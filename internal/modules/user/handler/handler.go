@@ -15,11 +15,19 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/users", h.CreateUser)
 }
 
+// CreateUser godoc
+// @Summary Create a new user
+// @Description Create a user with name and email
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body handler.CreateUserInput true "User data"
+// @Success 201 {string} string "created"
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /users [post]
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var input struct {
-		Name  string `json:"name"`
-		Email string `json:"email"`
-	}
+	var input CreateUserInput
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

@@ -2,6 +2,9 @@ package api
 
 import (
 	"net/http"
+
+	_ "github.com/edalferes/monogo/docs"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func RegisterGlobalRoutes(mux *http.ServeMux) {
@@ -14,4 +17,7 @@ func RegisterGlobalRoutes(mux *http.ServeMux) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("metrics: not implemented"))
 	})
+
+	mux.Handle("/swagger/", httpSwagger.WrapHandler)
+
 }
