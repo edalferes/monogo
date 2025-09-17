@@ -26,11 +26,10 @@ func NewApp() *App {
 
 	var entities []interface{}
 	entities = append(entities, auth.Entities()...)
-	// entities = append(entities, user.Entities()...) // Descomente para ativar migrations do módulo user
 	if err := database.AutoMigrate(entities...); err != nil {
 		logger.Log.Fatal().Err(err).Msg("failed to migrate database")
 	}
-	// Seed roles padrão
+	// Seed roles default
 	if err := auth.Seed(database); err != nil {
 		logger.Log.Fatal().Err(err).Msg("failed to seed roles")
 	}
@@ -49,6 +48,7 @@ func (a *App) RegisterModules() {
 	cfg := config.LoadConfig()
 	auth.WireUp(v1, a.db, cfg.JWTSecret)
 
+	// Test module
 	testmodule.WireUp(v1)
 }
 

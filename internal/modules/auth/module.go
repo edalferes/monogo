@@ -11,13 +11,11 @@ import (
 	"gorm.io/gorm"
 )
 
-// const user and strong passwd
 const (
 	RootUsername string = "root"
 	RootPassword string = "ZDcxMDUxZmM4M2Jl"
 )
 
-// Seed garante que as roles padrão existam no banco
 func Seed(db *gorm.DB) error {
 	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
 	permRepo := gormrepo.NewPermissionRepositoryGorm(db)
@@ -37,7 +35,7 @@ func Seed(db *gorm.DB) error {
 		}
 	}
 
-	// Seed roles e associa permissões
+	// Seed roles and assign permissions
 	var allPerms []domain.Permission
 	if err := db.Find(&allPerms).Error; err != nil {
 		return err
@@ -45,9 +43,9 @@ func Seed(db *gorm.DB) error {
 	for _, roleName := range defaultRoles {
 		var permsToAssign []domain.Permission
 		if roleName == "admin" {
-			permsToAssign = allPerms // admin tem todas
+			permsToAssign = allPerms // admin allows all permissions
 		} else {
-			// user só leitura
+			// user only read
 			for _, p := range allPerms {
 				if p.Name == "read" {
 					permsToAssign = append(permsToAssign, p)
@@ -61,7 +59,7 @@ func Seed(db *gorm.DB) error {
 				return err
 			}
 		} else {
-			// Atualiza permissões se necessário
+			// Update permissions if role already exists
 			db.Model(&role).Association("Permissions").Replace(permsToAssign)
 		}
 	}
@@ -92,14 +90,14 @@ func Seed(db *gorm.DB) error {
 }
 
 func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
-	// Use as implementações GORM dos repositórios
+
 	userRepo := gormrepo.NewUserRepositoryGorm(db)
 	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
 	permRepo := gormrepo.NewPermissionRepositoryGorm(db)
 	passwordService := service.NewPasswordService()
 	jwtService := service.NewJWTService(jwtSecret, 24*60*60) // 24h
 
-	// Handler para rotas públicas (apenas login)
+	// Handler public (only login)
 	publicHandler := &handler.Handler{
 		LoginUseCase: &usecase.LoginUseCase{
 			UserRepo:        userRepo,
@@ -109,7 +107,7 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
 	}
 	group.POST("/auth/login", publicHandler.Login)
 
-	// Handler para rotas administrativas
+	// Handler admin (user management, roles, permissions)
 	adminUserHandler := &handler_admin.AdminUserHandler{
 		UserRepo:        userRepo,
 		RoleRepo:        roleRepo,
@@ -120,6 +118,7 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
 		PermissionRepo: permRepo,
 	}
 	adminGroup := group.Group("/admin")
+	adminGroup.Use(JWTMiddleware(jwtSecret))
 	adminGroup.POST("/users", adminUserHandler.CreateUser)
 	adminGroup.GET("/users", adminUserHandler.ListUsers)
 	// Roles

@@ -1,5 +1,34 @@
 definitions:
-  admin.RegisterDTO:
+  domain.Permission:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  domain.Role:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/domain.Permission'
+        type: array
+    type: object
+  domain.User:
+    properties:
+      id:
+        type: integer
+      roles:
+        items:
+          $ref: '#/definitions/domain.Role'
+        type: array
+      username:
+        type: string
+    type: object
+  handler.LoginDTO:
     properties:
       password:
         type: string
@@ -9,7 +38,7 @@ definitions:
     - password
     - username
     type: object
-  handler.LoginDTO:
+  handler.RegisterDTO:
     properties:
       password:
         type: string
@@ -34,7 +63,7 @@ paths:
             type: array
       security:
       - BearerAuth: []
-      summary: Lista todas as permissões
+      summary: List all permissions
       tags:
       - admin
     post:
@@ -56,7 +85,7 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Cria uma nova permissão
+      summary: Create a new permission
       tags:
       - admin
   /v1/admin/permissions/{name}:
@@ -76,7 +105,7 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Remove uma permissão
+      summary: Delete a permission
       tags:
       - admin
   /v1/admin/roles:
@@ -91,7 +120,7 @@ paths:
             type: array
       security:
       - BearerAuth: []
-      summary: Lista todas as roles
+      summary: List all roles
       tags:
       - admin
     post:
@@ -113,7 +142,7 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Cria uma nova role
+      summary: Create a new role
       tags:
       - admin
   /v1/admin/roles/{name}:
@@ -133,20 +162,35 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Remove uma role
+      summary: Delete a role
       tags:
       - admin
   /v1/admin/users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.User'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List all users
+      tags:
+      - admin
     post:
       consumes:
       - application/json
       parameters:
-      - description: Dados do usuário
+      - description: User data
         in: body
         name: user
         required: true
         schema:
-          $ref: '#/definitions/admin.RegisterDTO'
+          $ref: '#/definitions/handler.RegisterDTO'
       produces:
       - application/json
       responses:
@@ -170,7 +214,7 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Cria um novo usuário
+      summary: Create a new user
       tags:
       - admin
   /v1/auth/login:

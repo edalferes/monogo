@@ -14,7 +14,6 @@ type RegisterUseCase struct {
 }
 
 func (u *RegisterUseCase) Execute(username, password string) error {
-	// Verifica se usuário já existe
 	if user, _ := u.UserRepo.FindByUsername(username); user != nil {
 		return errors.ErrUserAlreadyExists
 	}

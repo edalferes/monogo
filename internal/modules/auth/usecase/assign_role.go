@@ -1,10 +1,10 @@
 package usecase
 
 type AssignRoleUseCase struct {
-	// Adicione dependências como UserRepository, RoleRepository
+	// TODO: added dependencies like UserRepository, RoleRepository
 }
 
 func (u *AssignRoleUseCase) Execute(userID uint, roleName string) error {
-	// TODO: implementar atribuição de role
+	// TODO: implement role assignment
 	return nil
 }

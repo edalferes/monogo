@@ -1,10 +1,10 @@
 package usecase
 
 type CheckPermissionUseCase struct {
-	// Adicione dependências como UserRepository, PermissionRepository
+	// TODO: added dependencies like UserRepository, PermissionRepository
 }
 
 func (u *CheckPermissionUseCase) Execute(userID uint, permissionName string) (bool, error) {
-	// TODO: implementar checagem de permissão
+	// TODO: implement permission check
 	return false, nil
 }

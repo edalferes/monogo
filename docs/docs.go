@@ -25,7 +25,7 @@ const docTemplate = `{
                 "tags": [
                     "admin"
                 ],
-                "summary": "Lista todas as permissões",
+                "summary": "List all permissions",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -48,7 +48,7 @@ const docTemplate = `{
                 "tags": [
                     "admin"
                 ],
-                "summary": "Cria uma nova permissão",
+                "summary": "Create a new permission",
                 "parameters": [
                     {
                         "description": "Permission name",
@@ -86,7 +86,7 @@ const docTemplate = `{
                 "tags": [
                     "admin"
                 ],
-                "summary": "Remove uma permissão",
+                "summary": "Delete a permission",
                 "parameters": [
                     {
                         "type": "string",
@@ -119,7 +119,7 @@ const docTemplate = `{
                 "tags": [
                     "admin"
                 ],
-                "summary": "Lista todas as roles",
+                "summary": "List all roles",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -142,7 +142,7 @@ const docTemplate = `{
                 "tags": [
                     "admin"
                 ],
-                "summary": "Cria uma nova role",
+                "summary": "Create a new role",
                 "parameters": [
                     {
                         "description": "Role name",
@@ -180,7 +180,7 @@ const docTemplate = `{
                 "tags": [
                     "admin"
                 ],
-                "summary": "Remove uma role",
+                "summary": "Delete a role",
                 "parameters": [
                     {
                         "type": "string",
@@ -204,6 +204,31 @@ const docTemplate = `{
             }
         },
         "/v1/admin/users": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "List all users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.User"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -219,15 +244,15 @@ const docTemplate = `{
                 "tags": [
                     "admin"
                 ],
-                "summary": "Cria um novo usuário",
+                "summary": "Create a new user",
                 "parameters": [
                     {
-                        "description": "Dados do usuário",
+                        "description": "User data",
                         "name": "user",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin.RegisterDTO"
+                            "$ref": "#/definitions/handler.RegisterDTO"
                         }
                     }
                 ],
@@ -370,7 +395,52 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "admin.RegisterDTO": {
+        "domain.Permission": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Role": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Permission"
+                    }
+                }
+            }
+        },
+        "domain.User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Role"
+                    }
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.LoginDTO": {
             "type": "object",
             "required": [
                 "password",
@@ -385,7 +455,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handler.LoginDTO": {
+        "handler.RegisterDTO": {
             "type": "object",
             "required": [
                 "password",

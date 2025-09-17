@@ -19,7 +19,7 @@ type AdminUserHandler struct {
 }
 
 // ListUsers godoc
-// @Summary Lista todos os usuários
+// @Summary List all users
 // @Tags admin
 // @Security BearerAuth
 // @Produce json
@@ -34,12 +34,12 @@ func (h *AdminUserHandler) ListUsers(c echo.Context) error {
 }
 
 // CreateUser godoc
-// @Summary Cria um novo usuário
+// @Summary Create a new user
 // @Tags admin
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param user body RegisterDTO true "Dados do usuário"
+// @Param user body handler.RegisterDTO true "User data"
 // @Success 201 {object} map[string]string "created"
 // @Failure 400 {object} map[string]string "invalid data or user exists"
 // @Failure 500 {object} map[string]string "internal error"

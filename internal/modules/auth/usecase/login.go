@@ -20,7 +20,7 @@ func (u *LoginUseCase) Execute(username, password string) (string, error) {
 	if err := u.PasswordService.Compare(user.Password, password); err != nil {
 		return "", errors.ErrInvalidCredentials
 	}
-	// Extrai roles do usuário
+	// Extract role names from user roles
 	roles := make([]string, len(user.Roles))
 	for i, r := range user.Roles {
 		roles[i] = r.Name
