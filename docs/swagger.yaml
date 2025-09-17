@@ -9,6 +9,26 @@ definitions:
     - email
     - name
     type: object
+  handler.LoginDTO:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handler.RegisterDTO:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   responses.CreatedResponse:
     properties:
       id:
@@ -22,6 +42,84 @@ definitions:
 info:
   contact: {}
 paths:
+  /v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates user and returns JWT token
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: invalid data or missing credentials
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: invalid credentials
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: internal error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - auth
+  /v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with role 'user'
+      parameters:
+      - description: User registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.RegisterDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: invalid data or user exists
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: internal error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User registration
+      tags:
+      - auth
   /v1/users:
     post:
       consumes:

@@ -12,6 +12,7 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	Port       int
+	JWTSecret  string
 }
 
 func LoadConfig() *Config {
@@ -25,10 +26,11 @@ func LoadConfig() *Config {
 		DBPassword: viper.GetString("DB_PASSWORD"),
 		DBName:     viper.GetString("DB_NAME"),
 		Port:       viper.GetInt("PORT"),
+		JWTSecret:  viper.GetString("JWT_SECRET"),
 	}
 
-	if cfg.DBHost == "" || cfg.DBUser == "" || cfg.DBName == "" {
-		log.Fatal("Missing required environment variables: DB_HOST, DB_USER, DB_NAME")
+	if cfg.DBHost == "" || cfg.DBUser == "" || cfg.DBName == "" || cfg.JWTSecret == "" {
+		log.Fatalf("Missing required environment variables: DB_HOST, DB_USER, DB_NAME, JWT_SECRET")
 	}
 
 	return cfg

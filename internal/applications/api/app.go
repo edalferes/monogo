@@ -4,8 +4,7 @@ import (
 	"github.com/edalferes/monogo/config"
 	"github.com/edalferes/monogo/internal/infra/db"
 	"github.com/edalferes/monogo/internal/infra/logger"
-	"github.com/edalferes/monogo/internal/modules/user"
-	userdomain "github.com/edalferes/monogo/internal/modules/user/domain"
+	"github.com/edalferes/monogo/internal/modules/auth"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"gorm.io/gorm"
@@ -23,8 +22,16 @@ func NewApp() *App {
 	if err != nil {
 		logger.Log.Fatal().Err(err).Msg("failed to connect to database")
 	}
-	if err := database.AutoMigrate(&userdomain.User{}); err != nil {
+
+	var entities []interface{}
+	entities = append(entities, auth.Entities()...)
+	// entities = append(entities, user.Entities()...) // Descomente para ativar migrations do módulo user
+	if err := database.AutoMigrate(entities...); err != nil {
 		logger.Log.Fatal().Err(err).Msg("failed to migrate database")
+	}
+	// Seed roles padrão
+	if err := auth.Seed(database); err != nil {
+		logger.Log.Fatal().Err(err).Msg("failed to seed roles")
 	}
 	e := echo.New()
 	return &App{
@@ -35,9 +42,12 @@ func NewApp() *App {
 
 func (a *App) RegisterModules() {
 	v1 := a.echo.Group("/v1")
-	user.WireUpEcho(v1, a.db)
-	// auth.WireUpEcho(v1, a.db)
-	// billing.WireUpEcho(v1, a.db)
+	//user.WireUp(v1, a.db)
+
+	// Auth module
+	cfg := config.LoadConfig()
+	auth.WireUp(v1, a.db, cfg.JWTSecret)
+	// billing.WireUp(v1, a.db)
 }
 
 func (a *App) RegisterGlobalRoutes() {
