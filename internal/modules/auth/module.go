@@ -4,7 +4,7 @@ import (
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
 	"github.com/edalferes/monogo/internal/modules/auth/handler"
 	handler_admin "github.com/edalferes/monogo/internal/modules/auth/handler/admin"
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
+	gormrepo "github.com/edalferes/monogo/internal/modules/auth/repository/gorm"
 	"github.com/edalferes/monogo/internal/modules/auth/service"
 	"github.com/edalferes/monogo/internal/modules/auth/usecase"
 	"github.com/labstack/echo/v4"
@@ -19,9 +19,9 @@ const (
 
 // Seed garante que as roles padrão existam no banco
 func Seed(db *gorm.DB) error {
-	roleRepo := repository.NewRoleRepository(db)
-	permRepo := repository.NewPermissionRepository(db)
-	userRepo := repository.NewUserRepository(db)
+	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
+	permRepo := gormrepo.NewPermissionRepositoryGorm(db)
+	userRepo := gormrepo.NewUserRepositoryGorm(db)
 	passwordService := service.NewPasswordService()
 
 	defaultRoles := []string{"admin", "user"}
@@ -37,13 +37,32 @@ func Seed(db *gorm.DB) error {
 		}
 	}
 
-	// Seed roles
+	// Seed roles e associa permissões
+	var allPerms []domain.Permission
+	if err := db.Find(&allPerms).Error; err != nil {
+		return err
+	}
 	for _, roleName := range defaultRoles {
-		_, err := roleRepo.FindByName(roleName)
-		if err != nil {
-			if err := roleRepo.Create(&domain.Role{Name: roleName}); err != nil {
+		var permsToAssign []domain.Permission
+		if roleName == "admin" {
+			permsToAssign = allPerms // admin tem todas
+		} else {
+			// user só leitura
+			for _, p := range allPerms {
+				if p.Name == "read" {
+					permsToAssign = append(permsToAssign, p)
+				}
+			}
+		}
+		var role domain.Role
+		if err := db.Where("name = ?", roleName).First(&role).Error; err != nil {
+			role = domain.Role{Name: roleName, Permissions: permsToAssign}
+			if err := db.Create(&role).Error; err != nil {
 				return err
 			}
+		} else {
+			// Atualiza permissões se necessário
+			db.Model(&role).Association("Permissions").Replace(permsToAssign)
 		}
 	}
 
@@ -73,8 +92,10 @@ func Seed(db *gorm.DB) error {
 }
 
 func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
-	userRepo := repository.NewUserRepository(db)
-	roleRepo := repository.NewRoleRepository(db)
+	// Use as implementações GORM dos repositórios
+	userRepo := gormrepo.NewUserRepositoryGorm(db)
+	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
+	permRepo := gormrepo.NewPermissionRepositoryGorm(db)
 	passwordService := service.NewPasswordService()
 	jwtService := service.NewJWTService(jwtSecret, 24*60*60) // 24h
 
@@ -94,6 +115,19 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
 		RoleRepo:        roleRepo,
 		PasswordService: passwordService,
 	}
+	adminRolePermHandler := &handler_admin.AdminHandler{
+		RoleRepo:       roleRepo,
+		PermissionRepo: permRepo,
+	}
 	adminGroup := group.Group("/admin")
 	adminGroup.POST("/users", adminUserHandler.CreateUser)
+	adminGroup.GET("/users", adminUserHandler.ListUsers)
+	// Roles
+	adminGroup.GET("/roles", adminRolePermHandler.ListRoles)
+	adminGroup.POST("/roles", adminRolePermHandler.CreateRole)
+	adminGroup.DELETE("/roles/:name", adminRolePermHandler.DeleteRole)
+	// Permissions
+	adminGroup.GET("/permissions", adminRolePermHandler.ListPermissions)
+	adminGroup.POST("/permissions", adminRolePermHandler.CreatePermission)
+	adminGroup.DELETE("/permissions/:name", adminRolePermHandler.DeletePermission)
 }

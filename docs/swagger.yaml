@@ -1,5 +1,5 @@
 definitions:
-  handler.LoginDTO:
+  admin.RegisterDTO:
     properties:
       password:
         type: string
@@ -9,7 +9,7 @@ definitions:
     - password
     - username
     type: object
-  handler.RegisterDTO:
+  handler.LoginDTO:
     properties:
       password:
         type: string
@@ -136,6 +136,43 @@ paths:
       summary: Remove uma role
       tags:
       - admin
+  /v1/admin/users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Dados do usuário
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/admin.RegisterDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: invalid data or user exists
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: internal error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Cria um novo usuário
+      tags:
+      - admin
   /v1/auth/login:
     post:
       consumes:
@@ -176,42 +213,6 @@ paths:
               type: string
             type: object
       summary: User login
-      tags:
-      - auth
-  /v1/auth/register:
-    post:
-      consumes:
-      - application/json
-      description: Register a new user with role 'user'
-      parameters:
-      - description: User registration data
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/handler.RegisterDTO'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: created
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "400":
-          description: invalid data or user exists
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: internal error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: User registration
       tags:
       - auth
   /v1/test/protected:

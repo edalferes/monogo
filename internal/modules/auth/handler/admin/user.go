@@ -5,8 +5,10 @@ import (
 
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
 	"github.com/edalferes/monogo/internal/modules/auth/errors"
+	"github.com/edalferes/monogo/internal/modules/auth/handler"
 	"github.com/edalferes/monogo/internal/modules/auth/repository"
 	"github.com/edalferes/monogo/internal/modules/auth/service"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
@@ -14,6 +16,21 @@ type AdminUserHandler struct {
 	UserRepo        repository.UserRepository
 	RoleRepo        repository.RoleRepository
 	PasswordService service.PasswordService
+}
+
+// ListUsers godoc
+// @Summary Lista todos os usuários
+// @Tags admin
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {array} domain.User
+// @Router /v1/admin/users [get]
+func (h *AdminUserHandler) ListUsers(c echo.Context) error {
+	users, err := h.UserRepo.ListAll()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusOK, users)
 }
 
 // CreateUser godoc
@@ -28,11 +45,11 @@ type AdminUserHandler struct {
 // @Failure 500 {object} map[string]string "internal error"
 // @Router /v1/admin/users [post]
 func (h *AdminUserHandler) CreateUser(c echo.Context) error {
-	var input RegisterDTO
+	var input handler.RegisterDTO
 	if err := c.Bind(&input); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": errors.ErrInvalidData.Error()})
 	}
-	if input.Username == "" || input.Password == "" {
+	if err := validator.New().Struct(input); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": errors.ErrMissingCredentials.Error()})
 	}
 	if user, _ := h.UserRepo.FindByUsername(input.Username); user != nil {
@@ -55,9 +72,4 @@ func (h *AdminUserHandler) CreateUser(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "internal error"})
 	}
 	return c.JSON(http.StatusCreated, map[string]string{"message": "user created"})
-}
-
-type RegisterDTO struct {
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
 }
