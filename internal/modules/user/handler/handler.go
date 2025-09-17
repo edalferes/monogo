@@ -11,8 +11,8 @@ type Handler struct {
 }
 
 // RegisterRoutesEcho registra as rotas do módulo user usando Echo
-func (h *Handler) RegisterRoutesEcho(g *echo.Group) {
-	g.POST("/users", h.CreateUserEcho)
+func (h *Handler) RegisterRoutes(g *echo.Group) {
+	g.POST("/users", h.CreateUser)
 }
 
 // CreateUserEcho godoc
@@ -26,9 +26,12 @@ func (h *Handler) RegisterRoutesEcho(g *echo.Group) {
 // @Failure 400 {object} responses.ErrorResponse
 // @Failure 500 {object} responses.ErrorResponse
 // @Router /v1/users [post]
-func (h *Handler) CreateUserEcho(c echo.Context) error {
+func (h *Handler) CreateUser(c echo.Context) error {
 	var input CreateUserDTO
 	if err := c.Bind(&input); err != nil {
+		return responses.BadRequest(c, err)
+	}
+	if err := validate.Struct(&input); err != nil {
 		return responses.BadRequest(c, err)
 	}
 	user, err := h.Service.Register(input.Name, input.Email)

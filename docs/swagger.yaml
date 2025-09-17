@@ -5,6 +5,9 @@ definitions:
         type: string
       name:
         type: string
+    required:
+    - email
+    - name
     type: object
   responses.CreatedResponse:
     properties:

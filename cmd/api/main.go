@@ -1,6 +1,9 @@
 package main
 
-import "github.com/edalferes/monogo/internal/applications/api"
+import (
+	_ "github.com/edalferes/monogo/docs"
+	"github.com/edalferes/monogo/internal/applications/api"
+)
 
 func main() {
 	app := api.NewApp()

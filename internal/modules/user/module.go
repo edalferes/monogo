@@ -15,5 +15,5 @@ func WireUpEcho(g *echo.Group, db *gorm.DB) {
 	createUserUC := usecase.NewCreateUserUseCase(repo)
 	svc := &service.Service{CreateUserUC: createUserUC}
 	h := &handler.Handler{Service: svc}
-	h.RegisterRoutesEcho(g)
+	h.RegisterRoutes(g)
 }

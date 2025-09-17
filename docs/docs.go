@@ -65,6 +65,10 @@ const docTemplate = `{
     "definitions": {
         "handler.CreateUserDTO": {
             "type": "object",
+            "required": [
+                "email",
+                "name"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
