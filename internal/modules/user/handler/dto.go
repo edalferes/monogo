@@ -1,6 +1,6 @@
 package handler
 
-type CreateUserInput struct {
+type CreateUserDTO struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }

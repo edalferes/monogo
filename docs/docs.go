@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/users": {
+        "/v1/users": {
             "post": {
-                "description": "Create a user with name and email",
+                "description": "Cria um usuário com nome e email",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,15 +27,15 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Create a new user",
+                "summary": "Cria um novo usuário",
                 "parameters": [
                     {
-                        "description": "User data",
+                        "description": "Dados do usuário",
                         "name": "user",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handler.CreateUserInput"
+                            "$ref": "#/definitions/handler.CreateUserDTO"
                         }
                     }
                 ],
@@ -43,25 +43,19 @@ const docTemplate = `{
                     "201": {
                         "description": "created",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/responses.CreatedResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/responses.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/responses.ErrorResponse"
                         }
                     }
                 }
@@ -69,13 +63,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handler.CreateUserInput": {
+        "handler.CreateUserDTO": {
             "type": "object",
             "properties": {
                 "email": {
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.CreatedResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }

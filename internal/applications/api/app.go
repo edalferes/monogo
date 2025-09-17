@@ -1,44 +1,58 @@
 package api
 
 import (
-	"database/sql"
-	"net/http"
-
 	"github.com/edalferes/monogo/config"
 	"github.com/edalferes/monogo/internal/infra/db"
 	"github.com/edalferes/monogo/internal/infra/logger"
 	"github.com/edalferes/monogo/internal/modules/user"
+	userdomain "github.com/edalferes/monogo/internal/modules/user/domain"
+	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
+	"gorm.io/gorm"
 )
 
 type App struct {
-	mux *http.ServeMux
-	db  *sql.DB
+	echo *echo.Echo
+	db   *gorm.DB
 }
 
 func NewApp() *App {
 	logger.Init()
 	cfg := config.LoadConfig()
-	database, err := db.NewPostgresDB(cfg)
+	database, err := db.NewGormDB(cfg)
 	if err != nil {
 		logger.Log.Fatal().Err(err).Msg("failed to connect to database")
 	}
+	if err := database.AutoMigrate(&userdomain.User{}); err != nil {
+		logger.Log.Fatal().Err(err).Msg("failed to migrate database")
+	}
+	e := echo.New()
 	return &App{
-		mux: http.NewServeMux(),
-		db:  database,
+		echo: e,
+		db:   database,
 	}
 }
 
 func (a *App) RegisterModules() {
-	user.WireUp(a.mux, a.db)
-	// auth.WireUp(a.mux, a.db)
-	// billing.WireUp(a.mux, a.db)
-	RegisterGlobalRoutes(a.mux)
+	v1 := a.echo.Group("/v1")
+	user.WireUpEcho(v1, a.db)
+	// auth.WireUpEcho(v1, a.db)
+	// billing.WireUpEcho(v1, a.db)
+}
+
+func (a *App) RegisterGlobalRoutes() {
+	a.echo.GET("/health", func(c echo.Context) error {
+		return c.String(200, "ok")
+	})
+	a.echo.GET("/metrics", func(c echo.Context) error {
+		return c.String(200, "metrics: not implemented")
+	})
+	a.echo.GET("/swagger/*", echoSwagger.WrapHandler)
 }
 
 func (a *App) Run() {
+	a.RegisterGlobalRoutes()
+	a.RegisterModules()
 	logger.Log.Info().Msg("API running on :8080")
-	err := http.ListenAndServe(":8080", a.mux)
-	if err != nil {
-		logger.Log.Fatal().Err(err).Msg("server exited with error")
-	}
+	a.echo.Logger.Fatal(a.echo.Start(":8080"))
 }

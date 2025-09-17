@@ -1,40 +1,39 @@
 package repository
 
 import (
-	"database/sql"
-
 	"github.com/edalferes/monogo/internal/modules/user/domain"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type UserRepository interface {
-	CreateUser(name string, email string) (int64, error)
-	FindByID(id int64) (*domain.User, error)
+	CreateUser(name string, email string) (uuid.UUID, error)
+	FindByID(id uuid.UUID) (*domain.User, error)
 }
 
 type userRepository struct {
-	db *sql.DB
+	db *gorm.DB
 }
 
-func NewUserRepository(db *sql.DB) *userRepository {
+func NewUserRepository(db *gorm.DB) *userRepository {
 	return &userRepository{db: db}
 }
 
-func (r *userRepository) CreateUser(name string, email string) (int64, error) {
-	result, err := r.db.Exec("INSERT INTO users (name, email) VALUES ($1, $2)", name, email)
-	if err != nil {
-		return 0, err
+func (r *userRepository) CreateUser(name string, email string) (uuid.UUID, error) {
+	user := &domain.User{
+		ID:    uuid.New(),
+		Name:  name,
+		Email: email,
 	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		return 0, err
+	if err := r.db.Create(user).Error; err != nil {
+		return uuid.Nil, err
 	}
-	return id, nil
+	return user.ID, nil
 }
 
-func (r *userRepository) FindByID(id int64) (*domain.User, error) {
-	row := r.db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", id)
+func (r *userRepository) FindByID(id uuid.UUID) (*domain.User, error) {
 	var user domain.User
-	if err := row.Scan(&user.ID, &user.Name, &user.Email); err != nil {
+	if err := r.db.First(&user, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

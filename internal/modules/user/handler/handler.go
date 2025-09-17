@@ -1,40 +1,39 @@
 package handler
 
 import (
-	"encoding/json"
-	"net/http"
-
 	"github.com/edalferes/monogo/internal/modules/user/service"
+	"github.com/edalferes/monogo/pkg/responses"
+	"github.com/labstack/echo/v4"
 )
 
 type Handler struct {
 	Service *service.Service
 }
 
-func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/users", h.CreateUser)
+// RegisterRoutesEcho registra as rotas do módulo user usando Echo
+func (h *Handler) RegisterRoutesEcho(g *echo.Group) {
+	g.POST("/users", h.CreateUserEcho)
 }
 
-// CreateUser godoc
-// @Summary Create a new user
-// @Description Create a user with name and email
+// CreateUserEcho godoc
+// @Summary Cria um novo usuário
+// @Description Cria um usuário com nome e email
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body handler.CreateUserInput true "User data"
-// @Success 201 {string} string "created"
-// @Failure 400 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /users [post]
-func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var input CreateUserInput
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+// @Param user body CreateUserDTO true "Dados do usuário"
+// @Success 201 {object} responses.CreatedResponse "created"
+// @Failure 400 {object} responses.ErrorResponse
+// @Failure 500 {object} responses.ErrorResponse
+// @Router /v1/users [post]
+func (h *Handler) CreateUserEcho(c echo.Context) error {
+	var input CreateUserDTO
+	if err := c.Bind(&input); err != nil {
+		return responses.BadRequest(c, err)
 	}
-	if _, err := h.Service.Register(input.Name, input.Email); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	user, err := h.Service.Register(input.Name, input.Email)
+	if err != nil {
+		return responses.InternalServerError(c, err)
 	}
-	w.WriteHeader(http.StatusCreated)
+	return responses.Created(c, user.ID.String())
 }
