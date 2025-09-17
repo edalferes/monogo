@@ -3,6 +3,7 @@ package auth
 import (
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
 	"github.com/edalferes/monogo/internal/modules/auth/handler"
+	handler_admin "github.com/edalferes/monogo/internal/modules/auth/handler/admin"
 	"github.com/edalferes/monogo/internal/modules/auth/repository"
 	"github.com/edalferes/monogo/internal/modules/auth/service"
 	"github.com/edalferes/monogo/internal/modules/auth/usecase"
@@ -10,10 +11,18 @@ import (
 	"gorm.io/gorm"
 )
 
+// const user and strong passwd
+const (
+	RootUsername string = "root"
+	RootPassword string = "ZDcxMDUxZmM4M2Jl"
+)
+
 // Seed garante que as roles padrão existam no banco
 func Seed(db *gorm.DB) error {
 	roleRepo := repository.NewRoleRepository(db)
 	permRepo := repository.NewPermissionRepository(db)
+	userRepo := repository.NewUserRepository(db)
+	passwordService := service.NewPasswordService()
 
 	defaultRoles := []string{"admin", "user"}
 	defaultPerms := []string{"read", "write", "delete"}
@@ -37,6 +46,29 @@ func Seed(db *gorm.DB) error {
 			}
 		}
 	}
+
+	// Seed root user
+	rootUsername := RootUsername
+	rootPassword := RootPassword
+	_, err := userRepo.FindByUsername(rootUsername)
+	if err != nil {
+		adminRole, err := roleRepo.FindByName("admin")
+		if err != nil {
+			return err
+		}
+		hash, err := passwordService.Hash(rootPassword)
+		if err != nil {
+			return err
+		}
+		rootUser := &domain.User{
+			Username: rootUsername,
+			Password: hash,
+			Roles:    []domain.Role{*adminRole},
+		}
+		if err := userRepo.Create(rootUser); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -45,20 +77,23 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
 	roleRepo := repository.NewRoleRepository(db)
 	passwordService := service.NewPasswordService()
 	jwtService := service.NewJWTService(jwtSecret, 24*60*60) // 24h
-	loginUseCase := &usecase.LoginUseCase{
-		UserRepo:        userRepo,
-		PasswordService: passwordService,
-		JWTService:      jwtService,
+
+	// Handler para rotas públicas (apenas login)
+	publicHandler := &handler.Handler{
+		LoginUseCase: &usecase.LoginUseCase{
+			UserRepo:        userRepo,
+			PasswordService: passwordService,
+			JWTService:      jwtService,
+		},
 	}
-	registerUseCase := &usecase.RegisterUseCase{
+	group.POST("/auth/login", publicHandler.Login)
+
+	// Handler para rotas administrativas
+	adminUserHandler := &handler_admin.AdminUserHandler{
 		UserRepo:        userRepo,
 		RoleRepo:        roleRepo,
 		PasswordService: passwordService,
 	}
-	h := &handler.Handler{
-		LoginUseCase:    loginUseCase,
-		RegisterUseCase: registerUseCase,
-	}
-	group.POST("/auth/login", h.Login)
-	group.POST("/auth/register", h.Register)
+	adminGroup := group.Group("/admin")
+	adminGroup.POST("/users", adminUserHandler.CreateUser)
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/edalferes/monogo/internal/infra/db"
 	"github.com/edalferes/monogo/internal/infra/logger"
 	"github.com/edalferes/monogo/internal/modules/auth"
+	"github.com/edalferes/monogo/internal/modules/testmodule"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"gorm.io/gorm"
@@ -40,14 +41,15 @@ func NewApp() *App {
 	}
 }
 
+// RegisterModules register all modules
 func (a *App) RegisterModules() {
 	v1 := a.echo.Group("/v1")
-	//user.WireUp(v1, a.db)
 
 	// Auth module
 	cfg := config.LoadConfig()
 	auth.WireUp(v1, a.db, cfg.JWTSecret)
-	// billing.WireUp(v1, a.db)
+
+	testmodule.WireUp(v1)
 }
 
 func (a *App) RegisterGlobalRoutes() {

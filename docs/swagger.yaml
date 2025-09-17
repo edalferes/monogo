@@ -1,14 +1,4 @@
 definitions:
-  handler.CreateUserDTO:
-    properties:
-      email:
-        type: string
-      name:
-        type: string
-    required:
-    - email
-    - name
-    type: object
   handler.LoginDTO:
     properties:
       password:
@@ -29,19 +19,123 @@ definitions:
     - password
     - username
     type: object
-  responses.CreatedResponse:
-    properties:
-      id:
-        type: string
-    type: object
-  responses.ErrorResponse:
-    properties:
-      error:
-        type: string
-    type: object
 info:
   contact: {}
 paths:
+  /v1/admin/permissions:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Lista todas as permissões
+      tags:
+      - admin
+    post:
+      parameters:
+      - description: Permission name
+        in: body
+        name: permission
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Cria uma nova permissão
+      tags:
+      - admin
+  /v1/admin/permissions/{name}:
+    delete:
+      parameters:
+      - description: Permission name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Remove uma permissão
+      tags:
+      - admin
+  /v1/admin/roles:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Lista todas as roles
+      tags:
+      - admin
+    post:
+      parameters:
+      - description: Role name
+        in: body
+        name: role
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Cria uma nova role
+      tags:
+      - admin
+  /v1/admin/roles/{name}:
+    delete:
+      parameters:
+      - description: Role name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Remove uma role
+      tags:
+      - admin
   /v1/auth/login:
     post:
       consumes:
@@ -120,34 +214,30 @@ paths:
       summary: User registration
       tags:
       - auth
-  /v1/users:
-    post:
-      consumes:
-      - application/json
-      description: Cria um usuário com nome e email
-      parameters:
-      - description: Dados do usuário
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/handler.CreateUserDTO'
-      produces:
-      - application/json
+  /v1/test/protected:
+    get:
       responses:
-        "201":
-          description: created
+        "200":
+          description: OK
           schema:
-            $ref: '#/definitions/responses.CreatedResponse'
-        "400":
-          description: Bad Request
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.ErrorResponse'
-        "500":
-          description: Internal Server Error
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
           schema:
-            $ref: '#/definitions/responses.ErrorResponse'
-      summary: Cria um novo usuário
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Endpoint protegido para teste de roles/permissões
       tags:
-      - users
+      - testmodule
 swagger: "2.0"

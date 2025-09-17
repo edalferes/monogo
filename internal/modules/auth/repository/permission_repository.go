@@ -5,6 +5,14 @@ import (
 	"gorm.io/gorm"
 )
 
+type PermissionRepository interface {
+	FindByName(name string) (*domain.Permission, error)
+	Create(permission *domain.Permission) error
+	ListAll() ([]domain.Permission, error)
+	DeleteByName(name string) error
+	Update(permission *domain.Permission) error
+}
+
 type permissionRepository struct {
 	DB *gorm.DB
 }
@@ -25,7 +33,18 @@ func (r *permissionRepository) Create(permission *domain.Permission) error {
 	return r.DB.Create(permission).Error
 }
 
-type PermissionRepository interface {
-	FindByName(name string) (*domain.Permission, error)
-	Create(permission *domain.Permission) error
+func (r *permissionRepository) ListAll() ([]domain.Permission, error) {
+	var perms []domain.Permission
+	if err := r.DB.Find(&perms).Error; err != nil {
+		return nil, err
+	}
+	return perms, nil
+}
+
+func (r *permissionRepository) DeleteByName(name string) error {
+	return r.DB.Where("name = ?", name).Delete(&domain.Permission{}).Error
+}
+
+func (r *permissionRepository) Update(permission *domain.Permission) error {
+	return r.DB.Save(permission).Error
 }
