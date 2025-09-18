@@ -49,7 +49,7 @@ func (a *App) RegisterModules() {
 	auth.WireUp(v1, a.db, cfg.JWTSecret)
 
 	// Test module
-	testmodule.WireUp(v1)
+	testmodule.WireUp(v1, cfg.JWTSecret)
 }
 
 func (a *App) RegisterGlobalRoutes() {

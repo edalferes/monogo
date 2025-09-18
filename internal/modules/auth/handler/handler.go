@@ -5,11 +5,12 @@ import (
 
 	"github.com/edalferes/monogo/internal/modules/auth/errors"
 	"github.com/edalferes/monogo/internal/modules/auth/usecase"
+	"github.com/edalferes/monogo/pkg/utils"
 	"github.com/labstack/echo/v4"
 )
 
 type Handler struct {
-	LoginUseCase *usecase.LoginUseCase
+	LoginUseCase *usecase.LoginWithAuditUseCase
 }
 
 // Login godoc
@@ -32,7 +33,8 @@ func (h *Handler) Login(c echo.Context) error {
 	if input.Username == "" || input.Password == "" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": errors.ErrMissingCredentials.Error()})
 	}
-	token, err := h.LoginUseCase.Execute(input.Username, input.Password)
+	ip := utils.ToIPv4(c.RealIP())
+	token, err := h.LoginUseCase.Execute(input.Username, input.Password, ip)
 	if err != nil {
 		if err == errors.ErrInvalidCredentials {
 			return c.JSON(http.StatusUnauthorized, map[string]string{"error": err.Error()})

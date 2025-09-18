@@ -8,23 +8,31 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// JWTMiddleware autentica o token JWT e popula as claims no contexto Echo
+// JWTMiddleware authenticates the JWT token and populates the claims in the Echo context
 func JWTMiddleware(secret string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			authHeader := c.Request().Header.Get("Authorization")
-			if authHeader == "" {
+			parts := strings.Fields(authHeader)
+			if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+				c.Logger().Errorf("JWTMiddleware: missing or malformed Authorization header: %v", authHeader)
 				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "missing token"})
 			}
-			tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
+			tokenStr := parts[1]
 			token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 				return []byte(secret), nil
 			})
-			if err != nil || !token.Valid {
+			if err != nil {
+				c.Logger().Errorf("JWTMiddleware: token parse error: %v", err)
+				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "invalid token: " + err.Error()})
+			}
+			if !token.Valid {
+				c.Logger().Error("JWTMiddleware: token is not valid")
 				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "invalid token"})
 			}
 			claims, ok := token.Claims.(jwt.MapClaims)
 			if !ok {
+				c.Logger().Error("JWTMiddleware: invalid claims type")
 				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "invalid claims"})
 			}
 			c.Set("user", claims)

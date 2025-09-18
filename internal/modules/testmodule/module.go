@@ -6,7 +6,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func WireUp(group *echo.Group) {
+// WireUp register the testmodule routes, protecting with JWT and role check
+func WireUp(group *echo.Group, jwtSecret string) {
 	h := &handler.Handler{}
-	group.GET("/test/protected", h.Protected, auth.RequireRoles("user"))
+	protected := group.Group("/test")
+	protected.Use(auth.JWTMiddleware(jwtSecret))
+	protected.GET("/protected", h.Protected, auth.RequireRoles("user"))
 }

@@ -1,11 +1,11 @@
 package handler
 
-// RoleDTO representa o payload para criação de uma role
+// RoleDTO represents the payload for creating a role
 type RoleDTO struct {
 	Name string `json:"name" validate:"required"`
 }
 
-// PermissionDTO representa o payload para criação de uma permission
+// PermissionDTO represents the payload for creating a permission
 type PermissionDTO struct {
 	Name string `json:"name" validate:"required"`
 }
