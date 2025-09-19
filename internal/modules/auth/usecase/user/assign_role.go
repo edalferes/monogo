@@ -1,4 +1,4 @@
-package usecase
+package user
 
 type AssignRoleUseCase struct {
 	// TODO: added dependencies like UserRepository, RoleRepository

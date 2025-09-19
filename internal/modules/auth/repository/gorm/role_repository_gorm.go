@@ -16,6 +16,14 @@ func NewRoleRepositoryGorm(db *gormpkg.DB) *RoleRepositoryGorm {
 
 var _ repository.RoleRepository = (*RoleRepositoryGorm)(nil)
 
+func (r *RoleRepositoryGorm) FindByID(id uint) (*domain.Role, error) {
+	var role domain.Role
+	if err := r.DB.Preload("Permissions").First(&role, id).Error; err != nil {
+		return nil, err
+	}
+	return &role, nil
+}
+
 func (r *RoleRepositoryGorm) FindByName(name string) (*domain.Role, error) {
 	var role domain.Role
 	if err := r.DB.Where("name = ?", name).First(&role).Error; err != nil {

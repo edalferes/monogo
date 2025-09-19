@@ -16,6 +16,14 @@ func NewPermissionRepositoryGorm(db *gormpkg.DB) *PermissionRepositoryGorm {
 
 var _ repository.PermissionRepository = (*PermissionRepositoryGorm)(nil)
 
+func (r *PermissionRepositoryGorm) FindByID(id uint) (*domain.Permission, error) {
+	var perm domain.Permission
+	if err := r.DB.First(&perm, id).Error; err != nil {
+		return nil, err
+	}
+	return &perm, nil
+}
+
 func (r *PermissionRepositoryGorm) FindByName(name string) (*domain.Permission, error) {
 	var permission domain.Permission
 	if err := r.DB.Where("name = ?", name).First(&permission).Error; err != nil {

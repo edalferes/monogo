@@ -1,4 +1,4 @@
-package usecase
+package user
 
 import (
 	"github.com/edalferes/monogo/internal/modules/auth/domain"

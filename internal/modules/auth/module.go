@@ -7,7 +7,9 @@ import (
 	handler_admin "github.com/edalferes/monogo/internal/modules/auth/handler/admin"
 	gormrepo "github.com/edalferes/monogo/internal/modules/auth/repository/gorm"
 	"github.com/edalferes/monogo/internal/modules/auth/service"
-	"github.com/edalferes/monogo/internal/modules/auth/usecase"
+	permUC "github.com/edalferes/monogo/internal/modules/auth/usecase/permission"
+	roleUC "github.com/edalferes/monogo/internal/modules/auth/usecase/role"
+	userUC "github.com/edalferes/monogo/internal/modules/auth/usecase/user"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -24,7 +26,7 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
 
 	// Handler public (only login)
 	publicHandler := &handler.Handler{
-		LoginUseCase: &usecase.LoginWithAuditUseCase{
+		LoginUseCase: &userUC.LoginWithAuditUseCase{
 			UserRepo:        userRepo,
 			PasswordService: passwordService,
 			JWTService:      jwtService,
@@ -33,15 +35,30 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
 	}
 	group.POST("/auth/login", publicHandler.Login)
 
-	// Handler admin (user management, roles, permissions)
+	// Use cases para usuário
+	listUsersUC := &userUC.ListUsersUseCase{UserRepo: userRepo}
+	createUserUC := &userUC.RegisterUseCase{UserRepo: userRepo, RoleRepo: roleRepo, PasswordService: passwordService}
+	// Use cases para role
+	listRolesUC := &roleUC.ListRolesUseCase{RoleRepo: roleRepo}
+	createRoleUC := &roleUC.CreateRoleUseCase{RoleRepo: roleRepo}
+	deleteRoleUC := &roleUC.DeleteRoleUseCase{RoleRepo: roleRepo}
+	// Use cases para permission
+	listPermissionsUC := &permUC.ListPermissionsUseCase{PermissionRepo: permRepo}
+	createPermissionUC := &permUC.CreatePermissionUseCase{PermissionRepo: permRepo}
+	deletePermissionUC := &permUC.DeletePermissionUseCase{PermissionRepo: permRepo}
+
 	adminUserHandler := &handler_admin.AdminUserHandler{
-		UserRepo:        userRepo,
-		RoleRepo:        roleRepo,
-		PasswordService: passwordService,
+		ListUsersUC:  listUsersUC,
+		CreateUserUC: createUserUC,
+		// Adicione outros use cases conforme necessário
 	}
 	adminRolePermHandler := &handler_admin.AdminHandler{
-		RoleRepo:       roleRepo,
-		PermissionRepo: permRepo,
+		ListRolesUC:        listRolesUC,
+		CreateRoleUC:       createRoleUC,
+		DeleteRoleUC:       deleteRoleUC,
+		ListPermissionsUC:  listPermissionsUC,
+		CreatePermissionUC: createPermissionUC,
+		DeletePermissionUC: deletePermissionUC,
 	}
 	adminGroup := group.Group("/admin")
 	adminGroup.Use(JWTMiddleware(jwtSecret))

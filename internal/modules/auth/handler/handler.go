@@ -3,14 +3,15 @@ package handler
 import (
 	"net/http"
 
+	"github.com/edalferes/monogo/internal/modules/auth/dto"
 	"github.com/edalferes/monogo/internal/modules/auth/errors"
-	"github.com/edalferes/monogo/internal/modules/auth/usecase"
+	userUC "github.com/edalferes/monogo/internal/modules/auth/usecase/user"
 	"github.com/edalferes/monogo/pkg/utils"
 	"github.com/labstack/echo/v4"
 )
 
 type Handler struct {
-	LoginUseCase *usecase.LoginWithAuditUseCase
+	LoginUseCase *userUC.LoginWithAuditUseCase
 }
 
 // Login godoc
@@ -26,7 +27,7 @@ type Handler struct {
 // @Failure 500 {object} map[string]string "internal error"
 // @Router /v1/auth/login [post]
 func (h *Handler) Login(c echo.Context) error {
-	var input LoginDTO
+	var input dto.LoginDTO
 	if err := c.Bind(&input); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": errors.ErrInvalidData.Error()})
 	}

@@ -1,4 +1,4 @@
-package usecase
+package permission
 
 type CheckPermissionUseCase struct {
 	// TODO: added dependencies like UserRepository, PermissionRepository

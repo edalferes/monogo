@@ -10,6 +10,22 @@ type UserRepositoryGorm struct {
 	DB *gormpkg.DB
 }
 
+func (r *UserRepositoryGorm) FindByID(id uint) (*domain.User, error) {
+	var user domain.User
+	if err := r.DB.Preload("Roles").First(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *UserRepositoryGorm) Update(user *domain.User) error {
+	return r.DB.Session(&gormpkg.Session{FullSaveAssociations: true}).Updates(user).Error
+}
+
+func (r *UserRepositoryGorm) Delete(id uint) error {
+	return r.DB.Delete(&domain.User{}, id).Error
+}
+
 func NewUserRepositoryGorm(db *gormpkg.DB) *UserRepositoryGorm {
 	return &UserRepositoryGorm{DB: db}
 }

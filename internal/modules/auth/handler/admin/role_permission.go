@@ -4,13 +4,20 @@ import (
 	"net/http"
 
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
 	"github.com/labstack/echo/v4"
 )
 
 type AdminHandler struct {
-	RoleRepo       repository.RoleRepository
-	PermissionRepo repository.PermissionRepository
+	ListRolesUC  interface{ Execute() ([]domain.Role, error) }
+	CreateRoleUC interface {
+		Execute(name string, permissionIDs []uint) error
+	}
+	DeleteRoleUC      interface{ Execute(name string) error }
+	ListPermissionsUC interface {
+		Execute() ([]domain.Permission, error)
+	}
+	CreatePermissionUC interface{ Execute(name string) error }
+	DeletePermissionUC interface{ Execute(name string) error }
 }
 
 // ListRoles godoc
@@ -20,7 +27,7 @@ type AdminHandler struct {
 // @Success 200 {array} map[string]interface{}
 // @Router /v1/admin/roles [get]
 func (h *AdminHandler) ListRoles(c echo.Context) error {
-	roles, err := h.RoleRepo.ListAll()
+	roles, err := h.ListRolesUC.Execute()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
@@ -39,7 +46,8 @@ func (h *AdminHandler) CreateRole(c echo.Context) error {
 	if err := c.Bind(&req); err != nil || req["name"] == "" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid role name"})
 	}
-	if err := h.RoleRepo.Create(&domain.Role{Name: req["name"]}); err != nil {
+	// permissionIDs pode ser extraído do body se necessário
+	if err := h.CreateRoleUC.Execute(req["name"], nil); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 	return c.JSON(http.StatusCreated, map[string]string{"message": "role created"})
@@ -54,7 +62,7 @@ func (h *AdminHandler) CreateRole(c echo.Context) error {
 // @Router /v1/admin/roles/{name} [delete]
 func (h *AdminHandler) DeleteRole(c echo.Context) error {
 	name := c.Param("name")
-	if err := h.RoleRepo.DeleteByName(name); err != nil {
+	if err := h.DeleteRoleUC.Execute(name); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 	return c.NoContent(http.StatusNoContent)
@@ -67,7 +75,7 @@ func (h *AdminHandler) DeleteRole(c echo.Context) error {
 // @Success 200 {array} map[string]interface{}
 // @Router /v1/admin/permissions [get]
 func (h *AdminHandler) ListPermissions(c echo.Context) error {
-	perms, err := h.PermissionRepo.ListAll()
+	perms, err := h.ListPermissionsUC.Execute()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
@@ -86,7 +94,7 @@ func (h *AdminHandler) CreatePermission(c echo.Context) error {
 	if err := c.Bind(&req); err != nil || req["name"] == "" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid permission name"})
 	}
-	if err := h.PermissionRepo.Create(&domain.Permission{Name: req["name"]}); err != nil {
+	if err := h.CreatePermissionUC.Execute(req["name"]); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 	return c.JSON(http.StatusCreated, map[string]string{"message": "permission created"})
@@ -101,7 +109,7 @@ func (h *AdminHandler) CreatePermission(c echo.Context) error {
 // @Router /v1/admin/permissions/{name} [delete]
 func (h *AdminHandler) DeletePermission(c echo.Context) error {
 	name := c.Param("name")
-	if err := h.PermissionRepo.DeleteByName(name); err != nil {
+	if err := h.DeletePermissionUC.Execute(name); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 	return c.NoContent(http.StatusNoContent)
