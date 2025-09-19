@@ -12,7 +12,7 @@ type UserRepositoryGorm struct {
 
 func (r *UserRepositoryGorm) FindByID(id uint) (*domain.User, error) {
 	var user domain.User
-	if err := r.DB.Preload("Roles").First(&user, id).Error; err != nil {
+	if err := r.DB.Preload("Roles.Permissions").Preload("Roles").First(&user, id).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -34,7 +34,7 @@ var _ repository.UserRepository = (*UserRepositoryGorm)(nil)
 
 func (r *UserRepositoryGorm) FindByUsername(username string) (*domain.User, error) {
 	var user domain.User
-	if err := r.DB.Preload("Roles").Where("username = ?", username).First(&user).Error; err != nil {
+	if err := r.DB.Preload("Roles.Permissions").Preload("Roles").Where("username = ?", username).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -46,7 +46,7 @@ func (r *UserRepositoryGorm) Create(user *domain.User) error {
 
 func (r *UserRepositoryGorm) ListAll() ([]domain.User, error) {
 	var users []domain.User
-	if err := r.DB.Preload("Roles").Find(&users).Error; err != nil {
+	if err := r.DB.Preload("Roles.Permissions").Preload("Roles").Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil

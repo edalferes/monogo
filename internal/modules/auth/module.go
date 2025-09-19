@@ -3,8 +3,8 @@ package auth
 import (
 	"time"
 
-	"github.com/edalferes/monogo/internal/modules/auth/handler"
 	handler_admin "github.com/edalferes/monogo/internal/modules/auth/handler/admin"
+	"github.com/edalferes/monogo/internal/modules/auth/handler/login"
 	gormrepo "github.com/edalferes/monogo/internal/modules/auth/repository/gorm"
 	"github.com/edalferes/monogo/internal/modules/auth/service"
 	permUC "github.com/edalferes/monogo/internal/modules/auth/usecase/permission"
@@ -25,7 +25,7 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
 	auditService := service.NewAuditService(auditLogRepo)
 
 	// Handler public (only login)
-	publicHandler := &handler.Handler{
+	publicHandler := &login.Handler{
 		LoginUseCase: &userUC.LoginWithAuditUseCase{
 			UserRepo:        userRepo,
 			PasswordService: passwordService,
