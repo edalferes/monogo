@@ -2,12 +2,12 @@ package user
 
 import (
 	"github.com/edalferes/monogo/internal/modules/auth/errors"
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
 	"github.com/edalferes/monogo/internal/modules/auth/service"
+	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 )
 
 type LoginWithAuditUseCase struct {
-	UserRepo        repository.UserRepository
+	UserRepo        interfaces.UserReader
 	PasswordService service.PasswordService
 	JWTService      service.JWTService
 	AuditService    service.AuditService

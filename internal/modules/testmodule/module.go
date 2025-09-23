@@ -2,7 +2,7 @@ package testmodule
 
 import (
 	"github.com/edalferes/monogo/internal/modules/auth"
-	"github.com/edalferes/monogo/internal/modules/testmodule/handler"
+	"github.com/edalferes/monogo/internal/modules/testmodule/adapters/http/handler"
 	"github.com/labstack/echo/v4"
 )
 

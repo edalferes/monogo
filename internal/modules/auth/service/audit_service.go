@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
+	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 )
 
 type AuditService interface {
@@ -10,10 +10,10 @@ type AuditService interface {
 }
 
 type auditService struct {
-	repo repository.AuditLogRepository
+	repo interfaces.AuditLogRepository
 }
 
-func NewAuditService(repo repository.AuditLogRepository) AuditService {
+func NewAuditService(repo interfaces.AuditLogRepository) AuditService {
 	return &auditService{repo: repo}
 }
 

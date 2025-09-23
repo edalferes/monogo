@@ -3,9 +3,9 @@ package auth
 import (
 	"time"
 
-	handler_admin "github.com/edalferes/monogo/internal/modules/auth/handler/admin"
-	"github.com/edalferes/monogo/internal/modules/auth/handler/login"
-	gormrepo "github.com/edalferes/monogo/internal/modules/auth/repository/gorm"
+	handler_admin "github.com/edalferes/monogo/internal/modules/auth/adapters/http/handlers/admin"
+	"github.com/edalferes/monogo/internal/modules/auth/adapters/http/handlers/login"
+	gormrepo "github.com/edalferes/monogo/internal/modules/auth/adapters/repository/gorm"
 	"github.com/edalferes/monogo/internal/modules/auth/service"
 	permUC "github.com/edalferes/monogo/internal/modules/auth/usecase/permission"
 	roleUC "github.com/edalferes/monogo/internal/modules/auth/usecase/role"
@@ -37,7 +37,12 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
 
 	// Use cases para usuário
 	listUsersUC := &userUC.ListUsersUseCase{UserRepo: userRepo}
-	createUserUC := &userUC.RegisterUseCase{UserRepo: userRepo, RoleRepo: roleRepo, PasswordService: passwordService}
+	createUserUC := &userUC.RegisterUseCase{
+		UserReader:      userRepo,
+		UserWriter:      userRepo,
+		RoleReader:      roleRepo,
+		PasswordService: passwordService,
+	}
 	// Use cases para role
 	listRolesUC := &roleUC.ListRolesUseCase{RoleRepo: roleRepo}
 	createRoleUC := &roleUC.CreateRoleUseCase{RoleRepo: roleRepo}

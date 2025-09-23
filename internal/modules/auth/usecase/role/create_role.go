@@ -2,11 +2,11 @@ package role
 
 import (
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
+	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 )
 
 type CreateRoleUseCase struct {
-	RoleRepo repository.RoleRepository
+	RoleRepo interfaces.RoleWriter
 }
 
 func (u *CreateRoleUseCase) Execute(name string, permissionIDs []uint) error {

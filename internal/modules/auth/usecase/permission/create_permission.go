@@ -2,11 +2,11 @@ package permission
 
 import (
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
+	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 )
 
 type CreatePermissionUseCase struct {
-	PermissionRepo repository.PermissionRepository
+	PermissionRepo interfaces.PermissionWriter
 }
 
 func (u *CreatePermissionUseCase) Execute(name string) error {

@@ -1,9 +1,9 @@
 package role
 
-import "github.com/edalferes/monogo/internal/modules/auth/repository"
+import "github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 
 type DeleteRoleUseCase struct {
-	RoleRepo repository.RoleRepository
+	RoleRepo interfaces.RoleWriter
 }
 
 func (u *DeleteRoleUseCase) Execute(name string) error {

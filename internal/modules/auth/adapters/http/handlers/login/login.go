@@ -3,7 +3,7 @@ package login
 import (
 	"net/http"
 
-	"github.com/edalferes/monogo/internal/modules/auth/dto"
+	"github.com/edalferes/monogo/internal/modules/auth/adapters/http/dto"
 	"github.com/edalferes/monogo/internal/modules/auth/errors"
 	userUC "github.com/edalferes/monogo/internal/modules/auth/usecase/user"
 	"github.com/edalferes/monogo/pkg/utils"
@@ -20,7 +20,7 @@ type Handler struct {
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param credentials body LoginDTO true "User credentials"
+// @Param credentials body dto.LoginDTO true "User credentials"
 // @Success 200 {object} map[string]string "token"
 // @Failure 400 {object} map[string]string "invalid data or missing credentials"
 // @Failure 401 {object} map[string]string "invalid credentials"

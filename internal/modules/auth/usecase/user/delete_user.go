@@ -1,9 +1,9 @@
 package user
 
-import "github.com/edalferes/monogo/internal/modules/auth/repository"
+import "github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 
 type DeleteUserUseCase struct {
-	UserRepo repository.UserRepository
+	UserRepo interfaces.UserWriter
 }
 
 func (u *DeleteUserUseCase) Execute(id uint) error {

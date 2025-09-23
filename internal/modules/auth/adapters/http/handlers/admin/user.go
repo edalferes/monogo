@@ -3,8 +3,8 @@ package admin
 import (
 	"net/http"
 
+	"github.com/edalferes/monogo/internal/modules/auth/adapters/http/dto"
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/dto"
 	"github.com/edalferes/monogo/internal/modules/auth/errors"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -39,7 +39,7 @@ func (h *AdminUserHandler) ListUsers(c echo.Context) error {
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param user body handler.RegisterDTO true "User data"
+// @Param user body dto.RegisterDTO true "User data"
 // @Success 201 {object} map[string]string "created"
 // @Failure 400 {object} map[string]string "invalid data or user exists"
 // @Failure 500 {object} map[string]string "internal error"

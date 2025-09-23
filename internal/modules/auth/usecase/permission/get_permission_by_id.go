@@ -2,11 +2,11 @@ package permission
 
 import (
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
+	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 )
 
 type GetPermissionByIDUseCase struct {
-	PermissionRepo repository.PermissionRepository
+	PermissionRepo interfaces.PermissionReader
 }
 
 // Supondo que PermissionRepository tenha FindByID

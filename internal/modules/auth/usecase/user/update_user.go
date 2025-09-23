@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
+	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 )
 
 type UpdateUserInput struct {
@@ -13,8 +13,8 @@ type UpdateUserInput struct {
 }
 
 type UpdateUserUseCase struct {
-	UserRepo repository.UserRepository
-	RoleRepo repository.RoleRepository
+	UserRepo interfaces.UserRepository
+	RoleRepo interfaces.RoleRepository
 }
 
 func (u *UpdateUserUseCase) Execute(input UpdateUserInput) error {

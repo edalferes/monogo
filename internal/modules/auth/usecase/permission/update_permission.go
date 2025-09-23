@@ -1,7 +1,7 @@
 package permission
 
 import (
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
+	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 )
 
 type UpdatePermissionInput struct {
@@ -10,7 +10,7 @@ type UpdatePermissionInput struct {
 }
 
 type UpdatePermissionUseCase struct {
-	PermissionRepo repository.PermissionRepository
+	PermissionRepo interfaces.PermissionRepository
 }
 
 func (u *UpdatePermissionUseCase) Execute(input UpdatePermissionInput) error {

@@ -1,7 +1,8 @@
 package domain
 
+// Role representa um papel/função no sistema
 type Role struct {
-	ID          uint         `json:"id" gorm:"primaryKey"`
-	Name        string       `json:"name" gorm:"unique;not null"`
-	Permissions []Permission `json:"permissions" gorm:"many2many:role_permissions;"`
+	ID          uint
+	Name        string
+	Permissions []Permission
 }

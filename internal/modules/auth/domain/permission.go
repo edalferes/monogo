@@ -1,6 +1,7 @@
 package domain
 
+// Permission representa uma permissão no sistema
 type Permission struct {
-	ID   uint   `json:"id" gorm:"primaryKey"`
-	Name string `json:"name" gorm:"unique;not null"`
+	ID   uint
+	Name string
 }

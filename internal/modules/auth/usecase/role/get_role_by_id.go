@@ -2,11 +2,11 @@ package role
 
 import (
 	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/repository"
+	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 )
 
 type GetRoleByIDUseCase struct {
-	RoleRepo repository.RoleRepository
+	RoleRepo interfaces.RoleRepository
 }
 
 func (u *GetRoleByIDUseCase) Execute(id uint) (*domain.Role, error) {

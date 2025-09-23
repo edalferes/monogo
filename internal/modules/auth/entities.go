@@ -1,7 +1,12 @@
 package auth
 
-import "github.com/edalferes/monogo/internal/modules/auth/domain"
+import "github.com/edalferes/monogo/internal/modules/auth/adapters/repository/models"
 
 func Entities() []interface{} {
-	return []interface{}{&domain.User{}, &domain.Role{}, &domain.Permission{}, &domain.AuditLog{}}
+	return []interface{}{
+		&models.UserModel{},
+		&models.RoleModel{},
+		&models.PermissionModel{},
+		&models.AuditLogModel{},
+	}
 }
