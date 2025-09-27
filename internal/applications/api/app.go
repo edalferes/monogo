@@ -5,9 +5,9 @@ import (
 
 	"github.com/edalferes/monogo/config"
 	"github.com/edalferes/monogo/internal/infra/db"
-	"github.com/edalferes/monogo/internal/infra/logger"
 	"github.com/edalferes/monogo/internal/modules/auth"
 	"github.com/edalferes/monogo/internal/modules/testmodule"
+	"github.com/edalferes/monogo/pkg/logger"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"gorm.io/gorm"

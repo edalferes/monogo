@@ -3,7 +3,6 @@ package auth
 import (
 	"time"
 
-	"github.com/edalferes/monogo/internal/infra/logger"
 	handler_admin "github.com/edalferes/monogo/internal/modules/auth/adapters/http/handlers/admin"
 	"github.com/edalferes/monogo/internal/modules/auth/adapters/http/handlers/login"
 	gormrepo "github.com/edalferes/monogo/internal/modules/auth/adapters/repository/gorm"
@@ -11,6 +10,7 @@ import (
 	permUC "github.com/edalferes/monogo/internal/modules/auth/usecase/permission"
 	roleUC "github.com/edalferes/monogo/internal/modules/auth/usecase/role"
 	userUC "github.com/edalferes/monogo/internal/modules/auth/usecase/user"
+	"github.com/edalferes/monogo/pkg/logger"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
