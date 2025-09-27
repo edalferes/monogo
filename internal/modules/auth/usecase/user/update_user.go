@@ -13,12 +13,13 @@ type UpdateUserInput struct {
 }
 
 type UpdateUserUseCase struct {
-	UserRepo interfaces.UserRepository
-	RoleRepo interfaces.RoleRepository
+	UserReader interfaces.UserReader
+	UserWriter interfaces.UserWriter
+	RoleReader interfaces.RoleReader
 }
 
 func (u *UpdateUserUseCase) Execute(input UpdateUserInput) error {
-	user, err := u.UserRepo.FindByID(input.ID)
+	user, err := u.UserReader.FindByID(input.ID)
 	if err != nil {
 		return err
 	}
@@ -31,7 +32,7 @@ func (u *UpdateUserUseCase) Execute(input UpdateUserInput) error {
 	if input.RoleIDs != nil {
 		var roles []domain.Role
 		for _, rid := range input.RoleIDs {
-			role, err := u.RoleRepo.FindByID(rid)
+			role, err := u.RoleReader.FindByID(rid)
 			if err != nil {
 				return err
 			}
@@ -39,5 +40,5 @@ func (u *UpdateUserUseCase) Execute(input UpdateUserInput) error {
 		}
 		user.Roles = roles
 	}
-	return u.UserRepo.Update(user)
+	return u.UserWriter.Update(user)
 }

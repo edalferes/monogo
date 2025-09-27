@@ -1,6 +1,8 @@
 package api
 
 import (
+	"os"
+
 	"github.com/edalferes/monogo/config"
 	"github.com/edalferes/monogo/internal/infra/db"
 	"github.com/edalferes/monogo/internal/infra/logger"
@@ -12,31 +14,42 @@ import (
 )
 
 type App struct {
-	echo *echo.Echo
-	db   *gorm.DB
+	echo   *echo.Echo
+	db     *gorm.DB
+	logger logger.Logger
 }
 
 func NewApp() *App {
-	logger.Init()
+	// Configurar logger baseado no ambiente
+	loggerConfig := logger.DefaultConfig()
+	if os.Getenv("ENV") == "development" {
+		loggerConfig.Format = "console"
+		loggerConfig.Level = "debug"
+	}
+
+	appLogger := logger.New(loggerConfig)
+
 	cfg := config.LoadConfig()
 	database, err := db.NewGormDB(cfg)
 	if err != nil {
-		logger.Log.Fatal().Err(err).Msg("failed to connect to database")
+		appLogger.Fatal().Err(err).Msg("failed to connect to database")
 	}
 
 	var entities []interface{}
 	entities = append(entities, auth.Entities()...)
 	if err := database.AutoMigrate(entities...); err != nil {
-		logger.Log.Fatal().Err(err).Msg("failed to migrate database")
+		appLogger.Fatal().Err(err).Msg("failed to migrate database")
 	}
 	// Seed roles default
 	if err := auth.Seed(database); err != nil {
-		logger.Log.Fatal().Err(err).Msg("failed to seed roles")
+		appLogger.Fatal().Err(err).Msg("failed to seed roles")
 	}
+
 	e := echo.New()
 	return &App{
-		echo: e,
-		db:   database,
+		echo:   e,
+		db:     database,
+		logger: appLogger,
 	}
 }
 
@@ -46,7 +59,7 @@ func (a *App) RegisterModules() {
 
 	// Auth module
 	cfg := config.LoadConfig()
-	auth.WireUp(v1, a.db, cfg.JWTSecret)
+	auth.WireUp(v1, a.db, cfg.JWTSecret, a.logger)
 
 	// Test module
 	testmodule.WireUp(v1, cfg.JWTSecret)
@@ -65,6 +78,6 @@ func (a *App) RegisterGlobalRoutes() {
 func (a *App) Run() {
 	a.RegisterGlobalRoutes()
 	a.RegisterModules()
-	logger.Log.Info().Msg("API running on :8080")
+	a.logger.Info().Msg("API running on :8080")
 	a.echo.Logger.Fatal(a.echo.Start(":8080"))
 }

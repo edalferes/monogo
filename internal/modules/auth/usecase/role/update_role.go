@@ -12,11 +12,12 @@ type UpdateRoleInput struct {
 }
 
 type UpdateRoleUseCase struct {
-	RoleRepo interfaces.RoleRepository
+	RoleReader interfaces.RoleReader
+	RoleWriter interfaces.RoleWriter
 }
 
 func (u *UpdateRoleUseCase) Execute(input UpdateRoleInput) error {
-	role, err := u.RoleRepo.FindByID(input.ID)
+	role, err := u.RoleReader.FindByID(input.ID)
 	if err != nil {
 		return err
 	}
@@ -30,5 +31,5 @@ func (u *UpdateRoleUseCase) Execute(input UpdateRoleInput) error {
 		}
 		role.Permissions = perms
 	}
-	return u.RoleRepo.Update(role)
+	return u.RoleWriter.Update(role)
 }

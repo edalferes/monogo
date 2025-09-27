@@ -10,16 +10,17 @@ type UpdatePermissionInput struct {
 }
 
 type UpdatePermissionUseCase struct {
-	PermissionRepo interfaces.PermissionRepository
+	PermissionReader interfaces.PermissionReader
+	PermissionWriter interfaces.PermissionWriter
 }
 
 func (u *UpdatePermissionUseCase) Execute(input UpdatePermissionInput) error {
-	perm, err := u.PermissionRepo.FindByID(input.ID)
+	perm, err := u.PermissionReader.FindByID(input.ID)
 	if err != nil {
 		return err
 	}
 	if input.Name != "" {
 		perm.Name = input.Name
 	}
-	return u.PermissionRepo.Update(perm)
+	return u.PermissionWriter.Update(perm)
 }

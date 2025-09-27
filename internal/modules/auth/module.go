@@ -3,6 +3,7 @@ package auth
 import (
 	"time"
 
+	"github.com/edalferes/monogo/internal/infra/logger"
 	handler_admin "github.com/edalferes/monogo/internal/modules/auth/adapters/http/handlers/admin"
 	"github.com/edalferes/monogo/internal/modules/auth/adapters/http/handlers/login"
 	gormrepo "github.com/edalferes/monogo/internal/modules/auth/adapters/repository/gorm"
@@ -14,7 +15,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
+func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger) {
 
 	userRepo := gormrepo.NewUserRepositoryGorm(db)
 	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
@@ -32,6 +33,7 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string) {
 			JWTService:      jwtService,
 			AuditService:    auditService,
 		},
+		Logger: log,
 	}
 	group.POST("/auth/login", publicHandler.Login)
 

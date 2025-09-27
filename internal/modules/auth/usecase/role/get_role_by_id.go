@@ -6,7 +6,7 @@ import (
 )
 
 type GetRoleByIDUseCase struct {
-	RoleRepo interfaces.RoleRepository
+	RoleRepo interfaces.RoleReader
 }
 
 func (u *GetRoleByIDUseCase) Execute(id uint) (*domain.Role, error) {

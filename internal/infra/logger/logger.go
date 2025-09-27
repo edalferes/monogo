@@ -1,13 +1,11 @@
 package logger
 
-import (
-	"os"
+// New cria um novo logger com configuração
+func New(config Config) Logger {
+	return NewZerologLogger(config)
+}
 
-	"github.com/rs/zerolog"
-)
-
-var Log zerolog.Logger
-
-func Init() {
-	Log = zerolog.New(os.Stdout).With().Timestamp().Logger()
+// NewDefault cria um novo logger com configuração padrão
+func NewDefault() Logger {
+	return NewZerologLogger(DefaultConfig())
 }
