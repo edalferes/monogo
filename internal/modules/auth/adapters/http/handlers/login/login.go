@@ -1,3 +1,8 @@
+// Package login provides HTTP handlers for user authentication endpoints.
+//
+// This package implements the HTTP adapter layer for authentication operations,
+// specifically handling login requests and JWT token generation. It follows
+// Clean Architecture principles by delegating business logic to use cases.
 package login
 
 import (
@@ -11,9 +16,32 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// Handler handles HTTP requests for user authentication.
+//
+// This handler is responsible for:
+//   - Binding HTTP request data to DTOs
+//   - Delegating business logic to appropriate use cases
+//   - Converting use case results to HTTP responses
+//   - Logging HTTP-layer events and errors
+//   - Returning appropriate HTTP status codes
+//
+// The handler follows Clean Architecture principles by:
+//   - Depending on use case interfaces, not implementations
+//   - Converting between HTTP and domain models
+//   - Handling HTTP-specific concerns (status codes, headers)
+//   - Delegating all business logic to use cases
+//
+// Example usage:
+//
+//	handler := &Handler{
+//		LoginUseCase: loginUseCase,
+//		Logger:       logger,
+//	}
+//
+//	e.POST("/auth/login", handler.Login)
 type Handler struct {
-	LoginUseCase *userUC.LoginWithAuditUseCase
-	Logger       logger.Logger
+	LoginUseCase *userUC.LoginWithAuditUseCase // Use case for authentication logic
+	Logger       logger.Logger                 // Logger for HTTP-layer events
 }
 
 // Login godoc
