@@ -1,9 +1,9 @@
 package api
 
 import (
-	"os"
+	"fmt"
 
-	"github.com/edalferes/monogo/config"
+	"github.com/edalferes/monogo/internal/config"
 	"github.com/edalferes/monogo/internal/infra/db"
 	"github.com/edalferes/monogo/internal/modules/auth"
 	"github.com/edalferes/monogo/internal/modules/testmodule"
@@ -20,16 +20,15 @@ type App struct {
 }
 
 func NewApp() *App {
-	// Configurar logger baseado no ambiente
+	cfg := config.LoadConfig()
+
+	// Configure logger based on configuration
 	loggerConfig := logger.DefaultConfig()
-	if os.Getenv("ENV") == "development" {
-		loggerConfig.Format = "console"
-		loggerConfig.Level = "debug"
-	}
+	loggerConfig.Level = cfg.Logger.Level
+	loggerConfig.Format = cfg.Logger.Format
+	loggerConfig.Service = cfg.App.Name
 
 	appLogger := logger.New(loggerConfig)
-
-	cfg := config.LoadConfig()
 	database, err := db.NewGormDB(cfg)
 	if err != nil {
 		appLogger.Fatal().Err(err).Msg("failed to connect to database")
@@ -54,15 +53,14 @@ func NewApp() *App {
 }
 
 // RegisterModules register all modules
-func (a *App) RegisterModules() {
+func (a *App) RegisterModules(cfg *config.Config) {
 	v1 := a.echo.Group("/v1")
 
 	// Auth module
-	cfg := config.LoadConfig()
-	auth.WireUp(v1, a.db, cfg.JWTSecret, a.logger)
+	auth.WireUp(v1, a.db, cfg.JWT.Secret, a.logger)
 
 	// Test module
-	testmodule.WireUp(v1, cfg.JWTSecret)
+	testmodule.WireUp(v1, cfg.JWT.Secret)
 }
 
 func (a *App) RegisterGlobalRoutes() {
@@ -75,9 +73,9 @@ func (a *App) RegisterGlobalRoutes() {
 	a.echo.GET("/swagger/*", echoSwagger.WrapHandler)
 }
 
-func (a *App) Run() {
+func (a *App) Run(cfg *config.Config) {
 	a.RegisterGlobalRoutes()
-	a.RegisterModules()
-	a.logger.Info().Msg("API running on :8080")
-	a.echo.Logger.Fatal(a.echo.Start(":8080"))
+	a.RegisterModules(cfg)
+	a.logger.Info().Int("port", cfg.App.Port).Str("env", cfg.App.Environment).Msg("Starting API server")
+	a.echo.Logger.Fatal(a.echo.Start(fmt.Sprintf(":%d", cfg.App.Port)))
 }

@@ -2,7 +2,7 @@ package interfaces
 
 import "github.com/edalferes/monogo/internal/modules/auth/domain"
 
-// PermissionWriter representa operações de escrita de permissions
+// PermissionWriter represents permission write operations
 type PermissionWriter interface {
 	Create(permission *domain.Permission) error
 	Update(permission *domain.Permission) error

@@ -37,7 +37,7 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 	}
 	group.POST("/auth/login", publicHandler.Login)
 
-	// Use cases para usuário
+	// User use cases
 	listUsersUC := &userUC.ListUsersUseCase{UserRepo: userRepo}
 	createUserUC := &userUC.RegisterUseCase{
 		UserReader:      userRepo,
@@ -57,7 +57,7 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 	adminUserHandler := &handler_admin.AdminUserHandler{
 		ListUsersUC:  listUsersUC,
 		CreateUserUC: createUserUC,
-		// Adicione outros use cases conforme necessário
+		// Add other use cases as needed
 	}
 	adminRolePermHandler := &handler_admin.AdminHandler{
 		ListRolesUC:        listRolesUC,

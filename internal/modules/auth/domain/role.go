@@ -1,6 +1,6 @@
 package domain
 
-// Role representa um papel/função no sistema
+// Role represents a role/function in the system
 type Role struct {
 	ID          uint
 	Name        string

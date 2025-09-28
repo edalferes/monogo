@@ -6,12 +6,12 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// ZerologLogger implementa a interface Logger usando zerolog
+// ZerologLogger implements the Logger interface using zerolog
 type ZerologLogger struct {
 	logger zerolog.Logger
 }
 
-// NewZerologLogger cria uma nova instância do logger com a configuração especificada
+// NewZerologLogger creates a new logger instance with the specified configuration
 func NewZerologLogger(config Config) Logger {
 	var output = config.Output
 	if output == nil {
@@ -36,7 +36,7 @@ func NewZerologLogger(config Config) Logger {
 
 	zeroLogger := logger.Logger()
 
-	// Configurar nível de log
+	// Configure log level
 	if config.Level != "" {
 		if level, err := zerolog.ParseLevel(config.Level); err == nil {
 			zeroLogger = zeroLogger.Level(level)
@@ -52,92 +52,92 @@ func NewZerologLogger(config Config) Logger {
 	return &ZerologLogger{logger: zeroLogger}
 }
 
-// Info implementa Logger.Info
+// Info implements Logger.Info
 func (z *ZerologLogger) Info() Event {
 	return &ZerologEvent{event: z.logger.Info()}
 }
 
-// Error implementa Logger.Error
+// Error implements Logger.Error
 func (z *ZerologLogger) Error() Event {
 	return &ZerologEvent{event: z.logger.Error()}
 }
 
-// Debug implementa Logger.Debug
+// Debug implements Logger.Debug
 func (z *ZerologLogger) Debug() Event {
 	return &ZerologEvent{event: z.logger.Debug()}
 }
 
-// Warn implementa Logger.Warn
+// Warn implements Logger.Warn
 func (z *ZerologLogger) Warn() Event {
 	return &ZerologEvent{event: z.logger.Warn()}
 }
 
-// Fatal implementa Logger.Fatal
+// Fatal implements Logger.Fatal
 func (z *ZerologLogger) Fatal() Event {
 	return &ZerologEvent{event: z.logger.Fatal()}
 }
 
-// With implementa Logger.With
+// With implements Logger.With
 func (z *ZerologLogger) With() Context {
 	return &ZerologContext{context: z.logger.With()}
 }
 
-// ZerologEvent implementa a interface Event
+// ZerologEvent implements the Event interface
 type ZerologEvent struct {
 	event *zerolog.Event
 }
 
-// Msg implementa Event.Msg
+// Msg implements Event.Msg
 func (e *ZerologEvent) Msg(msg string) {
 	e.event.Msg(msg)
 }
 
-// Err implementa Event.Err
+// Err implements Event.Err
 func (e *ZerologEvent) Err(err error) Event {
 	return &ZerologEvent{event: e.event.Err(err)}
 }
 
-// Str implementa Event.Str
+// Str implements Event.Str
 func (e *ZerologEvent) Str(key, val string) Event {
 	return &ZerologEvent{event: e.event.Str(key, val)}
 }
 
-// Int implementa Event.Int
+// Int implements Event.Int
 func (e *ZerologEvent) Int(key string, val int) Event {
 	return &ZerologEvent{event: e.event.Int(key, val)}
 }
 
-// Uint implementa Event.Uint
+// Uint implements Event.Uint
 func (e *ZerologEvent) Uint(key string, val uint) Event {
 	return &ZerologEvent{event: e.event.Uint(key, val)}
 }
 
-// Bool implementa Event.Bool
+// Bool implements Event.Bool
 func (e *ZerologEvent) Bool(key string, val bool) Event {
 	return &ZerologEvent{event: e.event.Bool(key, val)}
 }
 
-// ZerologContext implementa a interface Context
+// ZerologContext implements the Context interface
 type ZerologContext struct {
 	context zerolog.Context
 }
 
-// Str implementa Context.Str
+// Str implements Context.Str
 func (c *ZerologContext) Str(key, val string) Context {
 	return &ZerologContext{context: c.context.Str(key, val)}
 }
 
-// Int implementa Context.Int
+// Int implements Context.Int
 func (c *ZerologContext) Int(key string, val int) Context {
 	return &ZerologContext{context: c.context.Int(key, val)}
 }
 
-// Uint implementa Context.Uint
+// Uint implements Context.Uint
 func (c *ZerologContext) Uint(key string, val uint) Context {
 	return &ZerologContext{context: c.context.Uint(key, val)}
 }
 
-// Logger implementa Context.Logger
+// Logger implements Context.Logger
 func (c *ZerologContext) Logger() Logger {
 	return &ZerologLogger{logger: c.context.Logger()}
 }

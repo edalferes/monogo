@@ -1,6 +1,6 @@
 package domain
 
-// Permission representa uma permissão no sistema
+// Permission represents a permission in the system
 type Permission struct {
 	ID   uint
 	Name string

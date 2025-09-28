@@ -1,6 +1,6 @@
 package logger
 
-// Logger define a interface para logging no sistema
+// Logger defines the interface for logging in the system
 type Logger interface {
 	Info() Event
 	Error() Event
@@ -10,7 +10,7 @@ type Logger interface {
 	With() Context
 }
 
-// Event representa um evento de log em construção
+// Event represents a log event being built
 type Event interface {
 	Msg(msg string)
 	Err(err error) Event

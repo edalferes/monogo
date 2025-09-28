@@ -1,6 +1,6 @@
 package domain
 
-// User representa um usuário no sistema
+// User represents a user in the system
 type User struct {
 	ID       uint
 	Username string

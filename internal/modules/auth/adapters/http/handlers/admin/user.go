@@ -15,7 +15,7 @@ type AdminUserHandler struct {
 	CreateUserUC interface {
 		Execute(username, password string) error
 	}
-	// Adicione outros use cases conforme necessário (GetUserByIDUC, UpdateUserUC, DeleteUserUC)
+	// Add other use cases as needed (GetUserByIDUC, UpdateUserUC, DeleteUserUC)
 }
 
 // ListUsers godoc

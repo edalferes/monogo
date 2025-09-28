@@ -1,11 +1,11 @@
 package logger
 
-// New cria um novo logger com configuração
+// New creates a new logger with configuration
 func New(config Config) Logger {
 	return NewZerologLogger(config)
 }
 
-// NewDefault cria um novo logger com configuração padrão
+// NewDefault creates a new logger with default configuration
 func NewDefault() Logger {
 	return NewZerologLogger(DefaultConfig())
 }

@@ -1,0 +1,23 @@
+# Configuração da Aplicação Monogo
+
+app:
+  name: "monogo"
+  version: "1.0.0"
+  environment: "development"  # development, staging, production
+  port: 8080
+
+database:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "postgres"
+  name: "monogo"
+  ssl_mode: "disable"
+
+jwt:
+  secret: "your-secret-key-here"
+  expiry_hour: 24
+
+logger:
+  level: "info"      # debug, info, warn, error, fatal
+  format: "json"     # json, console

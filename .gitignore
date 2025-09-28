@@ -32,6 +32,10 @@
 !.env.example
 .env.*
 
+# Configuration files (protect sensitive data)
+config.local.yaml
+config.prod.yaml
+
 # Build output
 bin/
 dist/

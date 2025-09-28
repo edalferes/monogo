@@ -1,24 +1,16 @@
 package db
 
 import (
-	"fmt"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"github.com/edalferes/monogo/config"
+	"github.com/edalferes/monogo/internal/config"
 
 	_ "github.com/lib/pq"
 )
 
 // NewGormDB Initialize a new Gorm DB connection
 func NewGormDB(cfg *config.Config) (*gorm.DB, error) {
-	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s sslmode=disable",
-		cfg.DBHost,
-		cfg.DBUser,
-		cfg.DBPassword,
-		cfg.DBName,
-	)
+	dsn := cfg.GetDSN()
 	return gorm.Open(postgres.Open(dsn), &gorm.Config{})
 }
