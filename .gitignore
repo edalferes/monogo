@@ -50,3 +50,6 @@ Desktop.ini
 # Go module files (if you want to ignore them, but usually you keep these)
 # go.mod
 # go.sum
+
+# Godoc server PID file
+.godoc.pid

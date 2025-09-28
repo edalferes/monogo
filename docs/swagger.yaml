@@ -1,0 +1,296 @@
+definitions:
+  domain.Permission:
+    properties:
+      id:
+        description: Unique identifier
+        type: integer
+      name:
+        description: Unique permission name (resource:action format)
+        type: string
+    type: object
+  domain.Role:
+    properties:
+      id:
+        description: Unique identifier
+        type: integer
+      name:
+        description: Unique role name
+        type: string
+      permissions:
+        description: Associated permissions
+        items:
+          $ref: '#/definitions/domain.Permission'
+        type: array
+    type: object
+  domain.User:
+    properties:
+      id:
+        description: Unique identifier
+        type: integer
+      roles:
+        description: Associated roles for authorization
+        items:
+          $ref: '#/definitions/domain.Role'
+        type: array
+      username:
+        description: Unique username for login
+        type: string
+    type: object
+  dto.LoginDTO:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dto.RegisterDTO:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/admin/permissions:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List all permissions
+      tags:
+      - admin
+    post:
+      parameters:
+      - description: Permission name
+        in: body
+        name: permission
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new permission
+      tags:
+      - admin
+  /v1/admin/permissions/{name}:
+    delete:
+      parameters:
+      - description: Permission name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a permission
+      tags:
+      - admin
+  /v1/admin/roles:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List all roles
+      tags:
+      - admin
+    post:
+      parameters:
+      - description: Role name
+        in: body
+        name: role
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new role
+      tags:
+      - admin
+  /v1/admin/roles/{name}:
+    delete:
+      parameters:
+      - description: Role name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a role
+      tags:
+      - admin
+  /v1/admin/users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.User'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List all users
+      tags:
+      - admin
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: invalid data or user exists
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: internal error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new user
+      tags:
+      - admin
+  /v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates user and returns JWT token
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: invalid data or missing credentials
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: invalid credentials
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: internal error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - auth
+  /v1/test/protected:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Protected endpoint for testing roles/permissions
+      tags:
+      - testmodule
+swagger: "2.0"
