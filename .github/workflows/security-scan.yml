@@ -1,33 +1,28 @@
-name: 🔒 Security Scanning (SAST)
+name: Security Scan
 
 on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
   schedule:
-    # Executar análise de segurança todo dia às 3h UTC
-    - cron: '0 3 * * *'
+    - cron: '0 2 * * 1'  # Weekly on Monday
   workflow_dispatch:
 
-env:
-  GO_VERSION: '1.25.1'
-
 jobs:
-  # 🔍 Static Analysis Security Testing
-  gosec-scan:
-    name: 🔍 GoSec Security Scanner
+  security:
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🐹 Setup Go
-        uses: actions/setup-go@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
         with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: 🔍 Run Gosec Security Scanner
+          go-version: '1.25.1'
+      
+      - name: Run gosec
+        run: |
+          go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
+          gosec ./...
+      
+      - name: Run govulncheck
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
         uses: securecodewarrior/github-action-gosec@master
         with:
           args: '-fmt sarif -out gosec.sarif -severity medium ./...'

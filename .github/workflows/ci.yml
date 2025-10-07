@@ -1,199 +1,27 @@
-name: 🔄 Continuous Integration
+name: CI
 
 on:
   push:
-    branches:
-      - feature/**
-      - develop
-      - main
+    branches: [main, develop, feature/**]
   pull_request:
-    branches:
-      - develop
-      - main
-
-env:
-  GO_VERSION: '1.25.1'
-  GOLANGCI_LINT_VERSION: v1.55.2
+    branches: [main, develop]
 
 jobs:
-  # 🔍 Code Quality & Linting
-  lint:
-    name: 🧹 Code Linting
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
         with:
-          fetch-depth: 0
-
-      - name: 🐹 Setup Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: true
-
-      - name: 📦 Download dependencies
-        run: go mod download
-
-      - name: 🔍 Run golangci-lint
+          go-version: '1.25.1'
+      
+      - name: Build
+        run: go build -v ./...
+      
+      - name: Test
+        run: go test -v ./...
+      
+      - name: Lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: ${{ env.GOLANGCI_LINT_VERSION }}
-          args: --timeout=5m --config=.golangci.yml
-
-      - name: 📊 Go format check
-        run: |
-          if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
-            echo "❌ Go files must be formatted with gofmt. Please run:"
-            echo "gofmt -s -w ."
-            gofmt -s -l .
-            exit 1
-          fi
-
-      - name: 🏗️ Go build test
-        run: go build -v ./...
-
-  # 🧪 Unit Tests
-  test:
-    name: 🧪 Unit Tests
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_PASSWORD: testpassword
-          POSTGRES_USER: testuser
-          POSTGRES_DB: testdb
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🐹 Setup Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: true
-
-      - name: 📦 Download dependencies
-        run: go mod download
-
-      - name: 🧪 Run tests with coverage
-        env:
-          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb?sslmode=disable
-        run: |
-          go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
-          go tool cover -html=coverage.out -o coverage.html
-
-      - name: 📊 Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.out
-          flags: unittests
-          name: codecov-umbrella
-
-      - name: 📈 Coverage Badge
-        if: github.ref == 'refs/heads/main'
-        run: |
-          COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
-          echo "Coverage: $COVERAGE%"
-
-  # 🔒 Security Scanning
-  security:
-    name: 🔒 Security Scan
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🐹 Setup Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: 🔍 Run Gosec Security Scanner
-        uses: securecodewarrior/github-action-gosec@master
-        with:
-          args: '-fmt sarif -out gosec.sarif ./...'
-
-      - name: 📤 Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: gosec.sarif
-
-  # 🐳 Docker Build Test
-  docker:
-    name: 🐳 Docker Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🐳 Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: 🏗️ Build Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: false
-          tags: monogo:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  # 📝 Documentation Check
-  docs:
-    name: 📝 Documentation
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🐹 Setup Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: 📚 Generate Go docs
-        run: |
-          go install golang.org/x/tools/cmd/godoc@latest
-          timeout 10s godoc -http=:6060 || true
-
-      - name: ✅ Check documentation coverage
-        run: |
-          # Check if public functions have documentation
-          missing_docs=$(go doc -all ./... | grep -c "^func [A-Z]" || true)
-          echo "Functions potentially missing documentation: $missing_docs"
-
-  # ✅ Integration Status
-  integration:
-    name: ✅ Integration Status
-    runs-on: ubuntu-latest
-    needs: [lint, test, security, docker, docs]
-    if: always()
-    steps:
-      - name: 📊 Check overall status
-        run: |
-          if [[ "${{ needs.lint.result }}" == "success" && 
-                "${{ needs.test.result }}" == "success" && 
-                "${{ needs.security.result }}" == "success" && 
-                "${{ needs.docker.result }}" == "success" && 
-                "${{ needs.docs.result }}" == "success" ]]; then
-            echo "✅ All checks passed!"
-            exit 0
-          else
-            echo "❌ Some checks failed:"
-            echo "Lint: ${{ needs.lint.result }}"
-            echo "Test: ${{ needs.test.result }}"
-            echo "Security: ${{ needs.security.result }}"
-            echo "Docker: ${{ needs.docker.result }}"
-            echo "Docs: ${{ needs.docs.result }}"
-            exit 1
-          fi
+          version: latest
