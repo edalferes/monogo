@@ -1,0 +1,343 @@
+name: 🔒 Security Scanning (SAST)
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Executar análise de segurança todo dia às 3h UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+env:
+  GO_VERSION: '1.25.1'
+
+jobs:
+  # 🔍 Static Analysis Security Testing
+  gosec-scan:
+    name: 🔍 GoSec Security Scanner
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐹 Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: 🔍 Run Gosec Security Scanner
+        uses: securecodewarrior/github-action-gosec@master
+        with:
+          args: '-fmt sarif -out gosec.sarif -severity medium ./...'
+
+      - name: 📤 Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: gosec.sarif
+
+      - name: 📊 Generate security report
+        if: always()
+        run: |
+          # Gerar relatório legível
+          if [ -f gosec.sarif ]; then
+            echo "## 🔒 Security Scan Results" > security-report.md
+            echo "" >> security-report.md
+            
+            # Extrair issues do SARIF
+            issues=$(jq -r '.runs[0].results[] | "**" + .ruleId + "**: " + .message.text + " (" + .level + ")"' gosec.sarif 2>/dev/null || echo "No issues found")
+            
+            if [ "$issues" = "No issues found" ]; then
+              echo "✅ **No security issues detected!**" >> security-report.md
+            else
+              echo "⚠️ **Security issues found:**" >> security-report.md
+              echo "" >> security-report.md
+              echo "$issues" >> security-report.md
+            fi
+            
+            echo "" >> security-report.md
+            echo "📊 **Scan Details:**" >> security-report.md
+            echo "- Scanner: GoSec" >> security-report.md
+            echo "- Timestamp: $(date)" >> security-report.md
+            echo "- Commit: $GITHUB_SHA" >> security-report.md
+          fi
+
+      - name: 📋 Upload security report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: security-report
+          path: |
+            gosec.sarif
+            security-report.md
+
+  # 🔐 Dependency Vulnerability Scan
+  dependency-scan:
+    name: 🔐 Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐹 Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: 📦 Download dependencies
+        run: go mod download
+
+      - name: 🔍 Scan dependencies with Nancy
+        run: |
+          # Instalar Nancy
+          go install github.com/sonatypecommunity/nancy@latest
+          
+          # Scan de vulnerabilidades
+          go list -json -deps ./... | nancy sleuth --output json > nancy-report.json || true
+
+      - name: 🔍 Scan with govulncheck
+        run: |
+          # Instalar govulncheck (ferramenta oficial do Go)
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          
+          # Scan de vulnerabilidades
+          govulncheck -json ./... > govulncheck-report.json || true
+
+      - name: 📊 Process vulnerability reports
+        run: |
+          echo "## 🔐 Dependency Vulnerability Scan" > dependency-report.md
+          echo "" >> dependency-report.md
+          
+          # Processar relatório do Nancy
+          if [ -f nancy-report.json ] && [ -s nancy-report.json ]; then
+            nancy_vulns=$(jq -r '.vulnerabilities[]? | "- **" + .title + "** (CVE: " + .cve + ") - Severity: " + .cvssScore' nancy-report.json 2>/dev/null || echo "")
+            
+            if [ -n "$nancy_vulns" ]; then
+              echo "### ⚠️ Nancy Scanner Results" >> dependency-report.md
+              echo "$nancy_vulns" >> dependency-report.md
+              echo "" >> dependency-report.md
+            fi
+          fi
+          
+          # Processar relatório do govulncheck
+          if [ -f govulncheck-report.json ] && [ -s govulncheck-report.json ]; then
+            govuln_vulns=$(jq -r '.finding[]? | "- **" + .osv + "**: " + .summary' govulncheck-report.json 2>/dev/null || echo "")
+            
+            if [ -n "$govuln_vulns" ]; then
+              echo "### ⚠️ Go Vulnerability Database Results" >> dependency-report.md
+              echo "$govuln_vulns" >> dependency-report.md
+              echo "" >> dependency-report.md
+            fi
+          fi
+          
+          # Se nenhuma vulnerabilidade foi encontrada
+          if [ ! -s dependency-report.md ] || ! grep -q "⚠️" dependency-report.md; then
+            echo "✅ **No known vulnerabilities found in dependencies!**" >> dependency-report.md
+          fi
+          
+          echo "" >> dependency-report.md
+          echo "📊 **Scan Details:**" >> dependency-report.md
+          echo "- Scanners: Nancy, govulncheck" >> dependency-report.md
+          echo "- Timestamp: $(date)" >> dependency-report.md
+          echo "- Go Version: $GO_VERSION" >> dependency-report.md
+
+      - name: 📋 Upload dependency report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: dependency-vulnerability-report
+          path: |
+            nancy-report.json
+            govulncheck-report.json
+            dependency-report.md
+
+  # 🔍 CodeQL Analysis
+  codeql-analyze:
+    name: 🔍 CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['go']
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔍 Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended,security-and-quality
+
+      - name: 🏗️ Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: 🔍 Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{matrix.language}}"
+
+  # 🐳 Container Security Scan
+  container-scan:
+    name: 🐳 Container Security Scan
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule'  # Não executar no cron para economizar recursos
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐳 Build Docker image
+        run: |
+          docker build -t monogo:security-scan .
+
+      - name: 🔍 Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'monogo:security-scan'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+
+      - name: 📤 Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: 🔍 Scan with Anchore Grype
+        run: |
+          # Instalar Grype
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          
+          # Scan da imagem
+          grype monogo:security-scan -o json > grype-results.json || true
+
+      - name: 📊 Generate container security report
+        run: |
+          echo "## 🐳 Container Security Scan" > container-report.md
+          echo "" >> container-report.md
+          
+          # Processar resultados do Trivy
+          if [ -f trivy-results.sarif ]; then
+            trivy_issues=$(jq -r '.runs[0].results[]? | "- **" + .ruleId + "**: " + .message.text + " (Severity: " + .level + ")"' trivy-results.sarif 2>/dev/null || echo "")
+            
+            if [ -n "$trivy_issues" ]; then
+              echo "### 🔍 Trivy Scanner Results" >> container-report.md
+              echo "$trivy_issues" >> container-report.md
+              echo "" >> container-report.md
+            fi
+          fi
+          
+          # Processar resultados do Grype
+          if [ -f grype-results.json ] && [ -s grype-results.json ]; then
+            grype_vulns=$(jq -r '.matches[]? | "- **" + .vulnerability.id + "**: " + .artifact.name + " (Severity: " + .vulnerability.severity + ")"' grype-results.json 2>/dev/null || echo "")
+            
+            if [ -n "$grype_vulns" ]; then
+              echo "### 🔍 Grype Scanner Results" >> container-report.md
+              echo "$grype_vulns" >> container-report.md
+              echo "" >> container-report.md
+            fi
+          fi
+          
+          # Se nenhuma vulnerabilidade foi encontrada
+          if ! grep -q "🔍" container-report.md; then
+            echo "✅ **No critical vulnerabilities found in container image!**" >> container-report.md
+          fi
+          
+          echo "" >> container-report.md
+          echo "📊 **Scan Details:**" >> container-report.md
+          echo "- Scanners: Trivy, Grype" >> container-report.md
+          echo "- Image: monogo:security-scan" >> container-report.md
+          echo "- Timestamp: $(date)" >> container-report.md
+
+      - name: 📋 Upload container security report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: container-security-report
+          path: |
+            trivy-results.sarif
+            grype-results.json
+            container-report.md
+
+  # 📊 Security Summary
+  security-summary:
+    name: 📊 Security Summary
+    runs-on: ubuntu-latest
+    needs: [gosec-scan, dependency-scan, codeql-analyze, container-scan]
+    if: always()
+    steps:
+      - name: 📥 Download all reports
+        uses: actions/download-artifact@v3
+        with:
+          path: security-reports
+
+      - name: 📋 Generate comprehensive security summary
+        run: |
+          echo "# 🔒 Comprehensive Security Report" > SECURITY_SUMMARY.md
+          echo "" >> SECURITY_SUMMARY.md
+          echo "**Scan Date:** $(date)" >> SECURITY_SUMMARY.md
+          echo "**Repository:** $GITHUB_REPOSITORY" >> SECURITY_SUMMARY.md
+          echo "**Commit:** $GITHUB_SHA" >> SECURITY_SUMMARY.md
+          echo "" >> SECURITY_SUMMARY.md
+          
+          # Status dos jobs
+          echo "## 📊 Scan Status" >> SECURITY_SUMMARY.md
+          echo "" >> SECURITY_SUMMARY.md
+          echo "| Scanner | Status |" >> SECURITY_SUMMARY.md
+          echo "|---------|--------|" >> SECURITY_SUMMARY.md
+          echo "| GoSec | ${{ needs.gosec-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> SECURITY_SUMMARY.md
+          echo "| Dependency Scan | ${{ needs.dependency-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> SECURITY_SUMMARY.md
+          echo "| CodeQL | ${{ needs.codeql-analyze.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> SECURITY_SUMMARY.md
+          echo "| Container Scan | ${{ needs.container-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> SECURITY_SUMMARY.md
+          echo "" >> SECURITY_SUMMARY.md
+          
+          # Incluir relatórios individuais se existirem
+          for report in security-reports/*/security-report.md security-reports/*/dependency-report.md security-reports/*/container-report.md; do
+            if [ -f "$report" ]; then
+              echo "---" >> SECURITY_SUMMARY.md
+              cat "$report" >> SECURITY_SUMMARY.md
+              echo "" >> SECURITY_SUMMARY.md
+            fi
+          done
+          
+          echo "## 🎯 Recommendations" >> SECURITY_SUMMARY.md
+          echo "" >> SECURITY_SUMMARY.md
+          echo "1. **Regular Updates**: Keep dependencies updated to latest secure versions" >> SECURITY_SUMMARY.md
+          echo "2. **Code Review**: Ensure security issues are addressed in code review" >> SECURITY_SUMMARY.md
+          echo "3. **Monitoring**: Set up security monitoring in production" >> SECURITY_SUMMARY.md
+          echo "4. **Training**: Keep team updated on security best practices" >> SECURITY_SUMMARY.md
+          echo "" >> SECURITY_SUMMARY.md
+          echo "---" >> SECURITY_SUMMARY.md
+          echo "*Generated by GitHub Actions Security Pipeline 🔒*" >> SECURITY_SUMMARY.md
+
+      - name: 📤 Upload comprehensive security summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: comprehensive-security-summary
+          path: SECURITY_SUMMARY.md
+
+      - name: 💬 Comment security summary on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            
+            if (fs.existsSync('SECURITY_SUMMARY.md')) {
+              const summary = fs.readFileSync('SECURITY_SUMMARY.md', 'utf8');
+              
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## 🔒 Security Scan Summary\n\n${summary}\n\n---\n*View detailed reports in the Actions artifacts*`
+              });
+            }
