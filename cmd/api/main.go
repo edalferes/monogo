@@ -2,9 +2,12 @@ package main
 
 import (
 	_ "github.com/edalferes/monogo/docs"
-	"github.com/edalferes/monogo/internal/cli"
+	"github.com/edalferes/monogo/internal/applications/api"
+	"github.com/edalferes/monogo/internal/config"
 )
 
 func main() {
-	cli.ExecuteCLI()
+	cfg := config.LoadConfig()
+	app := api.NewApp()
+	app.Run(cfg)
 }
