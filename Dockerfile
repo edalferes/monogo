@@ -28,10 +28,10 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -a -installsuffix cgo -o monogo ./cmd/api
 
 # Stage 2: Final stage
-FROM alpine:3.18
+FROM alpine:3.20
 
-# Install ca-certificates and wget for HTTPS requests and health checks
-RUN apk --no-cache add ca-certificates tzdata wget && \
+# Install ca-certificates and curl for HTTPS requests and health checks
+RUN apk --no-cache add ca-certificates tzdata curl && \
     addgroup -g 1001 -S appgroup && \
     adduser -u 1001 -S appuser -G appgroup
 
@@ -41,8 +41,8 @@ WORKDIR /app
 # Copy the binary from builder stage
 COPY --from=builder /app/monogo /app/monogo
 
-# Create config directory and copy if exists
-RUN mkdir -p /app/config
+# Copy configuration file
+COPY config.yaml /app/config.yaml
 
 # Change ownership to non-root user
 RUN chown -R appuser:appgroup /app
@@ -53,10 +53,9 @@ USER appuser
 # Expose port
 EXPOSE 8080
 
-# Health check using wget (available in alpine)
+# Health check using curl
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Run the binary
 ENTRYPOINT ["./monogo"]
-CMD ["auth", "--port=8080"]

@@ -3,19 +3,19 @@
 app:
   name: "monogo"
   version: "1.0.0"
-  environment: "development"  # development, staging, production
+  environment: "production"  # development, staging, production
   port: 8080
 
 database:
   host: "localhost"
   port: 5432
   user: "postgres"
-  password: "postgres"
+  password: ""  # Set via DB_PASSWORD env var
   name: "monogo"
   ssl_mode: "disable"
 
 jwt:
-  secret: "your-secret-key-here"
+  secret: ""  # REQUIRED: Set via JWT_SECRET env var
   expiry_hour: 24
 
 logger:

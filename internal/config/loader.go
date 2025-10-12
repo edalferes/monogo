@@ -62,6 +62,9 @@ func (l *Loader) Load(opts ...LoadOptions) (*Config, error) {
 			return nil, fmt.Errorf("error reading configuration file: %w", err)
 		}
 		// If file not found, use only env vars and defaults
+		fmt.Println("📄 No configuration file found, using environment variables and defaults")
+	} else {
+		fmt.Printf("📄 Configuration file loaded: %s\n", l.viper.ConfigFileUsed())
 	}
 
 	var config Config
