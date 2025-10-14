@@ -21,3 +21,15 @@ type RegisterDTO struct {
 	Username string `json:"username" validate:"required"`
 	Password string `json:"password" validate:"required"`
 }
+
+// ChangePasswordDTO represents the payload for changing password
+type ChangePasswordDTO struct {
+	CurrentPassword string `json:"current_password" validate:"required"`
+	NewPassword     string `json:"new_password" validate:"required"`
+}
+
+// UpdateUserDTO represents the payload for updating user
+type UpdateUserDTO struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}

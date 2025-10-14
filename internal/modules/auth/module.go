@@ -5,6 +5,7 @@ import (
 
 	handler_admin "github.com/edalferes/monogo/internal/modules/auth/adapters/http/handlers/admin"
 	"github.com/edalferes/monogo/internal/modules/auth/adapters/http/handlers/login"
+	handler_user "github.com/edalferes/monogo/internal/modules/auth/adapters/http/handlers/user"
 	gormrepo "github.com/edalferes/monogo/internal/modules/auth/adapters/repository/gorm"
 	"github.com/edalferes/monogo/internal/modules/auth/service"
 	permUC "github.com/edalferes/monogo/internal/modules/auth/usecase/permission"
@@ -44,6 +45,24 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 		Role:            roleRepo,
 		PasswordService: passwordService,
 	}
+	getUserByIDUC := &userUC.GetUserByIDUseCase{UserRepo: userRepo}
+	updateUserUC := &userUC.UpdateUserByAdminUseCase{
+		UserRepo:        userRepo,
+		PasswordService: passwordService,
+	}
+	deleteUserUC := &userUC.DeleteUserUseCase{UserRepo: userRepo}
+	assignRoleUC := &userUC.AssignRoleUseCase{
+		UserRepo: userRepo,
+		RoleRepo: roleRepo,
+	}
+	removeRoleUC := &userUC.RemoveRoleUseCase{
+		UserRepo: userRepo,
+		RoleRepo: roleRepo,
+	}
+	changePasswordUC := &userUC.ChangePasswordUseCase{
+		UserRepo:        userRepo,
+		PasswordService: passwordService,
+	}
 	// Use cases para role
 	listRolesUC := &roleUC.ListRolesUseCase{RoleRepo: roleRepo}
 	createRoleUC := &roleUC.CreateRoleUseCase{RoleRepo: roleRepo}
@@ -54,9 +73,13 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 	deletePermissionUC := &permUC.DeletePermissionUseCase{PermissionRepo: permRepo}
 
 	adminUserHandler := &handler_admin.AdminUserHandler{
-		ListUsersUC:  listUsersUC,
-		CreateUserUC: createUserUC,
-		// Add other use cases as needed
+		ListUsersUC:   listUsersUC,
+		CreateUserUC:  createUserUC,
+		GetUserByIDUC: getUserByIDUC,
+		UpdateUserUC:  updateUserUC,
+		DeleteUserUC:  deleteUserUC,
+		AssignRoleUC:  assignRoleUC,
+		RemoveRoleUC:  removeRoleUC,
 	}
 	adminRolePermHandler := &handler_admin.AdminHandler{
 		ListRolesUC:        listRolesUC,
@@ -70,6 +93,11 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 	adminGroup.Use(JWTMiddleware(jwtSecret))
 	adminGroup.POST("/users", adminUserHandler.CreateUser)
 	adminGroup.GET("/users", adminUserHandler.ListUsers)
+	adminGroup.GET("/users/:id", adminUserHandler.GetUser)
+	adminGroup.PUT("/users/:id", adminUserHandler.UpdateUser)
+	adminGroup.DELETE("/users/:id", adminUserHandler.DeleteUser)
+	adminGroup.POST("/users/:id/roles", adminUserHandler.AssignRoleToUser)
+	adminGroup.DELETE("/users/:id/roles/:roleName", adminUserHandler.RemoveRoleFromUser)
 	// Roles
 	adminGroup.GET("/roles", adminRolePermHandler.ListRoles)
 	adminGroup.POST("/roles", adminRolePermHandler.CreateRole)
@@ -78,4 +106,12 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 	adminGroup.GET("/permissions", adminRolePermHandler.ListPermissions)
 	adminGroup.POST("/permissions", adminRolePermHandler.CreatePermission)
 	adminGroup.DELETE("/permissions/:name", adminRolePermHandler.DeletePermission)
+
+	// User endpoints (protected, user can access their own data)
+	userHandler := &handler_user.UserHandler{
+		ChangePasswordUC: changePasswordUC,
+	}
+	userGroup := group.Group("/user")
+	userGroup.Use(JWTMiddleware(jwtSecret))
+	userGroup.PUT("/password", userHandler.ChangePassword)
 }

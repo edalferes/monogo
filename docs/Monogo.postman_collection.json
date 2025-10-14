@@ -1,0 +1,529 @@
+{
+	"info": {
+		"_postman_id": "f0257ee2-238e-4083-8eec-7e2f8d4a541d",
+		"name": "Monogo API - Complete Auth Module",
+		"description": "Collection completa da API Monogo com módulo de autenticação expandido incluindo CRUD de usuários, roles, permissions e funcionalidades de usuário.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4247924"
+	},
+	"item": [
+		{
+			"name": "Infra",
+			"item": [
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/health",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/metrics",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "List Users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/users",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "users"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"newuser\",\n    \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/users",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "users"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/users/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "users", "1"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update User",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"updateduser\",\n    \"password\": \"newpassword123\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/users/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "users", "1"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/users/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "users", "1"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Assign Role to User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"role_name\": \"admin\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/users/1/roles",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "users", "1", "roles"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove Role from User",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/users/1/roles/admin",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "users", "1", "roles", "admin"]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Roles",
+					"item": [
+						{
+							"name": "List Roles",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/roles",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "roles"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Role",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"moderator\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/roles",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "roles"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Role",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/roles/moderator",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "roles", "moderator"]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Permissions",
+					"item": [
+						{
+							"name": "List Permissions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/permissions",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "permissions"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Permission",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"users:update\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/permissions",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "permissions"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Permission",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/permissions/users:update",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "permissions", "users:update"]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Test",
+			"item": [
+				{
+					"name": "Protected",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/{{VERSION}}/test/protected",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"test",
+								"protected"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"description": "Endpoints para usuários autenticados gerenciarem seus próprios dados",
+			"item": [
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"current_password\": \"ZDcxMDUxZmM4M2Jl\",\n    \"new_password\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/{{VERSION}}/user/password",
+							"host": ["{{BASE_URL}}"],
+							"path": ["{{VERSION}}", "user", "password"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.environment.set(\"TOKEN\", response.token); ",
+									"pm.collectionVariables.set(\"TOKEN\", response.token);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"root\",\n    \"password\": \"ZDcxMDUxZmM4M2Jl\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/{{VERSION}}/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "VERSION",
+			"value": "v1",
+			"type": "string"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set default values if not already set",
+					"if (!pm.collectionVariables.get('BASE_URL')) {",
+					"    pm.collectionVariables.set('BASE_URL', 'http://localhost:8080');",
+					"}",
+					"if (!pm.collectionVariables.get('VERSION')) {",
+					"    pm.collectionVariables.set('VERSION', 'v1');",
+					"}"
+				]
+			}
+		}
+	]
+}
