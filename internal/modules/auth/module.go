@@ -40,9 +40,8 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 	// User use cases
 	listUsersUC := &userUC.ListUsersUseCase{UserRepo: userRepo}
 	createUserUC := &userUC.RegisterUseCase{
-		UserReader:      userRepo,
-		UserWriter:      userRepo,
-		RoleReader:      roleRepo,
+		User:            userRepo,
+		Role:            roleRepo,
 		PasswordService: passwordService,
 	}
 	// Use cases para role

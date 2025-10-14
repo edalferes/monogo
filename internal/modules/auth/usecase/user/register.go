@@ -8,21 +8,20 @@ import (
 )
 
 type RegisterUseCase struct {
-	UserReader      interfaces.UserReader
-	UserWriter      interfaces.UserWriter
-	RoleReader      interfaces.RoleReader
+	User            interfaces.User
+	Role            interfaces.Role
 	PasswordService service.PasswordService
 }
 
 func (u *RegisterUseCase) Execute(username, password string) error {
-	if user, _ := u.UserReader.FindByUsername(username); user != nil {
+	if user, _ := u.User.FindByUsername(username); user != nil {
 		return errors.ErrUserAlreadyExists
 	}
 	hash, err := u.PasswordService.Hash(password)
 	if err != nil {
 		return err
 	}
-	role, err := u.RoleReader.FindByName("user")
+	role, err := u.Role.FindByName("user")
 	if err != nil {
 		return err
 	}
@@ -31,5 +30,5 @@ func (u *RegisterUseCase) Execute(username, password string) error {
 		Password: hash,
 		Roles:    []domain.Role{*role},
 	}
-	return u.UserWriter.Create(user)
+	return u.User.Create(user)
 }

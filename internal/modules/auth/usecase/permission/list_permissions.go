@@ -6,7 +6,7 @@ import (
 )
 
 type ListPermissionsUseCase struct {
-	PermissionRepo interfaces.PermissionReader
+	PermissionRepo interfaces.Permission
 }
 
 func (u *ListPermissionsUseCase) Execute() ([]domain.Permission, error) {

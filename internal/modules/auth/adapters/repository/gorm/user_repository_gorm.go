@@ -38,9 +38,7 @@ func NewUserRepositoryGorm(db *gormpkg.DB) *UserRepositoryGorm {
 	}
 }
 
-// Garantir que UserRepositoryGorm implementa as interfaces segregadas
-var _ interfaces.UserReader = (*UserRepositoryGorm)(nil)
-var _ interfaces.UserWriter = (*UserRepositoryGorm)(nil)
+var _ interfaces.User = (*UserRepositoryGorm)(nil)
 
 func (r *UserRepositoryGorm) FindByUsername(username string) (*domain.User, error) {
 	var userModel models.UserModel

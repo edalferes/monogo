@@ -6,7 +6,7 @@ import (
 )
 
 type ListUsersUseCase struct {
-	UserRepo interfaces.UserReader
+	UserRepo interfaces.User
 }
 
 func (u *ListUsersUseCase) Execute() ([]domain.User, error) {

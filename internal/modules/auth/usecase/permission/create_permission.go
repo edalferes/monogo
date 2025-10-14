@@ -6,7 +6,7 @@ import (
 )
 
 type CreatePermissionUseCase struct {
-	PermissionRepo interfaces.PermissionWriter
+	PermissionRepo interfaces.Permission
 }
 
 func (u *CreatePermissionUseCase) Execute(name string) error {

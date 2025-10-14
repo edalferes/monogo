@@ -20,9 +20,7 @@ func NewPermissionRepositoryGorm(db *gormpkg.DB) *PermissionRepositoryGorm {
 	}
 }
 
-// Garantir que PermissionRepositoryGorm implementa as interfaces segregadas
-var _ interfaces.PermissionReader = (*PermissionRepositoryGorm)(nil)
-var _ interfaces.PermissionWriter = (*PermissionRepositoryGorm)(nil)
+var _ interfaces.Permission = (*PermissionRepositoryGorm)(nil)
 
 func (r *PermissionRepositoryGorm) FindByID(id uint) (*domain.Permission, error) {
 	var permModel models.PermissionModel

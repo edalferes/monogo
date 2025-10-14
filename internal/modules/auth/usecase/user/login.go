@@ -7,7 +7,7 @@ import (
 )
 
 type LoginUseCase struct {
-	UserRepo        interfaces.UserReader
+	UserRepo        interfaces.User
 	PasswordService service.PasswordService
 	JWTService      service.JWTService
 }

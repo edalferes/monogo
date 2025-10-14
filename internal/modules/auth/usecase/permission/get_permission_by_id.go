@@ -6,7 +6,7 @@ import (
 )
 
 type GetPermissionByIDUseCase struct {
-	PermissionRepo interfaces.PermissionReader
+	PermissionRepo interfaces.Permission
 }
 
 // Supondo que PermissionRepository tenha FindByID

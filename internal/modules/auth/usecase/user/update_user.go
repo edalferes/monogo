@@ -13,13 +13,12 @@ type UpdateUserInput struct {
 }
 
 type UpdateUserUseCase struct {
-	UserReader interfaces.UserReader
-	UserWriter interfaces.UserWriter
-	RoleReader interfaces.RoleReader
+	User       interfaces.User
+	RoleReader interfaces.Role
 }
 
 func (u *UpdateUserUseCase) Execute(input UpdateUserInput) error {
-	user, err := u.UserReader.FindByID(input.ID)
+	user, err := u.User.FindByID(input.ID)
 	if err != nil {
 		return err
 	}
@@ -40,5 +39,5 @@ func (u *UpdateUserUseCase) Execute(input UpdateUserInput) error {
 		}
 		user.Roles = roles
 	}
-	return u.UserWriter.Update(user)
+	return u.User.Update(user)
 }

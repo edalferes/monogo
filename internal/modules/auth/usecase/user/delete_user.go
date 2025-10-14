@@ -3,7 +3,7 @@ package user
 import "github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
 
 type DeleteUserUseCase struct {
-	UserRepo interfaces.UserWriter
+	UserRepo interfaces.User
 }
 
 func (u *DeleteUserUseCase) Execute(id uint) error {

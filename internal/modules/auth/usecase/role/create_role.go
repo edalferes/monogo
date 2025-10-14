@@ -6,7 +6,7 @@ import (
 )
 
 type CreateRoleUseCase struct {
-	RoleRepo interfaces.RoleWriter
+	RoleRepo interfaces.Role
 }
 
 func (u *CreateRoleUseCase) Execute(name string, permissionIDs []uint) error {

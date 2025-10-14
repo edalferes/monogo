@@ -20,9 +20,7 @@ func NewRoleRepositoryGorm(db *gormpkg.DB) *RoleRepositoryGorm {
 	}
 }
 
-// Garantir que RoleRepositoryGorm implementa as interfaces segregadas
-var _ interfaces.RoleReader = (*RoleRepositoryGorm)(nil)
-var _ interfaces.RoleWriter = (*RoleRepositoryGorm)(nil)
+var _ interfaces.Role = (*RoleRepositoryGorm)(nil)
 
 func (r *RoleRepositoryGorm) FindByID(id uint) (*domain.Role, error) {
 	var roleModel models.RoleModel

@@ -6,7 +6,7 @@ import (
 )
 
 type GetUserByIDUseCase struct {
-	UserRepo interfaces.UserReader
+	UserRepo interfaces.User
 }
 
 func (u *GetUserByIDUseCase) Execute(id uint) (*domain.User, error) {
