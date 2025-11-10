@@ -18,7 +18,7 @@ type UserHandler struct {
 // ChangePassword godoc
 // @Summary Change user password
 // @Description Allows authenticated user to change their own password
-// @Tags user
+// @Tags Auth - User
 // @Security BearerAuth
 // @Accept json
 // @Produce json

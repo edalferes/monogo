@@ -15,6 +15,385 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/accounts": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Accounts"
+                ],
+                "summary": "List user accounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Accounts"
+                ],
+                "summary": "Create a new account",
+                "parameters": [
+                    {
+                        "description": "Account creation request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Accounts"
+                ],
+                "summary": "Get account by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/budgets": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Budgets"
+                ],
+                "summary": "List user budgets",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Filter active budgets only",
+                        "name": "active_only",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Budgets"
+                ],
+                "summary": "Create a new budget",
+                "parameters": [
+                    {
+                        "description": "Budget creation request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateBudgetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Categories"
+                ],
+                "summary": "List user categories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by type (income or expense)",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Categories"
+                ],
+                "summary": "Create a new category",
+                "parameters": [
+                    {
+                        "description": "Category creation request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/reports/monthly": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Reports"
+                ],
+                "summary": "Get monthly financial report",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Year",
+                        "name": "year",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Month (1-12)",
+                        "name": "month",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.MonthlyReportResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Transactions"
+                ],
+                "summary": "List user transactions",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Filter by account ID",
+                        "name": "account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter by category ID",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by type (income, expense, transfer)",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by start date (RFC3339)",
+                        "name": "start_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by end date (RFC3339)",
+                        "name": "end_date",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget - Transactions"
+                ],
+                "summary": "Create a new transaction",
+                "parameters": [
+                    {
+                        "description": "Transaction creation request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateTransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/v1/admin/permissions": {
             "get": {
                 "security": [
@@ -23,7 +402,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "List all permissions",
                 "responses": {
@@ -46,7 +425,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Create a new permission",
                 "parameters": [
@@ -84,7 +463,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Delete a permission",
                 "parameters": [
@@ -117,7 +496,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "List all roles",
                 "responses": {
@@ -140,7 +519,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Create a new role",
                 "parameters": [
@@ -178,7 +557,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Delete a role",
                 "parameters": [
@@ -214,7 +593,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "List all users",
                 "responses": {
@@ -223,7 +602,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.User"
+                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.User"
                             }
                         }
                     }
@@ -242,7 +621,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Create a new user",
                 "parameters": [
@@ -252,7 +631,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.RegisterDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO"
                         }
                     }
                 ],
@@ -298,7 +677,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Get user by ID",
                 "parameters": [
@@ -314,7 +693,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.User"
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.User"
                         }
                     },
                     "400": {
@@ -359,7 +738,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Update user by ID",
                 "parameters": [
@@ -376,7 +755,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.RegisterDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO"
                         }
                     }
                 ],
@@ -426,7 +805,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Delete user by ID",
                 "parameters": [
@@ -486,7 +865,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Assign role to user",
                 "parameters": [
@@ -558,7 +937,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "admin"
+                    "Auth - Admin"
                 ],
                 "summary": "Remove role from user",
                 "parameters": [
@@ -619,7 +998,7 @@ const docTemplate = `{
         },
         "/v1/auth/login": {
             "post": {
-                "description": "Authenticates user and returns JWT token",
+                "description": "Authenticate user and return JWT token",
                 "consumes": [
                     "application/json"
                 ],
@@ -627,7 +1006,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "Auth - Login"
                 ],
                 "summary": "User login",
                 "parameters": [
@@ -637,7 +1016,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.LoginDTO"
                         }
                     }
                 ],
@@ -738,7 +1117,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "Auth - User"
                 ],
                 "summary": "Change user password",
                 "parameters": [
@@ -748,7 +1127,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ChangePasswordDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.ChangePasswordDTO"
                         }
                     }
                 ],
@@ -794,60 +1173,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.Permission": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "description": "Unique identifier",
-                    "type": "integer"
-                },
-                "name": {
-                    "description": "Unique permission name (resource:action format)",
-                    "type": "string"
-                }
-            }
-        },
-        "domain.Role": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "description": "Unique identifier",
-                    "type": "integer"
-                },
-                "name": {
-                    "description": "Unique role name",
-                    "type": "string"
-                },
-                "permissions": {
-                    "description": "Associated permissions",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Permission"
-                    }
-                }
-            }
-        },
-        "domain.User": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "description": "Unique identifier",
-                    "type": "integer"
-                },
-                "roles": {
-                    "description": "Associated roles for authorization",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Role"
-                    }
-                },
-                "username": {
-                    "description": "Unique username for login",
-                    "type": "string"
-                }
-            }
-        },
-        "dto.ChangePasswordDTO": {
+        "github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.ChangePasswordDTO": {
             "type": "object",
             "required": [
                 "current_password",
@@ -862,7 +1188,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.LoginDTO": {
+        "github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.LoginDTO": {
             "type": "object",
             "required": [
                 "password",
@@ -877,7 +1203,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.RegisterDTO": {
+        "github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO": {
             "type": "object",
             "required": [
                 "password",
@@ -889,6 +1215,467 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_auth_domain.Permission": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "Unique identifier",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Unique permission name (resource:action format)",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_auth_domain.Role": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "Unique identifier",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Unique role name",
+                    "type": "string"
+                },
+                "permissions": {
+                    "description": "Associated permissions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.Permission"
+                    }
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_auth_domain.User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "Unique identifier",
+                    "type": "integer"
+                },
+                "roles": {
+                    "description": "Associated roles for authorization",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.Role"
+                    }
+                },
+                "username": {
+                    "description": "Unique username for login",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse": {
+            "type": "object",
+            "properties": {
+                "alert_at": {
+                    "type": "number"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "is_over_budget": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "percentage_used": {
+                    "type": "number"
+                },
+                "period": {
+                    "type": "string"
+                },
+                "remaining": {
+                    "type": "number"
+                },
+                "should_alert": {
+                    "type": "boolean"
+                },
+                "spent": {
+                    "type": "number"
+                },
+                "start_date": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryBreakdownItem": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "category_name": {
+                    "type": "string"
+                },
+                "category_type": {
+                    "type": "string"
+                },
+                "percentage": {
+                    "type": "number"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateAccountRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "type"
+            ],
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "initial_balance": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "checking",
+                        "savings",
+                        "credit",
+                        "cash",
+                        "investment"
+                    ]
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateBudgetRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "category_id",
+                "end_date",
+                "name",
+                "period",
+                "start_date"
+            ],
+            "properties": {
+                "alert_at": {
+                    "type": "number"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "period": {
+                    "type": "string",
+                    "enum": [
+                        "monthly",
+                        "quarterly",
+                        "yearly",
+                        "custom"
+                    ]
+                },
+                "start_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateCategoryRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "type"
+            ],
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "income",
+                        "expense"
+                    ]
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateTransactionRequest": {
+            "type": "object",
+            "required": [
+                "account_id",
+                "amount",
+                "category_id",
+                "date",
+                "description",
+                "type"
+            ],
+            "properties": {
+                "account_id": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "attachments": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "destination_account_id": {
+                    "type": "integer"
+                },
+                "is_recurring": {
+                    "type": "boolean"
+                },
+                "recurrence_end": {
+                    "type": "string"
+                },
+                "recurrence_rule": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "transfer_fee": {
+                    "type": "number"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "income",
+                        "expense",
+                        "transfer"
+                    ]
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.MonthlyReportResponse": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                },
+                "category_breakdown": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryBreakdownItem"
+                    }
+                },
+                "month": {
+                    "type": "integer"
+                },
+                "month_name": {
+                    "type": "string"
+                },
+                "total_expense": {
+                    "type": "number"
+                },
+                "total_income": {
+                    "type": "number"
+                },
+                "year": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "attachments": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "destination_account_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_recurring": {
+                    "type": "boolean"
+                },
+                "parent_id": {
+                    "type": "integer"
+                },
+                "recurrence_end": {
+                    "type": "string"
+                },
+                "recurrence_rule": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "transfer_fee": {
+                    "type": "number"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         }

@@ -396,6 +396,512 @@
 			]
 		},
 		{
+			"name": "Budget",
+			"description": "Sistema completo de controle orçamentário pessoal",
+			"item": [
+				{
+					"name": "Accounts",
+					"item": [
+						{
+							"name": "Create Account",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Conta Corrente Banco do Brasil\",\n    \"type\": \"checking\",\n    \"initial_balance\": 5000.00,\n    \"currency\": \"BRL\",\n    \"description\": \"Conta principal para recebimento de salário\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/accounts",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "accounts"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/accounts",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "accounts"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/accounts/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "accounts", "1"]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "Create Category",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Freelance Design\",\n    \"type\": \"income\",\n    \"icon\": \"💼\",\n    \"color\": \"#2196F3\",\n    \"description\": \"Trabalhos freelance de design\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/categories",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "categories"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/categories",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "categories"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Income Categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/categories?type=income",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "categories"],
+									"query": [
+										{
+											"key": "type",
+											"value": "income"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Expense Categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/categories?type=expense",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "categories"],
+									"query": [
+										{
+											"key": "type",
+											"value": "expense"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Transactions",
+					"item": [
+						{
+							"name": "Create Income",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"account_id\": 1,\n    \"category_id\": 1,\n    \"type\": \"income\",\n    \"amount\": 8000.00,\n    \"description\": \"Salário Novembro 2025\",\n    \"date\": \"2025-11-05T00:00:00Z\",\n    \"tags\": [\"salário\", \"mensal\"]\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Expense",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"account_id\": 1,\n    \"category_id\": 7,\n    \"type\": \"expense\",\n    \"amount\": 1200.00,\n    \"description\": \"Aluguel Novembro 2025\",\n    \"date\": \"2025-11-01T00:00:00Z\",\n    \"tags\": [\"aluguel\", \"moradia\", \"recorrente\"],\n    \"is_recurring\": true,\n    \"recurrence_rule\": \"monthly\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Transfer",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"account_id\": 1,\n    \"category_id\": 1,\n    \"type\": \"transfer\",\n    \"amount\": 1000.00,\n    \"description\": \"Transferência para poupança\",\n    \"date\": \"2025-11-05T00:00:00Z\",\n    \"destination_account_id\": 2,\n    \"tags\": [\"transferência\", \"poupança\"]\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Transactions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Transactions by Account",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions?account_id=1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions"],
+									"query": [
+										{
+											"key": "account_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Transactions by Category",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions?category_id=1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions"],
+									"query": [
+										{
+											"key": "category_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Transactions by Date Range",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions?start_date=2025-11-01T00:00:00Z&end_date=2025-11-30T23:59:59Z",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions"],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "2025-11-01T00:00:00Z"
+										},
+										{
+											"key": "end_date",
+											"value": "2025-11-30T23:59:59Z"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Budgets",
+					"item": [
+						{
+							"name": "Create Budget",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"category_id\": 9,\n    \"name\": \"Orçamento Alimentação Novembro\",\n    \"amount\": 2000.00,\n    \"period\": \"monthly\",\n    \"start_date\": \"2025-11-01T00:00:00Z\",\n    \"end_date\": \"2025-11-30T23:59:59Z\",\n    \"alert_at\": 80.0,\n    \"description\": \"Limite mensal para alimentação incluindo mercado e refeições\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/budgets",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "budgets"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Budgets",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/budgets",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "budgets"]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Active Budgets",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/budgets?active_only=true",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "budgets"],
+									"query": [
+										{
+											"key": "active_only",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reports",
+					"item": [
+						{
+							"name": "Monthly Report - November 2025",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/reports/monthly?year=2025&month=11",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "reports", "monthly"],
+									"query": [
+										{
+											"key": "year",
+											"value": "2025"
+										},
+										{
+											"key": "month",
+											"value": "11"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Monthly Report - January 2025",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/reports/monthly?year=2025&month=1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "reports", "monthly"],
+									"query": [
+										{
+											"key": "year",
+											"value": "2025"
+										},
+										{
+											"key": "month",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "User",
 			"description": "Endpoints para usuários autenticados gerenciarem seus próprios dados",
 			"item": [

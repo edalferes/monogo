@@ -45,9 +45,9 @@ type Handler struct {
 }
 
 // Login godoc
-// @Summary User login
-// @Description Authenticates user and returns JWT token
-// @Tags auth
+// @Summary      User login
+// @Description  Authenticate user and return JWT token
+// @Tags         Auth - Login
 // @Accept json
 // @Produce json
 // @Param credentials body dto.LoginDTO true "User credentials"

@@ -33,7 +33,7 @@ type AdminUserHandler struct {
 
 // ListUsers godoc
 // @Summary List all users
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Produce json
 // @Success 200 {array} domain.User
@@ -48,7 +48,7 @@ func (h *AdminUserHandler) ListUsers(c echo.Context) error {
 
 // CreateUser godoc
 // @Summary Create a new user
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Accept json
 // @Produce json
@@ -76,7 +76,7 @@ func (h *AdminUserHandler) CreateUser(c echo.Context) error {
 
 // GetUser godoc
 // @Summary Get user by ID
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Produce json
 // @Param id path int true "User ID"
@@ -106,7 +106,7 @@ func (h *AdminUserHandler) GetUser(c echo.Context) error {
 
 // UpdateUser godoc
 // @Summary Update user by ID
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Accept json
 // @Produce json
@@ -142,7 +142,7 @@ func (h *AdminUserHandler) UpdateUser(c echo.Context) error {
 
 // DeleteUser godoc
 // @Summary Delete user by ID
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Param id path int true "User ID"
 // @Success 204 "No Content"
@@ -170,7 +170,7 @@ func (h *AdminUserHandler) DeleteUser(c echo.Context) error {
 
 // AssignRoleToUser godoc
 // @Summary Assign role to user
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Accept json
 // @Produce json
@@ -206,7 +206,7 @@ func (h *AdminUserHandler) AssignRoleToUser(c echo.Context) error {
 
 // RemoveRoleFromUser godoc
 // @Summary Remove role from user
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Param id path int true "User ID"
 // @Param roleName path string true "Role name"

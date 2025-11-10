@@ -22,7 +22,7 @@ type AdminHandler struct {
 
 // ListRoles godoc
 // @Summary List all roles
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Success 200 {array} map[string]interface{}
 // @Router /v1/admin/roles [get]
@@ -36,7 +36,7 @@ func (h *AdminHandler) ListRoles(c echo.Context) error {
 
 // CreateRole godoc
 // @Summary Create a new role
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Param role body map[string]string true "Role name"
 // @Success 201 {object} map[string]string
@@ -55,7 +55,7 @@ func (h *AdminHandler) CreateRole(c echo.Context) error {
 
 // DeleteRole godoc
 // @Summary Delete a role
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Param name path string true "Role name"
 // @Success 204 {object} map[string]string
@@ -70,7 +70,7 @@ func (h *AdminHandler) DeleteRole(c echo.Context) error {
 
 // ListPermissions godoc
 // @Summary List all permissions
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Success 200 {array} map[string]interface{}
 // @Router /v1/admin/permissions [get]
@@ -84,7 +84,7 @@ func (h *AdminHandler) ListPermissions(c echo.Context) error {
 
 // CreatePermission godoc
 // @Summary Create a new permission
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Param permission body map[string]string true "Permission name"
 // @Success 201 {object} map[string]string
@@ -102,7 +102,7 @@ func (h *AdminHandler) CreatePermission(c echo.Context) error {
 
 // DeletePermission godoc
 // @Summary Delete a permission
-// @Tags admin
+// @Tags Auth - Admin
 // @Security BearerAuth
 // @Param name path string true "Permission name"
 // @Success 204 {object} map[string]string

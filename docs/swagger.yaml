@@ -1,5 +1,35 @@
 definitions:
-  domain.Permission:
+  github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.ChangePasswordDTO:
+    properties:
+      current_password:
+        type: string
+      new_password:
+        type: string
+    required:
+    - current_password
+    - new_password
+    type: object
+  github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.LoginDTO:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  github_com_edalferes_monogo_internal_modules_auth_domain.Permission:
     properties:
       id:
         description: Unique identifier
@@ -8,7 +38,7 @@ definitions:
         description: Unique permission name (resource:action format)
         type: string
     type: object
-  domain.Role:
+  github_com_edalferes_monogo_internal_modules_auth_domain.Role:
     properties:
       id:
         description: Unique identifier
@@ -19,10 +49,10 @@ definitions:
       permissions:
         description: Associated permissions
         items:
-          $ref: '#/definitions/domain.Permission'
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.Permission'
         type: array
     type: object
-  domain.User:
+  github_com_edalferes_monogo_internal_modules_auth_domain.User:
     properties:
       id:
         description: Unique identifier
@@ -30,45 +60,539 @@ definitions:
       roles:
         description: Associated roles for authorization
         items:
-          $ref: '#/definitions/domain.Role'
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.Role'
         type: array
       username:
         description: Unique username for login
         type: string
     type: object
-  dto.ChangePasswordDTO:
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse:
     properties:
-      current_password:
+      balance:
+        type: number
+      created_at:
         type: string
-      new_password:
+      currency:
         type: string
-    required:
-    - current_password
-    - new_password
+      description:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      name:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
     type: object
-  dto.LoginDTO:
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse:
     properties:
-      password:
+      alert_at:
+        type: number
+      amount:
+        type: number
+      category_id:
+        type: integer
+      created_at:
         type: string
-      username:
+      description:
         type: string
-    required:
-    - password
-    - username
+      end_date:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      is_over_budget:
+        type: boolean
+      name:
+        type: string
+      percentage_used:
+        type: number
+      period:
+        type: string
+      remaining:
+        type: number
+      should_alert:
+        type: boolean
+      spent:
+        type: number
+      start_date:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
     type: object
-  dto.RegisterDTO:
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryBreakdownItem:
     properties:
-      password:
+      amount:
+        type: number
+      category_id:
+        type: integer
+      category_name:
         type: string
-      username:
+      category_type:
+        type: string
+      percentage:
+        type: number
+    type: object
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse:
+    properties:
+      color:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateAccountRequest:
+    properties:
+      currency:
+        type: string
+      description:
+        type: string
+      initial_balance:
+        type: number
+      name:
+        type: string
+      type:
+        enum:
+        - checking
+        - savings
+        - credit
+        - cash
+        - investment
         type: string
     required:
-    - password
-    - username
+    - name
+    - type
+    type: object
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateBudgetRequest:
+    properties:
+      alert_at:
+        type: number
+      amount:
+        type: number
+      category_id:
+        type: integer
+      description:
+        type: string
+      end_date:
+        type: string
+      name:
+        type: string
+      period:
+        enum:
+        - monthly
+        - quarterly
+        - yearly
+        - custom
+        type: string
+      start_date:
+        type: string
+    required:
+    - amount
+    - category_id
+    - end_date
+    - name
+    - period
+    - start_date
+    type: object
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateCategoryRequest:
+    properties:
+      color:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      name:
+        type: string
+      type:
+        enum:
+        - income
+        - expense
+        type: string
+    required:
+    - name
+    - type
+    type: object
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateTransactionRequest:
+    properties:
+      account_id:
+        type: integer
+      amount:
+        type: number
+      attachments:
+        items:
+          type: string
+        type: array
+      category_id:
+        type: integer
+      date:
+        type: string
+      description:
+        type: string
+      destination_account_id:
+        type: integer
+      is_recurring:
+        type: boolean
+      recurrence_end:
+        type: string
+      recurrence_rule:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      transfer_fee:
+        type: number
+      type:
+        enum:
+        - income
+        - expense
+        - transfer
+        type: string
+    required:
+    - account_id
+    - amount
+    - category_id
+    - date
+    - description
+    - type
+    type: object
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.MonthlyReportResponse:
+    properties:
+      balance:
+        type: number
+      category_breakdown:
+        items:
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryBreakdownItem'
+        type: array
+      month:
+        type: integer
+      month_name:
+        type: string
+      total_expense:
+        type: number
+      total_income:
+        type: number
+      year:
+        type: integer
+    type: object
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse:
+    properties:
+      account_id:
+        type: integer
+      amount:
+        type: number
+      attachments:
+        items:
+          type: string
+        type: array
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      date:
+        type: string
+      description:
+        type: string
+      destination_account_id:
+        type: integer
+      id:
+        type: integer
+      is_recurring:
+        type: boolean
+      parent_id:
+        type: integer
+      recurrence_end:
+        type: string
+      recurrence_rule:
+        type: string
+      status:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      transfer_fee:
+        type: number
+      type:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
     type: object
 info:
   contact: {}
 paths:
+  /accounts:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List user accounts
+      tags:
+      - Budget - Accounts
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Account creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new account
+      tags:
+      - Budget - Accounts
+  /accounts/{id}:
+    get:
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get account by ID
+      tags:
+      - Budget - Accounts
+  /budgets:
+    get:
+      parameters:
+      - description: Filter active budgets only
+        in: query
+        name: active_only
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse'
+            type: array
+      summary: List user budgets
+      tags:
+      - Budget - Budgets
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Budget creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateBudgetRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new budget
+      tags:
+      - Budget - Budgets
+  /categories:
+    get:
+      parameters:
+      - description: Filter by type (income or expense)
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse'
+            type: array
+      summary: List user categories
+      tags:
+      - Budget - Categories
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new category
+      tags:
+      - Budget - Categories
+  /reports/monthly:
+    get:
+      parameters:
+      - description: Year
+        in: query
+        name: year
+        required: true
+        type: integer
+      - description: Month (1-12)
+        in: query
+        name: month
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.MonthlyReportResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get monthly financial report
+      tags:
+      - Budget - Reports
+  /transactions:
+    get:
+      parameters:
+      - description: Filter by account ID
+        in: query
+        name: account_id
+        type: integer
+      - description: Filter by category ID
+        in: query
+        name: category_id
+        type: integer
+      - description: Filter by type (income, expense, transfer)
+        in: query
+        name: type
+        type: string
+      - description: Filter by start date (RFC3339)
+        in: query
+        name: start_date
+        type: string
+      - description: Filter by end date (RFC3339)
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse'
+            type: array
+      summary: List user transactions
+      tags:
+      - Budget - Transactions
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Transaction creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new transaction
+      tags:
+      - Budget - Transactions
   /v1/admin/permissions:
     get:
       responses:
@@ -83,7 +607,7 @@ paths:
       - BearerAuth: []
       summary: List all permissions
       tags:
-      - admin
+      - Auth - Admin
     post:
       parameters:
       - description: Permission name
@@ -105,7 +629,7 @@ paths:
       - BearerAuth: []
       summary: Create a new permission
       tags:
-      - admin
+      - Auth - Admin
   /v1/admin/permissions/{name}:
     delete:
       parameters:
@@ -125,7 +649,7 @@ paths:
       - BearerAuth: []
       summary: Delete a permission
       tags:
-      - admin
+      - Auth - Admin
   /v1/admin/roles:
     get:
       responses:
@@ -140,7 +664,7 @@ paths:
       - BearerAuth: []
       summary: List all roles
       tags:
-      - admin
+      - Auth - Admin
     post:
       parameters:
       - description: Role name
@@ -162,7 +686,7 @@ paths:
       - BearerAuth: []
       summary: Create a new role
       tags:
-      - admin
+      - Auth - Admin
   /v1/admin/roles/{name}:
     delete:
       parameters:
@@ -182,7 +706,7 @@ paths:
       - BearerAuth: []
       summary: Delete a role
       tags:
-      - admin
+      - Auth - Admin
   /v1/admin/users:
     get:
       produces:
@@ -192,13 +716,13 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/domain.User'
+              $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.User'
             type: array
       security:
       - BearerAuth: []
       summary: List all users
       tags:
-      - admin
+      - Auth - Admin
     post:
       consumes:
       - application/json
@@ -208,7 +732,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/dto.RegisterDTO'
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO'
       produces:
       - application/json
       responses:
@@ -234,7 +758,7 @@ paths:
       - BearerAuth: []
       summary: Create a new user
       tags:
-      - admin
+      - Auth - Admin
   /v1/admin/users/{id}:
     delete:
       parameters:
@@ -268,7 +792,7 @@ paths:
       - BearerAuth: []
       summary: Delete user by ID
       tags:
-      - admin
+      - Auth - Admin
     get:
       parameters:
       - description: User ID
@@ -282,7 +806,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.User'
+            $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.User'
         "400":
           description: invalid user id
           schema:
@@ -305,7 +829,7 @@ paths:
       - BearerAuth: []
       summary: Get user by ID
       tags:
-      - admin
+      - Auth - Admin
     put:
       consumes:
       - application/json
@@ -320,7 +844,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/dto.RegisterDTO'
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO'
       produces:
       - application/json
       responses:
@@ -352,7 +876,7 @@ paths:
       - BearerAuth: []
       summary: Update user by ID
       tags:
-      - admin
+      - Auth - Admin
   /v1/admin/users/{id}/roles:
     post:
       consumes:
@@ -402,7 +926,7 @@ paths:
       - BearerAuth: []
       summary: Assign role to user
       tags:
-      - admin
+      - Auth - Admin
   /v1/admin/users/{id}/roles/{roleName}:
     delete:
       parameters:
@@ -445,19 +969,19 @@ paths:
       - BearerAuth: []
       summary: Remove role from user
       tags:
-      - admin
+      - Auth - Admin
   /v1/auth/login:
     post:
       consumes:
       - application/json
-      description: Authenticates user and returns JWT token
+      description: Authenticate user and return JWT token
       parameters:
       - description: User credentials
         in: body
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/dto.LoginDTO'
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.LoginDTO'
       produces:
       - application/json
       responses:
@@ -487,7 +1011,7 @@ paths:
             type: object
       summary: User login
       tags:
-      - auth
+      - Auth - Login
   /v1/test/protected:
     get:
       responses:
@@ -525,7 +1049,7 @@ paths:
         name: password
         required: true
         schema:
-          $ref: '#/definitions/dto.ChangePasswordDTO'
+          $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.ChangePasswordDTO'
       produces:
       - application/json
       responses:
@@ -557,5 +1081,5 @@ paths:
       - BearerAuth: []
       summary: Change user password
       tags:
-      - user
+      - Auth - User
 swagger: "2.0"

@@ -5,7 +5,9 @@ import (
 
 	"github.com/edalferes/monogo/internal/config"
 	"github.com/edalferes/monogo/internal/infra/db"
+	"github.com/edalferes/monogo/internal/infra/validator"
 	"github.com/edalferes/monogo/internal/modules/auth"
+	"github.com/edalferes/monogo/internal/modules/budget"
 	"github.com/edalferes/monogo/internal/modules/testmodule"
 	"github.com/edalferes/monogo/pkg/logger"
 	"github.com/labstack/echo/v4"
@@ -36,15 +38,29 @@ func NewApp() *App {
 
 	var entities []interface{}
 	entities = append(entities, auth.Entities()...)
+	entities = append(entities, budget.Entities()...)
 	if err := database.AutoMigrate(entities...); err != nil {
 		appLogger.Fatal().Err(err).Msg("failed to migrate database")
 	}
-	// Seed roles default
+
+	// Seed auth module (roles, permissions, root user)
 	if err := auth.Seed(database); err != nil {
-		appLogger.Fatal().Err(err).Msg("failed to seed roles")
+		appLogger.Fatal().Err(err).Msg("failed to seed auth module")
+	}
+
+	// Seed budget module with default categories for root user
+	// Get root user ID
+	var rootUser struct{ ID uint }
+	if err := database.Table("users").Select("id").Where("username = ?", "root").First(&rootUser).Error; err != nil {
+		appLogger.Fatal().Err(err).Msg("failed to find root user for budget seed")
+	}
+	if err := budget.Seed(database, rootUser.ID); err != nil {
+		appLogger.Fatal().Err(err).Msg("failed to seed budget module")
 	}
 
 	e := echo.New()
+	e.Validator = validator.NewValidator()
+
 	return &App{
 		echo:   e,
 		db:     database,
@@ -59,6 +75,9 @@ func (a *App) RegisterModules(cfg *config.Config) {
 	// Register all modules
 	a.logger.Info().Str("module", "auth").Msg("Registering auth module")
 	auth.WireUp(v1, a.db, cfg.JWT.Secret, a.logger)
+
+	a.logger.Info().Str("module", "budget").Msg("Registering budget module")
+	budget.WireUp(v1, a.db, cfg.JWT.Secret, a.logger)
 
 	a.logger.Info().Str("module", "testmodule").Msg("Registering test module")
 	testmodule.WireUp(v1, cfg.JWT.Secret)
