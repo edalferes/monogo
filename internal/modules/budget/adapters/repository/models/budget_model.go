@@ -23,6 +23,9 @@ type BudgetModel struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
+
+	// Relationships
+	Category CategoryModel `gorm:"foreignKey:CategoryID;constraint:OnDelete:RESTRICT"`
 }
 
 func (BudgetModel) TableName() string {

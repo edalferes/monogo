@@ -29,6 +29,11 @@ type TransactionModel struct {
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
 	DeletedAt            gorm.DeletedAt `gorm:"index"`
+
+	// Relationships
+	Account            AccountModel  `gorm:"foreignKey:AccountID;constraint:OnDelete:RESTRICT"`
+	Category           CategoryModel `gorm:"foreignKey:CategoryID;constraint:OnDelete:RESTRICT"`
+	DestinationAccount *AccountModel `gorm:"foreignKey:DestinationAccountID;constraint:OnDelete:SET NULL"`
 }
 
 func (TransactionModel) TableName() string {
