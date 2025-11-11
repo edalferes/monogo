@@ -60,6 +60,7 @@ func Seed(db *gorm.DB, userID uint) error {
 		{UserID: userID, Name: "Cursos", Type: domain.CategoryTypeExpense, Icon: "📚", Color: "#8BC34A"},
 		{UserID: userID, Name: "Livros/Material", Type: domain.CategoryTypeExpense, Icon: "📖", Color: "#CDDC39"},
 		{UserID: userID, Name: "Assinaturas Educacionais", Type: domain.CategoryTypeExpense, Icon: "🎓", Color: "#FFEB3B"},
+		{UserID: userID, Name: "Mensalidades/Escola", Type: domain.CategoryTypeExpense, Icon: "🏫", Color: "#FFC107"},
 
 		// Lazer
 		{UserID: userID, Name: "Streaming", Type: domain.CategoryTypeExpense, Icon: "📺", Color: "#FFC107"},
