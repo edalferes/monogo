@@ -58,6 +58,11 @@ jobs:
             type=raw,value=${{ env.CUSTOM_TAG }}
             latest
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker-container
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
