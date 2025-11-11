@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/edalferes/monogo/compare/v0.3.0...v0.4.0) (2025-11-11)
+
+
+### Features
+
+* update docker ([6e5e6bd](https://github.com/edalferes/monogo/commit/6e5e6bd416eaef9b0ccfc525775b55893bef0bc1))
+
 ## [0.3.0](https://github.com/edalferes/monogo/compare/v0.2.0...v0.3.0) (2025-11-11)
 
 
