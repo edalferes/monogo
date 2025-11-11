@@ -1,0 +1,20 @@
+# Changelog
+
+## 0.1.0 (2025-11-11)
+
+
+### Features
+
+* add audit logs ([d8fb8b1](https://github.com/edalferes/monogo/commit/d8fb8b1a8ea0b77c766c3d3ee3b87ee203202c91))
+* add docker compose ([3c2d1dd](https://github.com/edalferes/monogo/commit/3c2d1dd4c2a484f0cdeaffd46bac35da39eba7a3))
+* add module auth ([a6222e4](https://github.com/edalferes/monogo/commit/a6222e4a48ccf6f3693a1c50f5d13b9d9ef2a09f))
+* add modules auth admin ([b44039f](https://github.com/edalferes/monogo/commit/b44039f655f5199ddb5608fd750a6313775ced09))
+* add readme ([2bbf524](https://github.com/edalferes/monogo/commit/2bbf5246ee9029b147a18b464ae114ba9ccdd277))
+* add validate ([0d5875e](https://github.com/edalferes/monogo/commit/0d5875ef3822eae5feca1a070fe10d8236a4652e))
+* refactor config ([df6c0f7](https://github.com/edalferes/monogo/commit/df6c0f7541c050eb32174fc722a2b28fa54f0e2e))
+* refactor module auth ([d399bf4](https://github.com/edalferes/monogo/commit/d399bf435f103e432e2fc6074c4b6a35a664df44))
+* refactor usescases ([d61448b](https://github.com/edalferes/monogo/commit/d61448b2f931aea9d54cb7a4084b38f125783b3c))
+* update admin routes use jwt ([1484e32](https://github.com/edalferes/monogo/commit/1484e325ece642e1a372492b0404f9020b19cba0))
+* update gitignore ([30ed186](https://github.com/edalferes/monogo/commit/30ed186cbd225ce36021ec55140cfdd8d72e4123))
+* update module in docs ([dfe6197](https://github.com/edalferes/monogo/commit/dfe619767085bbcf3365399d520f5a38a58fefcc))
+* update modules ([147ed43](https://github.com/edalferes/monogo/commit/147ed430de068a43ac1045b568aeaee9137b0ff9))
