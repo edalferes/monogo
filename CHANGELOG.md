@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/edalferes/monogo/compare/v0.2.0...v0.3.0) (2025-11-11)
+
+
+### Features
+
+* update buildx ([6ee6d34](https://github.com/edalferes/monogo/commit/6ee6d3411c1d95570544d2666a70040b3e9b3a5f))
+
 ## [0.2.0](https://github.com/edalferes/monogo/compare/v0.1.0...v0.2.0) (2025-11-11)
 
 
