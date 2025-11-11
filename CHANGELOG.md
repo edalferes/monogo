@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/edalferes/monogo/compare/v0.1.0...v0.2.0) (2025-11-11)
+
+
+### Features
+
+* update multiplatform ([8abe1db](https://github.com/edalferes/monogo/commit/8abe1db43a98c7c12d4e4c531f349ba9802c246f))
+
 ## 0.1.0 (2025-11-11)
 
 
