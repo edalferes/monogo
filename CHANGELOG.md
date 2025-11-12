@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/edalferes/monogo/compare/v0.4.0...v0.5.0) (2025-11-12)
+
+
+### Features
+
+* remove config ([78b5db9](https://github.com/edalferes/monogo/commit/78b5db924d58422e711b57647e8d55a1f47c806c))
+
 ## [0.4.0](https://github.com/edalferes/monogo/compare/v0.3.0...v0.4.0) (2025-11-11)
 
 
