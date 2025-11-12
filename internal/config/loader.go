@@ -53,10 +53,15 @@ func (l *Loader) Load(opts ...LoadOptions) (*Config, error) {
 	l.setDefaults()
 
 	// Configure reading of environment variables
+	// IMPORTANT: AutomaticEnv MUST be called BEFORE ReadInConfig
+	// This ensures environment variables have higher priority than config file
 	l.viper.AutomaticEnv()
 	l.viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
-	// Try to read configuration file
+	// Bind legacy environment variable names for backward compatibility
+	l.bindLegacyEnvVars()
+
+	// Try to read configuration file (optional)
 	if err := l.viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
 			return nil, fmt.Errorf("error reading configuration file: %w", err)
@@ -94,4 +99,29 @@ func (l *Loader) setDefaults() {
 	// Logger defaults
 	l.viper.SetDefault("logger.level", "info")
 	l.viper.SetDefault("logger.format", "json")
+}
+
+// bindLegacyEnvVars binds legacy environment variable names for backward compatibility
+func (l *Loader) bindLegacyEnvVars() {
+	// Map DB_* to database.*
+	l.viper.BindEnv("database.host", "DB_HOST")
+	l.viper.BindEnv("database.port", "DB_PORT")
+	l.viper.BindEnv("database.user", "DB_USER")
+	l.viper.BindEnv("database.password", "DB_PASSWORD")
+	l.viper.BindEnv("database.name", "DB_NAME")
+	l.viper.BindEnv("database.ssl_mode", "DB_SSL_MODE")
+
+	// Map APP_* and direct vars
+	l.viper.BindEnv("app.name", "APP_NAME")
+	l.viper.BindEnv("app.port", "PORT")
+	l.viper.BindEnv("app.environment", "APP_ENVIRONMENT", "ENVIRONMENT")
+	l.viper.BindEnv("app.version", "APP_VERSION")
+
+	// Map JWT_*
+	l.viper.BindEnv("jwt.secret", "JWT_SECRET")
+	l.viper.BindEnv("jwt.expiry_hour", "JWT_EXPIRY_HOUR")
+
+	// Map LOG_*
+	l.viper.BindEnv("logger.level", "LOG_LEVEL")
+	l.viper.BindEnv("logger.format", "LOG_FORMAT")
 }

@@ -43,9 +43,6 @@ WORKDIR /app
 # Copy the binary from builder stage
 COPY --from=builder /app/monogo /app/monogo
 
-# Copy configuration file
-COPY config.yaml /app/config.yaml
-
 # Change ownership to non-root user
 RUN chown -R appuser:appgroup /app
 

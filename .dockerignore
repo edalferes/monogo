@@ -10,3 +10,5 @@ coverage/
 *.test
 *.out
 docker-compose*.yml
+config.yaml
+config.yml
