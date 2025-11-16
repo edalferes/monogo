@@ -97,7 +97,7 @@ const docTemplate = `{
                 "tags": [
                     "Budget - Accounts"
                 ],
-                "summary": "Get account by ID",
+                "summary": "Get account by ID with calculated balance",
                 "parameters": [
                     {
                         "type": "integer",
@@ -111,7 +111,21 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountBalanceResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "404": {
@@ -1268,6 +1282,26 @@ const docTemplate = `{
                 "username": {
                     "description": "Unique username for login",
                     "type": "string"
+                }
+            }
+        },
+        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountBalanceResponse": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                },
+                "current_balance": {
+                    "type": "number"
+                },
+                "total_expense": {
+                    "type": "number"
+                },
+                "total_income": {
+                    "type": "number"
+                },
+                "total_transfers": {
+                    "type": "number"
                 }
             }
         },

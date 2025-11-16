@@ -66,6 +66,19 @@ definitions:
         description: Unique username for login
         type: string
     type: object
+  github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountBalanceResponse:
+    properties:
+      account:
+        $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse'
+      current_balance:
+        type: number
+      total_expense:
+        type: number
+      total_income:
+        type: number
+      total_transfers:
+        type: number
+    type: object
   github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse:
     properties:
       balance:
@@ -408,13 +421,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse'
+            $ref: '#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountBalanceResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
           schema:
             additionalProperties: true
             type: object
-      summary: Get account by ID
+      summary: Get account by ID with calculated balance
       tags:
       - Budget - Accounts
   /budgets:

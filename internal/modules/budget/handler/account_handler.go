@@ -12,18 +12,21 @@ import (
 
 // AccountHandler handles HTTP requests for accounts
 type AccountHandler struct {
-	createAccountUseCase *usecase.CreateAccountUseCase
-	listAccountsUseCase  *usecase.ListAccountsUseCase
+	createAccountUseCase     *usecase.CreateAccountUseCase
+	listAccountsUseCase      *usecase.ListAccountsUseCase
+	getAccountBalanceUseCase *usecase.GetAccountBalanceUseCase
 }
 
 // NewAccountHandler creates a new account handler
 func NewAccountHandler(
 	createAccountUseCase *usecase.CreateAccountUseCase,
 	listAccountsUseCase *usecase.ListAccountsUseCase,
+	getAccountBalanceUseCase *usecase.GetAccountBalanceUseCase,
 ) *AccountHandler {
 	return &AccountHandler{
-		createAccountUseCase: createAccountUseCase,
-		listAccountsUseCase:  listAccountsUseCase,
+		createAccountUseCase:     createAccountUseCase,
+		listAccountsUseCase:      listAccountsUseCase,
+		getAccountBalanceUseCase: getAccountBalanceUseCase,
 	}
 }
 
@@ -104,23 +107,44 @@ func (h *AccountHandler) ListAccounts(c echo.Context) error {
 }
 
 // GetAccount handles getting a single account
-// @Summary Get account by ID
+// @Summary Get account by ID with calculated balance
 // @Tags Budget - Accounts
 // @Produce json
 // @Param id path int true "Account ID"
-// @Success 200 {object} dto.AccountResponse
+// @Success 200 {object} dto.AccountBalanceResponse
+// @Failure 400 {object} map[string]interface{}
 // @Failure 404 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
 // @Router /accounts/{id} [get]
 func (h *AccountHandler) GetAccount(c echo.Context) error {
-	_, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	accountID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"error": "Invalid account ID",
 		})
 	}
 
-	// TODO: Implement GetAccountByIDUseCase
-	return c.JSON(http.StatusNotImplemented, map[string]interface{}{
-		"error": "Not implemented yet",
-	})
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	result, err := h.getAccountBalanceUseCase.Execute(c.Request().Context(), userID, uint(accountID))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	response := dto.AccountBalanceResponse{
+		Account:        dto.ToAccountResponse(result.Account),
+		CurrentBalance: result.CurrentBalance,
+		TotalIncome:    result.TotalIncome,
+		TotalExpense:   result.TotalExpense,
+		TotalTransfers: result.TotalTransfers,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }

@@ -60,3 +60,12 @@ type UpdateAccountRequest struct {
 	Description string `json:"description"`
 	IsActive    *bool  `json:"is_active"`
 }
+
+// AccountBalanceResponse represents an account with calculated balance details
+type AccountBalanceResponse struct {
+	Account        AccountResponse `json:"account"`
+	CurrentBalance float64         `json:"current_balance"`
+	TotalIncome    float64         `json:"total_income"`
+	TotalExpense   float64         `json:"total_expense"`
+	TotalTransfers float64         `json:"total_transfers"`
+}

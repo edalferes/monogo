@@ -23,6 +23,7 @@ type Module struct {
 	// Use cases
 	createAccountUseCase     *usecase.CreateAccountUseCase
 	listAccountsUseCase      *usecase.ListAccountsUseCase
+	getAccountBalanceUseCase *usecase.GetAccountBalanceUseCase
 	createCategoryUseCase    *usecase.CreateCategoryUseCase
 	listCategoriesUseCase    *usecase.ListCategoriesUseCase
 	createTransactionUseCase *usecase.CreateTransactionUseCase
@@ -54,6 +55,10 @@ func NewModule(db *gorm.DB) *Module {
 	// Initialize use cases
 	module.createAccountUseCase = usecase.NewCreateAccountUseCase(module.accountRepo)
 	module.listAccountsUseCase = usecase.NewListAccountsUseCase(module.accountRepo)
+	module.getAccountBalanceUseCase = usecase.NewGetAccountBalanceUseCase(
+		module.accountRepo,
+		module.transactionRepo,
+	)
 	module.createCategoryUseCase = usecase.NewCreateCategoryUseCase(module.categoryRepo)
 	module.listCategoriesUseCase = usecase.NewListCategoriesUseCase(module.categoryRepo)
 	module.createTransactionUseCase = usecase.NewCreateTransactionUseCase(
@@ -77,6 +82,7 @@ func NewModule(db *gorm.DB) *Module {
 	module.accountHandler = handler.NewAccountHandler(
 		module.createAccountUseCase,
 		module.listAccountsUseCase,
+		module.getAccountBalanceUseCase,
 	)
 	module.categoryHandler = handler.NewCategoryHandler(
 		module.createCategoryUseCase,
