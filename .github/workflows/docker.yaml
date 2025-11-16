@@ -25,9 +25,9 @@ jobs:
       matrix:
         include:
           - context: .
-            name: monogo
+            name: monetics
             dockerfile: Dockerfile
-            image: ghcr.io/${{ github.repository_owner }}/monogo
+            image: ghcr.io/${{ github.repository_owner }}/monetics
 
     steps: 
       - name: Checkout

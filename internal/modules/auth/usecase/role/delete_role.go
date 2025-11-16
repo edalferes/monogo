@@ -1,6 +1,6 @@
 package role
 
-import "github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
+import "github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 
 type DeleteRoleUseCase struct {
 	RoleRepo interfaces.Role

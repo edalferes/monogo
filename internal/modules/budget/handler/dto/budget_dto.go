@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // CreateBudgetRequest represents the request to create a budget

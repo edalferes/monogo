@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // BudgetRepository defines the contract for budget persistence operations

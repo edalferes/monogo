@@ -1,9 +1,9 @@
 package main
 
 import (
-	_ "github.com/edalferes/monogo/docs"
-	"github.com/edalferes/monogo/internal/applications/api"
-	"github.com/edalferes/monogo/internal/config"
+	_ "github.com/edalferes/monetics/docs"
+	"github.com/edalferes/monetics/internal/applications/api"
+	"github.com/edalferes/monetics/internal/config"
 )
 
 func main() {

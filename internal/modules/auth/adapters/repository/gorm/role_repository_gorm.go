@@ -1,10 +1,10 @@
 package gorm
 
 import (
-	"github.com/edalferes/monogo/internal/modules/auth/adapters/repository/mappers"
-	"github.com/edalferes/monogo/internal/modules/auth/adapters/repository/models"
-	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
+	"github.com/edalferes/monetics/internal/modules/auth/adapters/repository/mappers"
+	"github.com/edalferes/monetics/internal/modules/auth/adapters/repository/models"
+	"github.com/edalferes/monetics/internal/modules/auth/domain"
+	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 	gormpkg "gorm.io/gorm"
 )
 

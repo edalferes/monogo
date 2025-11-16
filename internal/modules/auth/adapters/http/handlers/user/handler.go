@@ -3,8 +3,8 @@ package user
 import (
 	"net/http"
 
-	"github.com/edalferes/monogo/internal/modules/auth/adapters/http/dto"
-	"github.com/edalferes/monogo/internal/modules/auth/errors"
+	"github.com/edalferes/monetics/internal/modules/auth/adapters/http/dto"
+	"github.com/edalferes/monetics/internal/modules/auth/errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )

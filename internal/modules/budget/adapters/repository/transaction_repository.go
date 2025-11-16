@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // TransactionRepository defines the contract for transaction persistence operations

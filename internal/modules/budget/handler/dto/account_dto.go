@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // CreateAccountRequest represents the request to create an account

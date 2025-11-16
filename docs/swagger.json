@@ -19,7 +19,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
                             }
                         }
                     },
@@ -50,7 +50,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateAccountRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateAccountRequest"
                         }
                     }
                 ],
@@ -58,7 +58,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
                         }
                     },
                     "400": {
@@ -100,7 +100,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountBalanceResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountBalanceResponse"
                         }
                     },
                     "400": {
@@ -150,7 +150,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse"
                             }
                         }
                     }
@@ -174,7 +174,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateBudgetRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateBudgetRequest"
                         }
                     }
                 ],
@@ -182,7 +182,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse"
                         }
                     },
                     "400": {
@@ -218,7 +218,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse"
                             }
                         }
                     }
@@ -242,7 +242,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateCategoryRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateCategoryRequest"
                         }
                     }
                 ],
@@ -250,7 +250,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse"
                         }
                     },
                     "400": {
@@ -292,7 +292,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.MonthlyReportResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.MonthlyReportResponse"
                         }
                     },
                     "400": {
@@ -352,7 +352,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse"
                             }
                         }
                     }
@@ -376,7 +376,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateTransactionRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateTransactionRequest"
                         }
                     }
                 ],
@@ -384,7 +384,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse"
                         }
                     },
                     "400": {
@@ -605,7 +605,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.User"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.User"
                             }
                         }
                     }
@@ -634,7 +634,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.RegisterDTO"
                         }
                     }
                 ],
@@ -696,7 +696,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.User"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.User"
                         }
                     },
                     "400": {
@@ -758,7 +758,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.RegisterDTO"
                         }
                     }
                 ],
@@ -1019,7 +1019,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.LoginDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.LoginDTO"
                         }
                     }
                 ],
@@ -1130,7 +1130,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.ChangePasswordDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.ChangePasswordDTO"
                         }
                     }
                 ],
@@ -1176,7 +1176,7 @@
         }
     },
     "definitions": {
-        "github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.ChangePasswordDTO": {
+        "github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.ChangePasswordDTO": {
             "type": "object",
             "required": [
                 "current_password",
@@ -1191,7 +1191,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.LoginDTO": {
+        "github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.LoginDTO": {
             "type": "object",
             "required": [
                 "password",
@@ -1206,7 +1206,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO": {
+        "github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.RegisterDTO": {
             "type": "object",
             "required": [
                 "password",
@@ -1221,7 +1221,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_domain.Permission": {
+        "github_com_edalferes_monetics_internal_modules_auth_domain.Permission": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1234,7 +1234,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_domain.Role": {
+        "github_com_edalferes_monetics_internal_modules_auth_domain.Role": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1249,12 +1249,12 @@
                     "description": "Associated permissions",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.Permission"
+                        "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.Permission"
                     }
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_domain.User": {
+        "github_com_edalferes_monetics_internal_modules_auth_domain.User": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1265,7 +1265,7 @@
                     "description": "Associated roles for authorization",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.Role"
+                        "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.Role"
                     }
                 },
                 "username": {
@@ -1274,11 +1274,11 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountBalanceResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountBalanceResponse": {
             "type": "object",
             "properties": {
                 "account": {
-                    "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                    "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
                 },
                 "current_balance": {
                     "type": "number"
@@ -1294,7 +1294,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse": {
             "type": "object",
             "properties": {
                 "balance": {
@@ -1329,7 +1329,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse": {
             "type": "object",
             "properties": {
                 "alert_at": {
@@ -1388,7 +1388,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryBreakdownItem": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryBreakdownItem": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -1408,7 +1408,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse": {
             "type": "object",
             "properties": {
                 "color": {
@@ -1440,7 +1440,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateAccountRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateAccountRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -1471,7 +1471,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateBudgetRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateBudgetRequest": {
             "type": "object",
             "required": [
                 "amount",
@@ -1514,7 +1514,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateCategoryRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateCategoryRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -1542,7 +1542,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateTransactionRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateTransactionRequest": {
             "type": "object",
             "required": [
                 "account_id",
@@ -1605,7 +1605,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.MonthlyReportResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.MonthlyReportResponse": {
             "type": "object",
             "properties": {
                 "balance": {
@@ -1614,7 +1614,7 @@
                 "category_breakdown": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryBreakdownItem"
+                        "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryBreakdownItem"
                     }
                 },
                 "month": {
@@ -1634,7 +1634,7 @@
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse": {
             "type": "object",
             "properties": {
                 "account_id": {

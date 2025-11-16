@@ -1,8 +1,8 @@
 package mappers
 
 import (
-	"github.com/edalferes/monogo/internal/modules/budget/adapters/repository/models"
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // AccountMapper converts between domain.Account and models.AccountModel

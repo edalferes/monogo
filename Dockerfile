@@ -27,7 +27,7 @@ ARG TARGETARCH
 # Build the application
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
     -ldflags="-w -s -X main.version=${VERSION} -X main.buildDate=${BUILD_DATE} -X main.gitCommit=${GIT_COMMIT}" \
-    -a -installsuffix cgo -o monogo ./cmd/api
+    -a -installsuffix cgo -o monetics ./cmd/api
 
 # Stage 2: Final stage
 FROM alpine:3.20
@@ -41,7 +41,7 @@ RUN apk --no-cache add ca-certificates tzdata curl && \
 WORKDIR /app
 
 # Copy the binary from builder stage
-COPY --from=builder /app/monogo /app/monogo
+COPY --from=builder /app/monetics /app/monetics
 
 # Change ownership to non-root user
 RUN chown -R appuser:appgroup /app
@@ -57,4 +57,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
 # Run the binary
-ENTRYPOINT ["./monogo"]
+ENTRYPOINT ["./monetics"]

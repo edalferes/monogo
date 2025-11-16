@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/edalferes/monogo/internal/modules/budget/adapters/repository"
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
-	"github.com/edalferes/monogo/internal/modules/budget/errors"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 // CreateTransactionUseCase handles transaction creation

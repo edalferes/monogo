@@ -83,7 +83,7 @@ func (l *Loader) Load(opts ...LoadOptions) (*Config, error) {
 // setDefaults sets default values
 func (l *Loader) setDefaults() {
 	// App defaults
-	l.viper.SetDefault("app.name", "monogo")
+	l.viper.SetDefault("app.name", "monetics")
 	l.viper.SetDefault("app.version", "1.0.0")
 	l.viper.SetDefault("app.environment", "development")
 	l.viper.SetDefault("app.port", 8080)

@@ -30,7 +30,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
                             }
                         }
                     },
@@ -61,7 +61,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateAccountRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateAccountRequest"
                         }
                     }
                 ],
@@ -69,7 +69,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
                         }
                     },
                     "400": {
@@ -111,7 +111,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountBalanceResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountBalanceResponse"
                         }
                     },
                     "400": {
@@ -161,7 +161,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse"
                             }
                         }
                     }
@@ -185,7 +185,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateBudgetRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateBudgetRequest"
                         }
                     }
                 ],
@@ -193,7 +193,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse"
                         }
                     },
                     "400": {
@@ -229,7 +229,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse"
                             }
                         }
                     }
@@ -253,7 +253,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateCategoryRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateCategoryRequest"
                         }
                     }
                 ],
@@ -261,7 +261,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse"
                         }
                     },
                     "400": {
@@ -303,7 +303,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.MonthlyReportResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.MonthlyReportResponse"
                         }
                     },
                     "400": {
@@ -363,7 +363,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse"
                             }
                         }
                     }
@@ -387,7 +387,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateTransactionRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateTransactionRequest"
                         }
                     }
                 ],
@@ -395,7 +395,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse"
                         }
                     },
                     "400": {
@@ -616,7 +616,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.User"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.User"
                             }
                         }
                     }
@@ -645,7 +645,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.RegisterDTO"
                         }
                     }
                 ],
@@ -707,7 +707,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.User"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.User"
                         }
                     },
                     "400": {
@@ -769,7 +769,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.RegisterDTO"
                         }
                     }
                 ],
@@ -1030,7 +1030,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.LoginDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.LoginDTO"
                         }
                     }
                 ],
@@ -1141,7 +1141,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.ChangePasswordDTO"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.ChangePasswordDTO"
                         }
                     }
                 ],
@@ -1187,7 +1187,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.ChangePasswordDTO": {
+        "github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.ChangePasswordDTO": {
             "type": "object",
             "required": [
                 "current_password",
@@ -1202,7 +1202,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.LoginDTO": {
+        "github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.LoginDTO": {
             "type": "object",
             "required": [
                 "password",
@@ -1217,7 +1217,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_adapters_http_dto.RegisterDTO": {
+        "github_com_edalferes_monetics_internal_modules_auth_adapters_http_dto.RegisterDTO": {
             "type": "object",
             "required": [
                 "password",
@@ -1232,7 +1232,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_domain.Permission": {
+        "github_com_edalferes_monetics_internal_modules_auth_domain.Permission": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1245,7 +1245,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_domain.Role": {
+        "github_com_edalferes_monetics_internal_modules_auth_domain.Role": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1260,12 +1260,12 @@ const docTemplate = `{
                     "description": "Associated permissions",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.Permission"
+                        "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.Permission"
                     }
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_auth_domain.User": {
+        "github_com_edalferes_monetics_internal_modules_auth_domain.User": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1276,7 +1276,7 @@ const docTemplate = `{
                     "description": "Associated roles for authorization",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_auth_domain.Role"
+                        "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.Role"
                     }
                 },
                 "username": {
@@ -1285,11 +1285,11 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountBalanceResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountBalanceResponse": {
             "type": "object",
             "properties": {
                 "account": {
-                    "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse"
+                    "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
                 },
                 "current_balance": {
                     "type": "number"
@@ -1305,7 +1305,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.AccountResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse": {
             "type": "object",
             "properties": {
                 "balance": {
@@ -1340,7 +1340,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.BudgetResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse": {
             "type": "object",
             "properties": {
                 "alert_at": {
@@ -1399,7 +1399,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryBreakdownItem": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryBreakdownItem": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -1419,7 +1419,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse": {
             "type": "object",
             "properties": {
                 "color": {
@@ -1451,7 +1451,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateAccountRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateAccountRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -1482,7 +1482,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateBudgetRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateBudgetRequest": {
             "type": "object",
             "required": [
                 "amount",
@@ -1525,7 +1525,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateCategoryRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateCategoryRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -1553,7 +1553,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.CreateTransactionRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateTransactionRequest": {
             "type": "object",
             "required": [
                 "account_id",
@@ -1616,7 +1616,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.MonthlyReportResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.MonthlyReportResponse": {
             "type": "object",
             "properties": {
                 "balance": {
@@ -1625,7 +1625,7 @@ const docTemplate = `{
                 "category_breakdown": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_edalferes_monogo_internal_modules_budget_handler_dto.CategoryBreakdownItem"
+                        "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryBreakdownItem"
                     }
                 },
                 "month": {
@@ -1645,7 +1645,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monogo_internal_modules_budget_handler_dto.TransactionResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse": {
             "type": "object",
             "properties": {
                 "account_id": {

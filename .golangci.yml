@@ -15,7 +15,7 @@ linters-settings:
   gofmt:
     simplify: true
   goimports:
-    local-prefixes: github.com/alpheres/monogo
+    local-prefixes: github.com/alpheres/monetics
 
 issues:
   max-same-issues: 50

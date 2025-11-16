@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/edalferes/monogo/internal/modules/budget/adapters/repository/mappers"
-	"github.com/edalferes/monogo/internal/modules/budget/adapters/repository/models"
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"gorm.io/gorm"
 )
 

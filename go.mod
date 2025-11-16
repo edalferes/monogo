@@ -1,4 +1,4 @@
-module github.com/edalferes/monogo
+module github.com/edalferes/monetics
 
 go 1.25.1
 

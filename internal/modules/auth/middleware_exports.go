@@ -1,7 +1,7 @@
 package auth
 
 import (
-	authmiddleware "github.com/edalferes/monogo/internal/modules/auth/adapters/http"
+	authmiddleware "github.com/edalferes/monetics/internal/modules/auth/adapters/http"
 	"github.com/labstack/echo/v4"
 )
 

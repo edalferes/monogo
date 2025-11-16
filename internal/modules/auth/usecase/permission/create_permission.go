@@ -1,8 +1,8 @@
 package permission
 
 import (
-	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
+	"github.com/edalferes/monetics/internal/modules/auth/domain"
+	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 )
 
 type CreatePermissionUseCase struct {

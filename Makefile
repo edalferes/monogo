@@ -1,10 +1,10 @@
-# Simple Makefile for Monogo project
+# Simple Makefile for Monetics project
 
 # Go parameters
 GOCMD=go
 GOBUILD=$(GOCMD) build
 GOTEST=$(GOCMD) test
-BINARY_NAME=./bin/monogo
+BINARY_NAME=./bin/monetics
 CMD_PATH=./cmd/api
 
 .PHONY: help build test clean run docker-build swagger

@@ -152,7 +152,7 @@ linters-settings:
     statements: 50
     
   gci:
-    local-prefixes: github.com/edalferes/monogo
+    local-prefixes: github.com/edalferes/monetics
     
   gocognit:
     min-complexity: 15
@@ -187,7 +187,7 @@ linters-settings:
     extra-rules: true
     
   goimports:
-    local-prefixes: github.com/edalferes/monogo
+    local-prefixes: github.com/edalferes/monetics
     
   gomnd:
     settings:

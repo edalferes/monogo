@@ -1,8 +1,8 @@
 {
 	"info": {
 		"_postman_id": "f0257ee2-238e-4083-8eec-7e2f8d4a541d",
-		"name": "Monogo API - Complete Auth Module",
-		"description": "Collection completa da API Monogo com módulo de autenticação expandido incluindo CRUD de usuários, roles, permissions e funcionalidades de usuário.",
+		"name": "Monetics API - Complete Auth Module",
+		"description": "Collection completa da API Monetics com módulo de autenticação expandido incluindo CRUD de usuários, roles, permissions e funcionalidades de usuário.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "4247924"
 	},

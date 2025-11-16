@@ -1,8 +1,8 @@
 package mappers
 
 import (
-	"github.com/edalferes/monogo/internal/modules/auth/adapters/repository/models"
-	"github.com/edalferes/monogo/internal/modules/auth/domain"
+	"github.com/edalferes/monetics/internal/modules/auth/adapters/repository/models"
+	"github.com/edalferes/monetics/internal/modules/auth/domain"
 )
 
 // AuditLogMapper converte entre domain.AuditLog e models.AuditLogModel

@@ -3,7 +3,7 @@ package admin
 import (
 	"net/http"
 
-	"github.com/edalferes/monogo/internal/modules/auth/domain"
+	"github.com/edalferes/monetics/internal/modules/auth/domain"
 	"github.com/labstack/echo/v4"
 )
 

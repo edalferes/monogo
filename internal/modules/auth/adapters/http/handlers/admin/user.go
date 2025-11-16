@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/edalferes/monogo/internal/modules/auth/adapters/http/dto"
-	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/errors"
+	"github.com/edalferes/monetics/internal/modules/auth/adapters/http/dto"
+	"github.com/edalferes/monetics/internal/modules/auth/domain"
+	"github.com/edalferes/monetics/internal/modules/auth/errors"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )

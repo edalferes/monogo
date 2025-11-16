@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	"github.com/edalferes/monogo/internal/config"
+	"github.com/edalferes/monetics/internal/config"
 
 	_ "github.com/lib/pq"
 )

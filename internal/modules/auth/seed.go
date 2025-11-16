@@ -1,9 +1,9 @@
 package auth
 
 import (
-	gormrepo "github.com/edalferes/monogo/internal/modules/auth/adapters/repository/gorm"
-	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/service"
+	gormrepo "github.com/edalferes/monetics/internal/modules/auth/adapters/repository/gorm"
+	"github.com/edalferes/monetics/internal/modules/auth/domain"
+	"github.com/edalferes/monetics/internal/modules/auth/service"
 	"gorm.io/gorm"
 )
 

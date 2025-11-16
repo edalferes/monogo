@@ -1,7 +1,7 @@
 package budget
 
 import (
-	"github.com/edalferes/monogo/internal/modules/budget/adapters/repository/models"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 )
 
 // Entities returns all database entities for the budget module

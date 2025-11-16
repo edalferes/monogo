@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/edalferes/monogo/internal/modules/budget/handler/dto"
-	"github.com/edalferes/monogo/internal/modules/budget/usecase"
+	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase"
 	"github.com/labstack/echo/v4"
 )
 

@@ -1,8 +1,8 @@
 package testmodule
 
 import (
-	"github.com/edalferes/monogo/internal/modules/auth"
-	"github.com/edalferes/monogo/internal/modules/testmodule/adapters/http/handler"
+	"github.com/edalferes/monetics/internal/modules/auth"
+	"github.com/edalferes/monetics/internal/modules/testmodule/adapters/http/handler"
 	"github.com/labstack/echo/v4"
 )
 

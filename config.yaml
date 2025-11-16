@@ -1,7 +1,7 @@
-# Configuração da Aplicação Monogo
+# Configuração da Aplicação monetics
 
 app:
-  name: "monogo"
+  name: "monetics"
   version: "1.0.0"
   environment: "production"  # development, staging, production
   port: 8080
@@ -11,7 +11,7 @@ database:
   port: 5432
   user: "postgres"
   password: ""  # Set via DB_PASSWORD env var
-  name: "monogo"
+  name: "monetics"
   ssl_mode: "disable"
 
 jwt:

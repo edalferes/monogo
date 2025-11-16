@@ -1,10 +1,10 @@
 package user
 
 import (
-	"github.com/edalferes/monogo/internal/modules/auth/domain"
-	"github.com/edalferes/monogo/internal/modules/auth/errors"
-	"github.com/edalferes/monogo/internal/modules/auth/service"
-	"github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
+	"github.com/edalferes/monetics/internal/modules/auth/domain"
+	"github.com/edalferes/monetics/internal/modules/auth/errors"
+	"github.com/edalferes/monetics/internal/modules/auth/service"
+	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 )
 
 type RegisterUseCase struct {

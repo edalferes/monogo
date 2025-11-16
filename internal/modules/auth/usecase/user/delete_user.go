@@ -1,6 +1,6 @@
 package user
 
-import "github.com/edalferes/monogo/internal/modules/auth/usecase/interfaces"
+import "github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 
 type DeleteUserUseCase struct {
 	UserRepo interfaces.User

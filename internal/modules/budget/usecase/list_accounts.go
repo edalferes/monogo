@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 
-	"github.com/edalferes/monogo/internal/modules/budget/adapters/repository"
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // ListAccountsUseCase handles listing user accounts

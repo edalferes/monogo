@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 
-	"github.com/edalferes/monogo/internal/modules/budget/adapters/repository"
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
-	"github.com/edalferes/monogo/internal/modules/budget/errors"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 // CreateCategoryUseCase handles category creation

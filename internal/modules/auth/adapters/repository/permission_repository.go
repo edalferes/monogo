@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/edalferes/monogo/internal/modules/auth/domain"
+import "github.com/edalferes/monetics/internal/modules/auth/domain"
 
 type PermissionRepository interface {
 	FindByName(name string) (*domain.Permission, error)

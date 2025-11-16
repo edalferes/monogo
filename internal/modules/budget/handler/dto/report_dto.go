@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"github.com/edalferes/monogo/internal/modules/budget/usecase"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase"
 )
 
 // MonthlyReportResponse represents a monthly financial report

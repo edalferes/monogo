@@ -38,7 +38,7 @@ func LoadConfig() *Config {
 func loadFromEnvOnly() *Config {
 	return &Config{
 		App: AppConfig{
-			Name:        getEnvOrDefault("APP_NAME", "monogo"),
+			Name:        getEnvOrDefault("APP_NAME", "monetics"),
 			Version:     getEnvOrDefault("APP_VERSION", "1.0.0"),
 			Environment: getEnvOrDefault("APP_ENVIRONMENT", "development"),
 			Port:        getIntEnvOrDefault("PORT", 8080),

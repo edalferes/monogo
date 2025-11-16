@@ -1,11 +1,11 @@
 package budget
 
 import (
-	"github.com/edalferes/monogo/internal/modules/auth"
-	"github.com/edalferes/monogo/internal/modules/budget/adapters/repository"
-	"github.com/edalferes/monogo/internal/modules/budget/handler"
-	"github.com/edalferes/monogo/internal/modules/budget/usecase"
-	"github.com/edalferes/monogo/pkg/logger"
+	"github.com/edalferes/monetics/internal/modules/auth"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/handler"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase"
+	"github.com/edalferes/monetics/pkg/logger"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )

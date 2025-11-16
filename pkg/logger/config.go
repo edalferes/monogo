@@ -16,6 +16,6 @@ func DefaultConfig() Config {
 	return Config{
 		Level:   "info",
 		Format:  "json",
-		Service: "monogo",
+		Service: "monetics",
 	}
 }

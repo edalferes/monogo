@@ -1,8 +1,8 @@
 package mappers
 
 import (
-	"github.com/edalferes/monogo/internal/modules/budget/adapters/repository/models"
-	"github.com/edalferes/monogo/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // CategoryMapper converts between domain.Category and models.CategoryModel

@@ -1,8 +1,8 @@
 package mappers
 
 import (
-	"github.com/edalferes/monogo/internal/modules/auth/adapters/repository/models"
-	"github.com/edalferes/monogo/internal/modules/auth/domain"
+	"github.com/edalferes/monetics/internal/modules/auth/adapters/repository/models"
+	"github.com/edalferes/monetics/internal/modules/auth/domain"
 )
 
 // PermissionMapper converte entre domain.Permission e models.PermissionModel
