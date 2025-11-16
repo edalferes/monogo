@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.0](https://github.com/edalferes/monetics/compare/v0.5.0...v0.6.0) (2025-11-16)
+
+
+### Features
+
+* rename Project ([dbd423c](https://github.com/edalferes/monetics/commit/dbd423cd020449ce98fb40af400d044a90f2ae2f))
+* update method ([94a050a](https://github.com/edalferes/monetics/commit/94a050aeffb62c73606ba962ee028de949be57d5))
+
 ## [0.5.0](https://github.com/edalferes/monetics/compare/v0.4.0...v0.5.0) (2025-11-12)
 
 
