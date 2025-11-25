@@ -1,0 +1,70 @@
+site_name: 'Monetics'
+site_description: 'API RESTful para gestão financeira pessoal'
+site_author: 'Alpheres Team'
+
+repo_url: https://github.com/alpheres/monetics
+repo_name: alpheres/monetics
+edit_uri: edit/master/docs/
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+  font:
+    text: Roboto
+    code: Roboto Mono
+  logo: assets/logo.png
+  favicon: assets/favicon.ico
+  features:
+    - navigation.tabs
+    - navigation.instant
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.annotate
+
+plugins:
+  - search
+  - techdocs-core
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - toc:
+      permalink: true
+  - tables
+  - footnotes
+  - attr_list
+  - md_in_html
+
+nav:
+  - Home: index.md
+  - Começando:
+      - Instalação: getting-started/installation.md
+      - Configuração: getting-started/configuration.md
+      - Primeiro Uso: getting-started/quickstart.md
+  - Arquitetura:
+      - Visão Geral: architecture/overview.md
+      - Módulos: architecture/modules.md
+      - Banco de Dados: architecture/database.md
+  - Módulos:
+      - Auth: modules/auth.md
+      - Budget: modules/budget.md
+  - API Reference:
+      - Autenticação: api/auth.md
+      - Contas: api/accounts.md
+      - Categorias: api/categories.md
+      - Transações: api/transactions.md
+      - Orçamentos: api/budgets.md
+      - Relatórios: api/reports.md
+  - Guias:
+      - Desenvolvimento: guides/development.md
+      - Testes: guides/testing.md
+      - Deploy: guides/deployment.md

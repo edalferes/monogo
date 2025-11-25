@@ -132,3 +132,29 @@ make docker-build # Construir imagem Docker
 - ✅ Migrations automáticas com GORM
 - ✅ Seed de dados iniciais
 - ✅ Pronto para containerização
+- ✅ Integração com Backstage TechDocs
+
+## 📖 Documentação Técnica
+
+A documentação completa do projeto está disponível via **Backstage TechDocs** usando MkDocs.
+
+### Visualizar Localmente
+
+```bash
+# Instalar MkDocs
+pip install mkdocs-techdocs-core
+
+# Servir documentação
+mkdocs serve
+
+# Acesse: http://localhost:8000
+```
+
+### Backstage Integration
+
+O projeto está configurado para integração com o Backstage:
+
+- **Catalog**: `catalog-info.yaml` - Define componentes e APIs
+- **TechDocs**: `mkdocs.yml` + `docs/` - Documentação técnica completa
+
+Consulte [docs/README.md](docs/README.md) para mais detalhes sobre a documentação.

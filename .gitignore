@@ -47,6 +47,9 @@ tmp/
 Thumbs.db
 Desktop.ini
 
+# TechDocs generated site
+site/
+
 # Go module files (if you want to ignore them, but usually you keep these)
 # go.mod
 # go.sum
