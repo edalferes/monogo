@@ -1,4 +1,17 @@
 apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: monetics
+  description: Sistema de gestão financeira pessoal
+  tags:
+    - finance
+    - personal-finance
+spec:
+  owner: infra
+  domain: fictorpay
+
+---
+apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: monetics-api
@@ -16,7 +29,7 @@ metadata:
     - budget
     - personal-finance
   links:
-    - url: https://github.com/edalferes/monetics
+    - url: https://github.com/alpheres/monetics
       title: Repositório GitHub
       icon: github
     - url: http://localhost:8080/swagger/index.html
@@ -25,7 +38,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: group:default/finance-team
+  owner: infra
   system: monetics
   providesApis:
     - monetics-api-v1
@@ -46,7 +59,7 @@ metadata:
 spec:
   type: openapi
   lifecycle: production
-  owner: group:default/finance-team
+  owner: infra
   system: monetics
   definition: |
     openapi: 3.0.0
@@ -142,5 +155,5 @@ metadata:
     - finance
 spec:
   type: database
-  owner: group:default/finance-team
+  owner: infra
   system: monetics
