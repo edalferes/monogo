@@ -47,94 +47,20 @@ metadata:
   name: monetics-api-v1
   title: Monetics API v1
   description: API REST para gestão financeira pessoal com autenticação, contas, transações e orçamentos
+  annotations:
+    github.com/project-slug: alpheres/monetics
   tags:
     - golang
     - api
+    - rest
+    - openapi
 spec:
   type: openapi
   lifecycle: production
   owner: infra
   system: monetics
-  definition: |
-    openapi: 3.0.0
-    info:
-      title: Monetics Financial Management API
-      version: 1.0.0
-      description: API para gestão financeira pessoal
-    paths:
-      /health:
-        get:
-          summary: Health check
-          responses:
-            '200':
-              description: Service is healthy
-      /v1/auth/login:
-        post:
-          summary: User authentication
-          responses:
-            '200':
-              description: Login successful
-      /v1/auth/users:
-        get:
-          summary: List users
-          responses:
-            '200':
-              description: Users retrieved
-        post:
-          summary: Create user
-          responses:
-            '201':
-              description: User created
-      /v1/budget/accounts:
-        get:
-          summary: List accounts
-          responses:
-            '200':
-              description: Accounts retrieved
-        post:
-          summary: Create account
-          responses:
-            '201':
-              description: Account created
-      /v1/budget/categories:
-        get:
-          summary: List categories
-          responses:
-            '200':
-              description: Categories retrieved
-        post:
-          summary: Create category
-          responses:
-            '201':
-              description: Category created
-      /v1/budget/transactions:
-        get:
-          summary: List transactions
-          responses:
-            '200':
-              description: Transactions retrieved
-        post:
-          summary: Create transaction
-          responses:
-            '201':
-              description: Transaction created
-      /v1/budget/budgets:
-        get:
-          summary: List budgets
-          responses:
-            '200':
-              description: Budgets retrieved
-        post:
-          summary: Create budget
-          responses:
-            '201':
-              description: Budget created
-      /v1/budget/reports/monthly:
-        get:
-          summary: Get monthly financial report
-          responses:
-            '200':
-              description: Report retrieved
+  definition:
+    $text: ./docs/swagger.yaml
 
 ---
 apiVersion: backstage.io/v1alpha1
