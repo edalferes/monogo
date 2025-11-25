@@ -23,11 +23,6 @@ metadata:
   tags:
     - golang
     - api
-    - backend
-    - rest
-    - finance
-    - budget
-    - personal-finance
   links:
     - url: https://github.com/alpheres/monetics
       title: Repositório GitHub
@@ -53,9 +48,8 @@ metadata:
   title: Monetics API v1
   description: API REST para gestão financeira pessoal com autenticação, contas, transações e orçamentos
   tags:
-    - rest
-    - openapi
-    - finance
+    - golang
+    - api
 spec:
   type: openapi
   lifecycle: production
@@ -152,7 +146,6 @@ metadata:
   tags:
     - postgresql
     - database
-    - finance
 spec:
   type: database
   owner: infra
