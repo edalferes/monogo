@@ -15,7 +15,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: monetics-api
-  title: Monetics API
+  title: monetics-api
   description: API RESTful para gestão financeira pessoal - Controle de contas, categorias, transações e orçamentos
   annotations:
     github.com/project-slug: alpheres/monetics
