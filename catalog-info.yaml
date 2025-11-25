@@ -5,7 +5,7 @@ metadata:
   title: Monetics API
   description: API RESTful para gestão financeira pessoal - Controle de contas, categorias, transações e orçamentos
   annotations:
-    github.com/project-slug: edalferes/monetics
+    github.com/project-slug: alpheres/monetics
     backstage.io/techdocs-ref: dir:.
   tags:
     - golang
