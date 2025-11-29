@@ -152,6 +152,6 @@ func (a *App) Run() {
 	a.logger.Info().
 		Int("port", a.config.App.Port).
 		Str("env", a.config.App.Environment).
-		Msg("Starting API server")
+		Msg("Starting Server")
 	a.echo.Logger.Fatal(a.echo.Start(fmt.Sprintf(":%d", a.config.App.Port)))
 }
