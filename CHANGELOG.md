@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.0](https://github.com/alpheres/monetics/compare/v0.6.2...v0.7.0) (2025-11-29)
+
+
+### Features
+
+* update docs ([7326715](https://github.com/alpheres/monetics/commit/7326715bfb1bd4c108beca9c1ff2d36a1ac97f5b))
+
+
+### Documentation
+
+* update docs ([2160acf](https://github.com/alpheres/monetics/commit/2160acfae29581b5e5cb2823c6130c0291e0555d))
+
 ## [0.6.2](https://github.com/alpheres/monetics/compare/v0.6.1...v0.6.2) (2025-11-29)
 
 
