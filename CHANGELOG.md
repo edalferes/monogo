@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/alpheres/monetics/compare/v0.6.0...v0.6.1) (2025-11-29)
+
+
+### Documentation
+
+* adicionar documentação MkDocs em português com logo e i18n ([6fd3001](https://github.com/alpheres/monetics/commit/6fd3001b0948153cf81b1ab1e2a0ae5a24cff8cf))
+
 ## [0.6.0](https://github.com/edalferes/monetics/compare/v0.5.0...v0.6.0) (2025-11-16)
 
 
