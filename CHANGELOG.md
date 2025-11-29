@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/edalferes/monetics/compare/v0.7.0...v0.8.0) (2025-11-29)
+
+
+### Features
+
+* update app.go ([dc99ae2](https://github.com/edalferes/monetics/commit/dc99ae234656d22a197fb05a41c5654054c5ae92))
+
 ## [0.7.0](https://github.com/alpheres/monetics/compare/v0.6.2...v0.7.0) (2025-11-29)
 
 
