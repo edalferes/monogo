@@ -1,10 +1,11 @@
 site_name: 'Monetics'
 site_description: 'Personal Finance Management API - Modular Architecture with Go'
 site_author: 'Alpheres Team'
+site_url: https://alpheres.github.io/monetics/
 
 repo_url: https://github.com/alpheres/monetics
 repo_name: alpheres/monetics
-edit_uri: edit/master/docs/
+edit_uri: edit/master/docs/mkdocs/
 
 theme:
   name: material
