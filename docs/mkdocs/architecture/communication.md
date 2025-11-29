@@ -386,6 +386,7 @@ log.Info().
 2. Revise logs de erro do serviço
 3. Aguarde reset timeout (30s por padrão)
 4. Investigue causa raiz das falhas
+5. 
 
 ### Problema: Alto tempo de resposta
 
