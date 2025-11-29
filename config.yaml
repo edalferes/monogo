@@ -10,14 +10,21 @@ database:
   host: "localhost"
   port: 5432
   user: "postgres"
-  password: ""  # Set via DB_PASSWORD env var
+  password: "postgres"  # Set via DB_PASSWORD env var
   name: "monetics"
   ssl_mode: "disable"
 
 jwt:
-  secret: ""  # REQUIRED: Set via JWT_SECRET env var
+  secret: "change_me"  # REQUIRED: Set via JWT_SECRET env var
   expiry_hour: 24
 
 logger:
   level: "info"      # debug, info, warn, error, fatal
   format: "json"     # json, console
+
+# Module service URLs (for remote module communication)
+modules:
+  auth:
+    url: "${AUTH_SERVICE_URL:http://auth-service:8080}"
+  budget:
+    url: "${BUDGET_SERVICE_URL:http://budget-service:8080}"

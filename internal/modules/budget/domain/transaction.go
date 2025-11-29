@@ -8,7 +8,7 @@ type TransactionType string
 const (
 	TransactionTypeIncome   TransactionType = "income"   // Receita
 	TransactionTypeExpense  TransactionType = "expense"  // Despesa
-	TransactionTypeTransfer TransactionType = "transfer" // Transferência entre contas
+	TransactionTypeTransfer TransactionType = "transfer" // Transfer between accounts
 )
 
 // TransactionStatus represents the status of a transaction
@@ -16,7 +16,7 @@ type TransactionStatus string
 
 const (
 	TransactionStatusPending   TransactionStatus = "pending"   // Pendente
-	TransactionStatusCompleted TransactionStatus = "completed" // Concluída
+	TransactionStatusCompleted TransactionStatus = "completed" // Completed
 	TransactionStatusCancelled TransactionStatus = "cancelled" // Cancelada
 )
 
@@ -56,13 +56,13 @@ type Transaction struct {
 	Date        time.Time         `json:"date"`
 	Status      TransactionStatus `json:"status"`
 	// Transfer specific fields
-	DestinationAccountID *uint    `json:"destination_account_id,omitempty"` // Para transferências
-	TransferFee          *float64 `json:"transfer_fee,omitempty"`           // Taxa de transferência
+	DestinationAccountID *uint    `json:"destination_account_id,omitempty"` // For transfers
+	TransferFee          *float64 `json:"transfer_fee,omitempty"`           // Transfer fee
 	// Recurrence
 	IsRecurring    bool       `json:"is_recurring"`
 	RecurrenceRule string     `json:"recurrence_rule,omitempty"` // "monthly", "weekly", etc.
 	RecurrenceEnd  *time.Time `json:"recurrence_end,omitempty"`
-	ParentID       *uint      `json:"parent_id,omitempty"` // Para transações recorrentes
+	ParentID       *uint      `json:"parent_id,omitempty"` // For recurring transactions
 	// Metadata
 	Tags        []string  `json:"tags,omitempty"`
 	Attachments []string  `json:"attachments,omitempty"` // URLs de comprovantes

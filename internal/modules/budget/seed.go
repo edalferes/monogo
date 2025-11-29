@@ -34,7 +34,7 @@ func Seed(db *gorm.DB, userID uint) error {
 		{UserID: userID, Name: "IPTU", Type: domain.CategoryTypeExpense, Icon: "🏘️", Color: "#795548"},
 		{UserID: userID, Name: "Manutenção", Type: domain.CategoryTypeExpense, Icon: "🔧", Color: "#607D8B"},
 
-		// Alimentação
+		// Food
 		{UserID: userID, Name: "Mercado", Type: domain.CategoryTypeExpense, Icon: "🛒", Color: "#4CAF50"},
 		{UserID: userID, Name: "Refeições Fora", Type: domain.CategoryTypeExpense, Icon: "🍽️", Color: "#8BC34A"},
 		{UserID: userID, Name: "Lanches/Cafés", Type: domain.CategoryTypeExpense, Icon: "☕", Color: "#CDDC39"},
@@ -49,14 +49,14 @@ func Seed(db *gorm.DB, userID uint) error {
 		{UserID: userID, Name: "IPVA", Type: domain.CategoryTypeExpense, Icon: "🚙", Color: "#673AB7"},
 		{UserID: userID, Name: "Estacionamento/Pedágios", Type: domain.CategoryTypeExpense, Icon: "🅿️", Color: "#3F51B5"},
 
-		// Saúde
+		// Health
 		{UserID: userID, Name: "Plano de Saúde", Type: domain.CategoryTypeExpense, Icon: "🏥", Color: "#2196F3"},
 		{UserID: userID, Name: "Medicamentos", Type: domain.CategoryTypeExpense, Icon: "💊", Color: "#03A9F4"},
 		{UserID: userID, Name: "Consultas/Exames", Type: domain.CategoryTypeExpense, Icon: "👨‍⚕️", Color: "#00BCD4"},
 		{UserID: userID, Name: "Academia", Type: domain.CategoryTypeExpense, Icon: "💪", Color: "#009688"},
 		{UserID: userID, Name: "Terapia/Psicólogo", Type: domain.CategoryTypeExpense, Icon: "🧠", Color: "#4CAF50"},
 
-		// Educação
+		// Education
 		{UserID: userID, Name: "Cursos", Type: domain.CategoryTypeExpense, Icon: "📚", Color: "#8BC34A"},
 		{UserID: userID, Name: "Livros/Material", Type: domain.CategoryTypeExpense, Icon: "📖", Color: "#CDDC39"},
 		{UserID: userID, Name: "Assinaturas Educacionais", Type: domain.CategoryTypeExpense, Icon: "🎓", Color: "#FFEB3B"},

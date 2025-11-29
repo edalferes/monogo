@@ -169,4 +169,4 @@ Lá você pode:
 
 - Explore todos os endpoints na [API Reference](../api/auth.md)
 - Entenda a arquitetura em [Visão Geral](../architecture/overview.md)
-- Configure orçamentos avançados em [Módulo Budget](../modules/budget.md)
+- Configure orçamentos avançados consultando a documentação da API

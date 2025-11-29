@@ -1,221 +1,232 @@
-# TechDocs - Monetics
+# Estrutura da Documentação
 
-Este diretório contém a documentação técnica do Monetics usando MkDocs para integração com o Backstage TechDocs.
+Este diretório contém toda a documentação do projeto organizada por tipo.
 
-## 📚 Estrutura
+## 📁 Estrutura
 
 ```
 docs/
-├── index.md                    # Página inicial
-├── getting-started/            # Começando
-│   ├── installation.md
-│   ├── configuration.md
-│   └── quickstart.md
-├── architecture/               # Arquitetura
-│   ├── overview.md
-│   ├── modules.md
-│   └── database.md
-├── modules/                    # Documentação dos módulos
-│   ├── auth.md
-│   └── budget.md
-├── api/                        # Referência da API
-│   ├── auth.md
-│   ├── accounts.md
-│   ├── categories.md
-│   ├── transactions.md
-│   ├── budgets.md
-│   └── reports.md
-└── guides/                     # Guias
-    ├── development.md
-    ├── testing.md
-    └── deployment.md
+├── 📘 mkdocs/                      # MkDocs Documentation (Human-readable)
+│   ├── index.md                    # Home page
+│   ├── MKDOCS.md                   # MkDocs setup guide
+│   ├── module-dependencies.md      # DI system documentation
+│   ├── testing-dependencies.md     # Testing guide
+│   ├── dependency-graph.md         # Dependency visualization
+│   ├── http-architecture.md        # HTTP architecture
+│   │
+│   ├── getting-started/            # Getting started guides
+│   │   ├── installation.md
+│   │   ├── quickstart.md
+│   │   └── configuration.md
+│   │
+│   ├── architecture/               # Architecture documentation
+│   │   ├── overview.md
+│   │   ├── modules.md
+│   │   ├── communication.md
+│   │   └── database.md
+│   │
+│   ├── api/                        # API documentation
+│   │   ├── auth.md
+│   │   ├── accounts.md
+│   │   └── health.md
+│   │
+│   └── guides/                     # Development guides
+│       ├── development.md
+│       ├── testing.md
+│       └── deployment.md
+│
+├── 🔧 openapi/                     # OpenAPI/Swagger specs
+│   ├── docs.go                     # Generated Go docs
+│   ├── swagger.json                # OpenAPI JSON spec
+│   └── swagger.yaml                # OpenAPI YAML spec
+│
+└── 🧪 postman/                     # API testing
+    └── Monetics.postman_collection.json
 ```
 
-## 🚀 Como Usar Localmente
+## 📘 Documentação MkDocs
 
-### Instalar MkDocs
+**Propósito**: Documentação legível para desenvolvedores
 
+**Como usar**:
 ```bash
-# Via pip
-pip install mkdocs-techdocs-core
-
-# Ou via pipx (recomendado)
-pipx install mkdocs
-pipx inject mkdocs mkdocs-techdocs-core
-```
-
-### Servir Localmente
-
-```bash
-# No diretório raiz do projeto
+# Servir localmente em http://127.0.0.1:8000
 mkdocs serve
 
-# Acesse: http://localhost:8000
-```
-
-### Build da Documentação
-
-```bash
+# Gerar site estático
 mkdocs build
 
-# Gera a pasta site/ com HTML estático
+# Deploy para GitHub Pages
+mkdocs gh-deploy
 ```
 
-## 📖 Backstage Integration
+**Tecnologias**:
+- MkDocs com tema Material
+- Markdown com suporte a diagramas Mermaid
+- Suporte a modo escuro
+- Busca de texto completo
 
-### Configuração no Backstage
+**Adicionar nova página**:
+1. Criar arquivo `.md` no subdiretório apropriado
+2. Adicionar à navegação do `mkdocs.yml`
+3. Mudanças recarregam automaticamente no servidor dev
 
-A anotação no `catalog-info.yaml` aponta para esta documentação:
+## 🔧 OpenAPI/Swagger
 
-```yaml
-metadata:
-  annotations:
-    backstage.io/techdocs-ref: dir:.
-```
+**Propósito**: Especificação da API e documentação interativa
 
-Isso indica que o TechDocs deve buscar o `mkdocs.yml` na raiz do repositório.
-
-### Como o Backstage Processa
-
-1. **Discovery**: Backstage encontra o `catalog-info.yaml`
-2. **Build**: Executa `mkdocs build` no repositório
-3. **Publish**: Armazena o site gerado
-4. **Serve**: Disponibiliza via interface do Backstage
-
-### Visualizar no Backstage
-
-Após registrar o componente:
-
-1. Acesse o componente no Backstage
-2. Clique na aba **"Docs"**
-3. A documentação será renderizada
-
-## ✍️ Editando a Documentação
-
-### Adicionar Nova Página
-
-1. Crie o arquivo `.md` em `docs/`
-2. Adicione ao `nav` em `mkdocs.yml`:
-
-```yaml
-nav:
-  - Nova Seção:
-      - Título: caminho/para/arquivo.md
-```
-
-### Sintaxe Markdown
-
-O MkDocs suporta Markdown estendido com:
-
-- **Admonitions** (alertas):
-  ```markdown
-  !!! warning "Atenção"
-      Conteúdo do alerta
-  ```
-
-- **Code Blocks** com syntax highlighting:
-  ````markdown
-  ```go
-  func main() {
-      fmt.Println("Hello")
-  }
-  ```
-  ````
-
-- **Tabelas**:
-  ```markdown
-  | Coluna 1 | Coluna 2 |
-  |----------|----------|
-  | Valor 1  | Valor 2  |
-  ```
-
-- **Links internos**:
-  ```markdown
-  [Texto](../outro-arquivo.md)
-  ```
-
-### Preview em Tempo Real
-
+**Como gerar**:
 ```bash
-# MkDocs auto-reload ao salvar
+# Gerar a partir de anotações no código
+make swagger
+
+# Ou manualmente
+swag init -g cmd/api/main.go --parseDependency --parseInternal -o docs/openapi
+```
+
+**Acessar Swagger UI**:
+```
+http://localhost:8080/swagger/index.html
+```
+
+**Arquivos**:
+- `docs.go` - Pacote Go gerado (auto-gerado, não editar)
+- `swagger.json` - Especificação OpenAPI 3.0 em JSON
+- `swagger.yaml` - Especificação OpenAPI 3.0 em YAML
+
+**Uso no código**:
+```go
+import _ "github.com/edalferes/monetics/docs/openapi"
+```
+
+## 🧪 Collections do Postman
+
+**Propósito**: Testes de API e fluxos de testes manuais
+
+**Como usar**:
+1. Importar `Monetics.postman_collection.json` no Postman
+2. Configurar variáveis de ambiente:
+   - `BASE_URL` - URL base da API (padrão: `http://localhost:8080`)
+   - `AUTH_URL` - URL do serviço Auth (para modo microservices)
+   - `BUDGET_URL` - URL do serviço Budget (para modo microservices)
+3. Executar collections ou requisições individuais
+
+**Inclui**:
+- Fluxos de autenticação (registro, login)
+- Gestão de orçamento (contas, categorias, transações)
+- Endpoints de health check
+- Scripts pré-requisição para gestão de tokens
+
+**Atualizar collection**:
+1. Fazer mudanças no Postman
+2. Exportar collection (Collection v2.1)
+3. Substituir `postman/Monetics.postman_collection.json`
+
+## 🔄 Manutenção
+
+### Atualizando Documentação Swagger
+
+Quando adicionar/modificar endpoints da API:
+
+1. Adicionar anotações Swagger ao handler:
+```go
+// @Summary Criar conta
+// @Description Criar uma nova conta financeira
+// @Tags Contas
+// @Accept json
+// @Produce json
+// @Param account body dto.CreateAccountRequest true "Dados da conta"
+// @Success 201 {object} dto.AccountResponse
+// @Router /v1/budget/accounts [post]
+func CreateAccount(c echo.Context) error { ... }
+```
+
+2. Regenerar documentação:
+```bash
+make swagger
+```
+
+3. Commitar mudanças:
+```bash
+git add docs/openapi/
+git commit -m "docs: atualizar specs do swagger"
+```
+
+### Atualizando MkDocs
+
+Quando adicionar nova documentação:
+
+1. Criar/editar arquivos `.md` no subdiretório apropriado
+2. Adicionar à seção nav do `mkdocs.yml`
+3. Testar localmente:
+```bash
 mkdocs serve
 ```
 
-## 🎨 Personalização
-
-### Tema
-
-Configurado em `mkdocs.yml`:
-
-```yaml
-theme:
-  name: material
-  palette:
-    primary: indigo
-    accent: indigo
-  features:
-    - navigation.tabs
-    - navigation.instant
-    - search.suggest
+4. Commitar mudanças:
+```bash
+git add docs/ mkdocs.yml
+git commit -m "docs: adicionar nova documentação"
 ```
 
-### Plugins
+### Atualizando Collection do Postman
 
-- **search**: Busca integrada
-- **techdocs-core**: Compatibilidade com Backstage
+Quando a API mudar:
+
+1. Atualizar requisições no Postman
+2. Testar todos os endpoints
+3. Exportar collection
+4. Substituir arquivo em `docs/postman/`
+5. Commitar:
+```bash
+git add docs/postman/
+git commit -m "docs: atualizar collection do postman"
+```
+
+## 📊 Comparação dos Tipos de Documentação
+
+| Tipo | Formato | Auto-gerado | Público-alvo | Caso de Uso |
+|------|--------|---------------|-----------------|----------|
+| **MkDocs** | Markdown | ❌ Manual | Desenvolvedores | Arquitetura, guias, tutoriais |
+| **Swagger** | YAML/JSON | ✅ Do código | Desenvolvedores, consumidores API | Referência API, testes |
+| **Postman** | JSON | ❌ Manual | QA, Desenvolvedores | Testes manuais, testes integração |
+
+## 🎯 Acesso Rápido
+
+- **Docs Locais**: http://127.0.0.1:8000 (executar `mkdocs serve`)
+- **Swagger UI**: http://localhost:8080/swagger/index.html (quando API estiver rodando)
+- **Postman Collection**: Importar `docs/postman/Monetics.postman_collection.json`
 
 ## 📝 Boas Práticas
 
-✅ **Mantenha atualizado**: Documente mudanças importantes  
-✅ **Seja claro**: Use exemplos e código sempre que possível  
-✅ **Organize bem**: Use a estrutura de pastas lógica  
-✅ **Links relativos**: Facilita navegação local e no Backstage  
-✅ **Imagens**: Coloque em `docs/assets/`  
+### MkDocs
+- ✅ Usar títulos descritivos
+- ✅ Adicionar exemplos de código
+- ✅ Incluir diagramas (Mermaid)
+- ✅ Manter páginas focadas (um tópico por página)
+- ✅ Adicionar breadcrumbs de navegação
+- ❌ Não duplicar referência da API (usar link do Swagger)
 
-## 🔗 Links Úteis
+### Swagger
+- ✅ Documentar todos os endpoints
+- ✅ Incluir exemplos de request/response
+- ✅ Adicionar descrições aos parâmetros
+- ✅ Agrupar endpoints relacionados com tags
+- ✅ Documentar respostas de erro
+- ❌ Não escrever explicações longas (usar MkDocs)
 
-- [MkDocs Documentation](https://www.mkdocs.org/)
+### Postman
+- ✅ Organizar em pastas por módulo
+- ✅ Usar variáveis de ambiente
+- ✅ Adicionar scripts pré-requisição para auth
+- ✅ Incluir respostas de exemplo
+- ✅ Adicionar asserções de teste
+- ❌ Não usar credenciais hardcoded
+
+## 🔗 Links Externos
+
+- [Documentação MkDocs](https://www.mkdocs.org/)
 - [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
-- [Backstage TechDocs](https://backstage.io/docs/features/techdocs/)
-- [TechDocs Core Plugin](https://github.com/backstage/mkdocs-techdocs-core)
-
-## 📦 Estrutura de Arquivos
-
-```
-monetics/
-├── mkdocs.yml              # Configuração do MkDocs
-├── catalog-info.yaml       # Catálogo do Backstage
-├── docs/                   # Documentação
-│   ├── index.md
-│   ├── getting-started/
-│   ├── architecture/
-│   ├── modules/
-│   ├── api/
-│   ├── guides/
-│   └── assets/            # Imagens, diagramas
-└── site/                  # Gerado pelo build (gitignored)
-```
-
-## 🚨 Troubleshooting
-
-### Erro ao buildar
-
-```bash
-# Instale dependências
-pip install mkdocs-techdocs-core
-
-# Limpe o cache
-rm -rf site/
-mkdocs build
-```
-
-### Links quebrados
-
-- Use caminhos relativos: `../outro-arquivo.md`
-- Verifique a estrutura em `mkdocs.yml`
-
-### Não aparece no Backstage
-
-- Verifique a anotação em `catalog-info.yaml`
-- Confirme que `mkdocs.yml` está na raiz
-- Veja os logs do TechDocs no Backstage
+- [Especificação Swagger/OpenAPI](https://swagger.io/specification/)
+- [Swag (Go Swagger)](https://github.com/swaggo/swag)
+- [Documentação Postman](https://learning.postman.com/docs/)

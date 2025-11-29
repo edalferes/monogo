@@ -17,16 +17,23 @@ import (
 )
 
 func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger) {
+	log.Info().Msg("Initializing Auth module...")
+	_ = WireUpWithService(group, db, jwtSecret, log)
+	log.Info().Msg("Auth module started successfully")
+}
 
+// WireUpWithService registers auth module routes and returns UserService for other modules
+func WireUpWithService(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger) interface{} {
+	log.Info().Msg("Initializing Auth module with service...")
 	userRepo := gormrepo.NewUserRepositoryGorm(db)
 	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
 	permRepo := gormrepo.NewPermissionRepositoryGorm(db)
 	passwordService := service.NewPasswordService()
-	jwtService := service.NewJWTService(jwtSecret, time.Hour) // 1 hour expiration token
+	jwtService := service.NewJWTService(jwtSecret, time.Hour) // 1 hour token expiration
 	auditLogRepo := gormrepo.NewAuditLogRepositoryGorm(db)
 	auditService := service.NewAuditService(auditLogRepo)
 
-	// Handler public (only login)
+	// Public handler (login only)
 	publicHandler := &login.Handler{
 		LoginUseCase: &userUC.LoginWithAuditUseCase{
 			UserRepo:        userRepo,
@@ -63,11 +70,11 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 		UserRepo:        userRepo,
 		PasswordService: passwordService,
 	}
-	// Use cases para role
+	// Role use cases
 	listRolesUC := &roleUC.ListRolesUseCase{RoleRepo: roleRepo}
 	createRoleUC := &roleUC.CreateRoleUseCase{RoleRepo: roleRepo}
 	deleteRoleUC := &roleUC.DeleteRoleUseCase{RoleRepo: roleRepo}
-	// Use cases para permission
+	// Permission use cases
 	listPermissionsUC := &permUC.ListPermissionsUseCase{PermissionRepo: permRepo}
 	createPermissionUC := &permUC.CreatePermissionUseCase{PermissionRepo: permRepo}
 	deletePermissionUC := &permUC.DeletePermissionUseCase{PermissionRepo: permRepo}
@@ -114,4 +121,9 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 	userGroup := group.Group("/user")
 	userGroup.Use(JWTMiddleware(jwtSecret))
 	userGroup.PUT("/password", userHandler.ChangePassword)
+
+	log.Info().Msg("Auth module with service started successfully")
+
+	// Return UserService for other modules to use
+	return service.NewUserServiceLocal(userRepo)
 }

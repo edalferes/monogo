@@ -1,6 +1,6 @@
 # Configuração - Clean Architecture
 
-Esta implementação segue os princípios de Clean Code e SOLID, separando responsabilidades em módulos específicos.
+Esta implementação segue os princípios de Clean Code e monetics, separando responsabilidades em módulos específicos.
 
 **Nota**: Esta configuração está em `internal/` porque é específica para este projeto (contém tipos como DatabaseConfig, JWTConfig). Para reutilização em outros projetos, seria necessário criar uma versão mais genérica em `pkg/`.
 

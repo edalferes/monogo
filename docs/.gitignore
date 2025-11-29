@@ -1,0 +1,8 @@
+# Ignore MkDocs build output
+site/
+
+# Ignore old backup files
+*.old
+
+# Ignore MkDocs cache
+.mkdocs_cache/

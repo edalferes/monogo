@@ -2,7 +2,7 @@
 
 O Monetics utiliza **PostgreSQL** como banco de dados relacional, com GORM para ORM e migrations automáticas.
 
-## Schema Overview
+## Visão Geral do Schema
 
 ```
 ┌─────────────┐       ┌──────────────┐       ┌─────────────┐

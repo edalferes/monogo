@@ -46,7 +46,7 @@ func (h *AdminHandler) CreateRole(c echo.Context) error {
 	if err := c.Bind(&req); err != nil || req["name"] == "" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid role name"})
 	}
-	// permissionIDs pode ser extraído do body se necessário
+	// permissionIDs can be extracted from body if needed
 	if err := h.CreateRoleUC.Execute(req["name"], nil); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}

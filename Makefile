@@ -27,7 +27,7 @@ build: ## Build the application
 ## Swagger
 swagger: ## Generate Swagger documentation
 	@echo "Generating Swagger documentation..."
-	@$(GOCMD) run github.com/swaggo/swag/cmd/swag@latest init -g cmd/api/main.go --parseDependency --parseInternal
+	@$(GOCMD) run github.com/swaggo/swag/cmd/swag@latest init -g cmd/api/main.go --parseDependency --parseInternal -o docs/openapi
 
 ## Test
 test: ## Run tests

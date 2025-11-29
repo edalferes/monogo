@@ -27,17 +27,83 @@ O Monetics oferece um sistema completo para controle de finanças pessoais, perm
 
 ## 🏗️ Arquitetura
 
-Projeto monolítico modular seguindo princípios de Clean Architecture:
+Projeto modular inspirado na arquitetura do **Grafana Loki**, oferecendo flexibilidade para executar como monólito ou microserviços.
 
-- **Domain**: Entidades de negócio e regras de domínio
-- **Use Cases**: Casos de uso e lógica de aplicação
-- **Adapters**: Handlers HTTP e Repositories
-- **Infrastructure**: Banco de dados, validadores, logger
+### Princípios
+
+- **Clean Architecture**: Separação clara de Domain, Use Cases, Adapters e Infrastructure
+- **Modularidade**: Cada módulo pode ser executado independentemente
+- **Comunicação HTTP**: Inspirada no Loki, com suporte a comunicação local e remota
+- **Dependency Injection**: Container e Registry para gerenciar dependências entre módulos
+- **Health Checks**: Endpoints `/health`, `/ready` e `/live` para Kubernetes
 
 ### Módulos Disponíveis
 
 1. **Auth**: Autenticação, autorização, usuários, roles e permissions
-2. **Budget**: Contas, categorias, transações, orçamentos e relatórios
+2. **Budget**: Contas, categorias, transações, orçamentos e relatórios (depende de Auth)
+
+### Modos de Execução
+
+```bash
+# Executar todos os módulos (monólito)
+./bin/monetics --module=all
+
+# Executar apenas auth (microservice)
+./bin/monetics --module=auth
+
+# Executar apenas budget (microservice)
+./bin/monetics --module=budget
+
+# Executar múltiplos módulos
+./bin/monetics --module=auth,budget
+```
+
+### Sistema de Dependências
+
+O Monetics usa um **Dependency Injection Container** e **Module Registry** para gerenciar dependências entre módulos:
+
+- **Inicialização automática**: Módulos são inicializados na ordem correta baseado no grafo de dependências
+- **Comunicação flexível**: Usa serviços locais (in-memory) quando disponíveis, caso contrário HTTP
+- **Fail-fast**: Valida dependências no startup, evitando erros em runtime
+
+**Exemplo de dependência**:
+```go
+// Budget depende de Auth
+registry.Register("budget", []string{"auth"}, ...)
+```
+
+**Monólito** (`--module=all`):
+- Auth inicializa primeiro
+- Budget usa serviço local do Auth (in-memory)
+- Zero overhead de rede
+
+**Microservices** (módulos separados):
+- Cada módulo roda em processo independente
+- Budget conecta via HTTP ao Auth service
+- Retry + Circuit Breaker automático
+
+📚 **Documentação completa**: 
+- [Module Dependencies Guide](./docs/module-dependencies.md)
+- [Testing Dependencies](./docs/testing-dependencies.md)
+
+### Comunicação Entre Serviços
+
+A comunicação entre módulos é configurada via `config.yaml`:
+
+```yaml
+modules:
+  auth:
+    url: ""  # Vazio = local (monólito)
+    # url: "http://auth-service:8080"  # HTTP remoto (microservices)
+```
+
+O sistema usa **pkg/httpclient** para comunicação HTTP resiliente com:
+
+- Connection pooling otimizado (100 conexões idle)
+- Timeouts configuráveis (10s padrão)
+- Retry logic com backoff exponencial (3 tentativas)
+- Circuit breaker para proteção contra falhas em cascata
+- Jitter aleatório para evitar thundering herd
 
 ## 📦 Como Executar
 
@@ -70,12 +136,49 @@ make build
 ./bin/monetics
 ```
 
-## 📚 Documentação da API
+## 📚 Documentação
 
-Após executar a aplicação, acesse:
+O projeto possui documentação completa organizada por tipo:
 
-- **Swagger UI**: http://localhost:8080/swagger/index.html
-- **Health Check**: http://localhost:8080/health
+### 📘 Developer Documentation (MkDocs)
+
+Documentação para desenvolvedores com guias, arquitetura e tutoriais:
+
+```bash
+# Servir localmente em http://127.0.0.1:8000
+mkdocs serve
+```
+
+**Conteúdo**:
+- [Module Dependencies](./docs/mkdocs/module-dependencies.md) - Sistema de injeção de dependências
+- [Testing Guide](./docs/mkdocs/testing-dependencies.md) - Como testar dependências
+- [Dependency Graph](./docs/mkdocs/dependency-graph.md) - Visualização de dependências
+- [Architecture](./docs/mkdocs/architecture/) - Documentação de arquitetura
+- [Getting Started](./docs/mkdocs/getting-started/) - Guias de início
+
+### 🔧 API Documentation (Swagger)
+
+Documentação interativa da API REST:
+
+```bash
+# Gerar/atualizar Swagger docs
+make swagger
+```
+
+**Acesso**: http://localhost:8080/swagger/index.html (quando API estiver rodando)
+
+### 🧪 Postman Collection
+
+Collection completa para testes manuais:
+
+**Arquivo**: [`docs/postman/Monetics.postman_collection.json`](./docs/postman/Monetics.postman_collection.json)
+
+**Como usar**:
+1. Importar no Postman
+2. Configurar variáveis de ambiente (BASE_URL, AUTH_URL, BUDGET_URL)
+3. Testar endpoints
+
+📖 **Mais detalhes**: [docs/README.md](./docs/README.md)
 
 ### Credenciais Padrão
 

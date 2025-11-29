@@ -2,13 +2,13 @@ package api
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/edalferes/monetics/internal/config"
 	"github.com/edalferes/monetics/internal/infra/db"
 	"github.com/edalferes/monetics/internal/infra/validator"
 	"github.com/edalferes/monetics/internal/modules/auth"
 	"github.com/edalferes/monetics/internal/modules/budget"
-	"github.com/edalferes/monetics/internal/modules/testmodule"
 	"github.com/edalferes/monetics/pkg/logger"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -16,13 +16,16 @@ import (
 )
 
 type App struct {
-	echo   *echo.Echo
-	db     *gorm.DB
-	logger logger.Logger
+	echo    *echo.Echo
+	db      *gorm.DB
+	logger  logger.Logger
+	modules []string // List of enabled modules
+	config  *config.Config
 }
 
-func NewApp() *App {
-	cfg := config.LoadConfig()
+func NewApp(enabledModules string, cfg *config.Config) *App {
+	// Parse enabled modules
+	modules := parseModules(enabledModules)
 
 	// Configure logger based on configuration
 	loggerConfig := logger.DefaultConfig()
@@ -36,69 +39,119 @@ func NewApp() *App {
 		appLogger.Fatal().Err(err).Msg("failed to connect to database")
 	}
 
+	// Migrate entities from enabled modules
 	var entities []interface{}
-	entities = append(entities, auth.Entities()...)
-	entities = append(entities, budget.Entities()...)
-	if err := database.AutoMigrate(entities...); err != nil {
-		appLogger.Fatal().Err(err).Msg("failed to migrate database")
+	if hasModule(modules, "auth") {
+		entities = append(entities, auth.Entities()...)
+	}
+	if hasModule(modules, "budget") {
+		entities = append(entities, budget.Entities()...)
 	}
 
-	// Seed auth module (roles, permissions, root user)
-	if err := auth.Seed(database); err != nil {
-		appLogger.Fatal().Err(err).Msg("failed to seed auth module")
+	if len(entities) > 0 {
+		if err := database.AutoMigrate(entities...); err != nil {
+			appLogger.Fatal().Err(err).Msg("failed to migrate database")
+		}
 	}
 
-	// Seed budget module with default categories for root user
-	// Get root user ID
-	var rootUser struct{ ID uint }
-	if err := database.Table("users").Select("id").Where("username = ?", "root").First(&rootUser).Error; err != nil {
-		appLogger.Fatal().Err(err).Msg("failed to find root user for budget seed")
+	// Seed enabled modules
+	if hasModule(modules, "auth") {
+		if err := auth.Seed(database); err != nil {
+			appLogger.Fatal().Err(err).Msg("failed to seed auth module")
+		}
 	}
-	if err := budget.Seed(database, rootUser.ID); err != nil {
-		appLogger.Fatal().Err(err).Msg("failed to seed budget module")
+
+	if hasModule(modules, "budget") {
+		var rootUser struct{ ID uint }
+		if err := database.Table("users").Select("id").Where("username = ?", "root").First(&rootUser).Error; err != nil {
+			appLogger.Fatal().Err(err).Msg("failed to find root user for budget seed")
+		}
+		if err := budget.Seed(database, rootUser.ID); err != nil {
+			appLogger.Fatal().Err(err).Msg("failed to seed budget module")
+		}
 	}
 
 	e := echo.New()
 	e.Validator = validator.NewValidator()
 
 	return &App{
-		echo:   e,
-		db:     database,
-		logger: appLogger,
+		echo:    e,
+		db:      database,
+		logger:  appLogger,
+		modules: modules,
+		config:  cfg,
 	}
 }
 
-// RegisterModules register all available modules
+// parseModules converts module string to list
+func parseModules(input string) []string {
+	if input == "" || input == "all" {
+		return []string{"auth", "budget"}
+	}
+
+	parts := strings.Split(input, ",")
+	modules := make([]string, 0, len(parts))
+	for _, p := range parts {
+		m := strings.TrimSpace(p)
+		if m != "" {
+			modules = append(modules, m)
+		}
+	}
+	return modules
+}
+
+// hasModule checks if module is enabled
+func hasModule(modules []string, name string) bool {
+	for _, m := range modules {
+		if m == name {
+			return true
+		}
+	}
+	return false
+}
+
+// RegisterModules registers only enabled modules using dependency injection
 func (a *App) RegisterModules(cfg *config.Config) {
 	v1 := a.echo.Group("/v1")
 
-	// Register all modules
-	a.logger.Info().Str("module", "auth").Msg("Registering auth module")
-	auth.WireUp(v1, a.db, cfg.JWT.Secret, a.logger)
+	// Create dependency injection container
+	container := NewModuleContainer(cfg, a.db, a.logger, v1, a.modules)
 
-	a.logger.Info().Str("module", "budget").Msg("Registering budget module")
-	budget.WireUp(v1, a.db, cfg.JWT.Secret, a.logger)
+	// Create module registry
+	registry := NewModuleRegistry(container)
 
-	a.logger.Info().Str("module", "testmodule").Msg("Registering test module")
-	testmodule.WireUp(v1, cfg.JWT.Secret)
+	// Register all built-in modules with their dependencies
+	registry.RegisterBuiltInModules()
+
+	// Initialize modules in dependency order
+	if err := registry.Initialize(); err != nil {
+		a.logger.Fatal().Err(err).Msg("Failed to initialize modules")
+	}
 }
 
 func (a *App) RegisterGlobalRoutes() {
-	a.echo.GET("/health", func(c echo.Context) error {
+	// Health and readiness probes (Kubernetes/Loki style)
+	a.echo.GET("/health", a.HealthHandler)
+	a.echo.GET("/ready", a.ReadyHandler)
+	a.echo.GET("/live", a.LivenessHandler)
+
+	// Legacy health endpoint for backward compatibility
+	a.echo.GET("/healthz", func(c echo.Context) error {
 		return c.String(200, "ok")
 	})
+
 	a.echo.GET("/metrics", func(c echo.Context) error {
 		return c.String(200, "metrics: not implemented")
 	})
 	a.echo.GET("/swagger/*", echoSwagger.WrapHandler)
 }
 
-func (a *App) Run(cfg *config.Config) {
+func (a *App) Run() {
 	a.RegisterGlobalRoutes()
-	a.RegisterModules(cfg)
+	a.RegisterModules(a.config)
 	a.logger.Info().
-		Int("port", cfg.App.Port).
-		Str("env", cfg.App.Environment).
+		Int("port", a.config.App.Port).
+		Str("env", a.config.App.Environment).
 		Msg("Starting API server")
-	a.echo.Logger.Fatal(a.echo.Start(fmt.Sprintf(":%d", cfg.App.Port)))
+	a.echo.Logger.Fatal(a.echo.Start(fmt.Sprintf(":%d", a.config.App.Port)))
 }

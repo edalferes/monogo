@@ -8,6 +8,18 @@ type Config struct {
 	Database DatabaseConfig `mapstructure:"database" yaml:"database"`
 	JWT      JWTConfig      `mapstructure:"jwt" yaml:"jwt"`
 	Logger   LoggerConfig   `mapstructure:"logger" yaml:"logger"`
+	Modules  ModulesConfig  `mapstructure:"modules" yaml:"modules"`
+}
+
+// ModulesConfig holds service URLs for remote modules
+type ModulesConfig struct {
+	Auth   ModuleServiceConfig `mapstructure:"auth" yaml:"auth"`
+	Budget ModuleServiceConfig `mapstructure:"budget" yaml:"budget"`
+}
+
+// ModuleServiceConfig holds URL for a remote service
+type ModuleServiceConfig struct {
+	URL string `mapstructure:"url" yaml:"url"`
 }
 
 // AppConfig application configuration

@@ -60,7 +60,7 @@ spec:
   owner: infra
   system: monetics
   definition:
-    $text: ./docs/swagger.yaml
+    $text: ./docs/openapi/swagger.yaml
 
 ---
 apiVersion: backstage.io/v1alpha1

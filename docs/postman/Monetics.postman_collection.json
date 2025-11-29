@@ -11,7 +11,7 @@
 			"name": "Infra",
 			"item": [
 				{
-					"name": "Health",
+					"name": "Health Check (Detailed)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -23,7 +23,62 @@
 							"path": [
 								"health"
 							]
-						}
+						},
+						"description": "Health check detalhado com status do serviço, módulos ativos e database status"
+					},
+					"response": []
+				},
+				{
+					"name": "Readiness Probe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/ready",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"ready"
+							]
+						},
+						"description": "Kubernetes readiness probe - verifica se o serviço está pronto para receber tráfego"
+					},
+					"response": []
+				},
+				{
+					"name": "Liveness Probe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/live",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"live"
+							]
+						},
+						"description": "Kubernetes liveness probe - verifica se o processo está vivo"
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check (Legacy)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/healthz",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"healthz"
+							]
+						},
+						"description": "Endpoint legacy de health check para backward compatibility"
 					},
 					"response": []
 				},
@@ -1007,7 +1062,20 @@
 		{
 			"key": "BASE_URL",
 			"value": "http://localhost:8080",
-			"type": "string"
+			"type": "string",
+			"description": "Base URL do serviço (Monolith: 8080, Auth: 8081, Budget: 8082)"
+		},
+		{
+			"key": "AUTH_URL",
+			"value": "http://localhost:8081",
+			"type": "string",
+			"description": "URL do serviço Auth (quando executado separadamente)"
+		},
+		{
+			"key": "BUDGET_URL",
+			"value": "http://localhost:8082",
+			"type": "string",
+			"description": "URL do serviço Budget (quando executado separadamente)"
 		},
 		{
 			"key": "VERSION",
@@ -1025,9 +1093,21 @@
 					"if (!pm.collectionVariables.get('BASE_URL')) {",
 					"    pm.collectionVariables.set('BASE_URL', 'http://localhost:8080');",
 					"}",
+					"if (!pm.collectionVariables.get('AUTH_URL')) {",
+					"    pm.collectionVariables.set('AUTH_URL', 'http://localhost:8081');",
+					"}",
+					"if (!pm.collectionVariables.get('BUDGET_URL')) {",
+					"    pm.collectionVariables.set('BUDGET_URL', 'http://localhost:8082');",
+					"}",
 					"if (!pm.collectionVariables.get('VERSION')) {",
 					"    pm.collectionVariables.set('VERSION', 'v1');",
-					"}"
+					"}",
+					"",
+					"// Helper: Uncomment the line below to test against Auth service directly",
+					"// pm.collectionVariables.set('BASE_URL', pm.collectionVariables.get('AUTH_URL'));",
+					"",
+					"// Helper: Uncomment the line below to test against Budget service directly",
+					"// pm.collectionVariables.set('BASE_URL', pm.collectionVariables.get('BUDGET_URL'));"
 				]
 			}
 		}
