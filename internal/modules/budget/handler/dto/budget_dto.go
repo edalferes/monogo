@@ -75,9 +75,11 @@ func ToBudgetResponseList(budgets []domain.Budget) []BudgetResponse {
 
 // UpdateBudgetRequest represents the request to update a budget
 type UpdateBudgetRequest struct {
-	Name        string   `json:"name"`
-	Amount      *float64 `json:"amount"`
-	AlertAt     *float64 `json:"alert_at"`
-	IsActive    *bool    `json:"is_active"`
-	Description string   `json:"description"`
+	Name        *string    `json:"name" validate:"omitempty,min=3,max=100"`
+	Amount      *float64   `json:"amount" validate:"omitempty,gt=0"`
+	Period      *string    `json:"period" validate:"omitempty,oneof=monthly quarterly yearly custom"`
+	StartDate   *time.Time `json:"start_date"`
+	EndDate     *time.Time `json:"end_date"`
+	AlertAt     *float64   `json:"alert_at" validate:"omitempty,gte=0,lte=100"`
+	Description *string    `json:"description" validate:"omitempty,max=500"`
 }

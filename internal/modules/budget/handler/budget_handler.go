@@ -2,27 +2,46 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
-	"github.com/edalferes/monetics/internal/modules/budget/usecase"
+	budgetUseCase "github.com/edalferes/monetics/internal/modules/budget/usecase/budget"
 	"github.com/labstack/echo/v4"
 )
 
+// convertBudgetPeriod converts string pointer to BudgetPeriod pointer
+func convertBudgetPeriod(p *string) *domain.BudgetPeriod {
+	if p == nil {
+		return nil
+	}
+	period := domain.BudgetPeriod(*p)
+	return &period
+}
+
 // BudgetHandler handles HTTP requests for budgets
 type BudgetHandler struct {
-	createBudgetUseCase *usecase.CreateBudgetUseCase
-	listBudgetsUseCase  *usecase.ListBudgetsUseCase
+	createBudgetUseCase  *budgetUseCase.CreateUseCase
+	listBudgetsUseCase   *budgetUseCase.ListUseCase
+	getBudgetByIDUseCase *budgetUseCase.GetByIDUseCase
+	updateBudgetUseCase  *budgetUseCase.UpdateUseCase
+	deleteBudgetUseCase  *budgetUseCase.DeleteUseCase
 }
 
 // NewBudgetHandler creates a new budget handler
 func NewBudgetHandler(
-	createBudgetUseCase *usecase.CreateBudgetUseCase,
-	listBudgetsUseCase *usecase.ListBudgetsUseCase,
+	createBudgetUseCase *budgetUseCase.CreateUseCase,
+	listBudgetsUseCase *budgetUseCase.ListUseCase,
+	getBudgetByIDUseCase *budgetUseCase.GetByIDUseCase,
+	updateBudgetUseCase *budgetUseCase.UpdateUseCase,
+	deleteBudgetUseCase *budgetUseCase.DeleteUseCase,
 ) *BudgetHandler {
 	return &BudgetHandler{
-		createBudgetUseCase: createBudgetUseCase,
-		listBudgetsUseCase:  listBudgetsUseCase,
+		createBudgetUseCase:  createBudgetUseCase,
+		listBudgetsUseCase:   listBudgetsUseCase,
+		getBudgetByIDUseCase: getBudgetByIDUseCase,
+		updateBudgetUseCase:  updateBudgetUseCase,
+		deleteBudgetUseCase:  deleteBudgetUseCase,
 	}
 }
 
@@ -56,7 +75,7 @@ func (h *BudgetHandler) CreateBudget(c echo.Context) error {
 		})
 	}
 
-	input := usecase.CreateBudgetInput{
+	input := budgetUseCase.CreateInput{
 		UserID:      userID,
 		CategoryID:  req.CategoryID,
 		Name:        req.Name,
@@ -68,14 +87,14 @@ func (h *BudgetHandler) CreateBudget(c echo.Context) error {
 		Description: req.Description,
 	}
 
-	budget, err := h.createBudgetUseCase.Execute(c.Request().Context(), input)
+	budgetResult, err := h.createBudgetUseCase.Execute(c.Request().Context(), input)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusCreated, dto.ToBudgetResponse(budget))
+	return c.JSON(http.StatusCreated, dto.ToBudgetResponse(budgetResult))
 }
 
 // ListBudgets handles listing user budgets
@@ -93,12 +112,8 @@ func (h *BudgetHandler) ListBudgets(c echo.Context) error {
 		})
 	}
 
-	input := usecase.ListBudgetsInput{
-		UserID:     userID,
-		ActiveOnly: c.QueryParam("active_only") == "true",
-	}
-
-	budgets, err := h.listBudgetsUseCase.Execute(c.Request().Context(), input)
+	// TODO: Implement active_only filter if needed
+	budgets, err := h.listBudgetsUseCase.Execute(c.Request().Context(), userID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
@@ -106,4 +121,133 @@ func (h *BudgetHandler) ListBudgets(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, dto.ToBudgetResponseList(budgets))
+}
+
+// GetBudgetByID handles getting budget by ID
+// @Summary Get budget by ID
+// @Tags Budget - Budgets
+// @Produce json
+// @Param id path int true "Budget ID"
+// @Success 200 {object} dto.BudgetResponse
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /budgets/{id} [get]
+func (h *BudgetHandler) GetBudgetByID(c echo.Context) error {
+	budgetID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid budget ID",
+		})
+	}
+
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	budget, err := h.getBudgetByIDUseCase.Execute(c.Request().Context(), userID, uint(budgetID))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, dto.ToBudgetResponse(budget))
+}
+
+// UpdateBudget handles budget update
+// @Summary Update a budget
+// @Tags Budget - Budgets
+// @Accept json
+// @Produce json
+// @Param id path int true "Budget ID"
+// @Param request body dto.UpdateBudgetRequest true "Budget update request"
+// @Success 200 {object} dto.BudgetResponse
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /budgets/{id} [put]
+func (h *BudgetHandler) UpdateBudget(c echo.Context) error {
+	budgetID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid budget ID",
+		})
+	}
+
+	var req dto.UpdateBudgetRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	input := budgetUseCase.UpdateInput{
+		ID:          uint(budgetID),
+		UserID:      userID,
+		Name:        req.Name,
+		Amount:      req.Amount,
+		Period:      convertBudgetPeriod(req.Period),
+		StartDate:   req.StartDate,
+		EndDate:     req.EndDate,
+		AlertAt:     req.AlertAt,
+		Description: req.Description,
+	}
+
+	budget, err := h.updateBudgetUseCase.Execute(c.Request().Context(), input)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, dto.ToBudgetResponse(budget))
+}
+
+// DeleteBudget handles budget deletion (soft delete)
+// @Summary Delete a budget
+// @Tags Budget - Budgets
+// @Produce json
+// @Param id path int true "Budget ID"
+// @Success 204
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /budgets/{id} [delete]
+func (h *BudgetHandler) DeleteBudget(c echo.Context) error {
+	budgetID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid budget ID",
+		})
+	}
+
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	err = h.deleteBudgetUseCase.Execute(c.Request().Context(), userID, uint(budgetID))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }

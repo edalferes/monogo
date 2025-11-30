@@ -1,8 +1,6 @@
 package dto
 
-import (
-	"github.com/edalferes/monetics/internal/modules/budget/usecase"
-)
+import "github.com/edalferes/monetics/internal/modules/budget/usecase/report"
 
 // MonthlyReportResponse represents a monthly financial report
 type MonthlyReportResponse struct {
@@ -24,16 +22,16 @@ type CategoryBreakdownItem struct {
 	Percentage   float64 `json:"percentage"`
 }
 
-// ToMonthlyReportResponse converts usecase.MonthlyReport to MonthlyReportResponse
-func ToMonthlyReportResponse(report *usecase.MonthlyReport) MonthlyReportResponse {
-	breakdown := make([]CategoryBreakdownItem, len(report.CategoryTotals))
+// ToMonthlyReportResponse converts report.MonthlyReport to MonthlyReportResponse
+func ToMonthlyReportResponse(r *report.MonthlyReport) MonthlyReportResponse {
+	breakdown := make([]CategoryBreakdownItem, len(r.CategoryTotals))
 
-	for i, total := range report.CategoryTotals {
+	for i, total := range r.CategoryTotals {
 		var percentage float64
-		if total.CategoryType == "income" && report.TotalIncome > 0 {
-			percentage = (total.Amount / report.TotalIncome) * 100
-		} else if total.CategoryType == "expense" && report.TotalExpense > 0 {
-			percentage = (total.Amount / report.TotalExpense) * 100
+		if total.CategoryType == "income" && r.TotalIncome > 0 {
+			percentage = (total.Amount / r.TotalIncome) * 100
+		} else if total.CategoryType == "expense" && r.TotalExpense > 0 {
+			percentage = (total.Amount / r.TotalExpense) * 100
 		}
 
 		breakdown[i] = CategoryBreakdownItem{
@@ -46,12 +44,12 @@ func ToMonthlyReportResponse(report *usecase.MonthlyReport) MonthlyReportRespons
 	}
 
 	return MonthlyReportResponse{
-		Year:              report.Year,
-		Month:             int(report.Month),
-		MonthName:         report.Month.String(),
-		TotalIncome:       report.TotalIncome,
-		TotalExpense:      report.TotalExpense,
-		Balance:           report.Balance,
+		Year:              r.Year,
+		Month:             int(r.Month),
+		MonthName:         r.Month.String(),
+		TotalIncome:       r.TotalIncome,
+		TotalExpense:      r.TotalExpense,
+		Balance:           r.Balance,
 		CategoryBreakdown: breakdown,
 	}
 }

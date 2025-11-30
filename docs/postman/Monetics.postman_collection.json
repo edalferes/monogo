@@ -519,7 +519,77 @@
 									"raw": "{{BASE_URL}}/{{VERSION}}/budget/accounts/1",
 									"host": ["{{BASE_URL}}"],
 									"path": ["{{VERSION}}", "budget", "accounts", "1"]
-								}
+								},
+								"description": "Obtém saldo e detalhes calculados de uma conta"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account Detail",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/accounts/1/detail",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "accounts", "1", "detail"]
+								},
+								"description": "Obtém detalhes básicos de uma conta sem cálculos"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Account",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Conta Corrente BB - Atualizada\",\n    \"type\": \"checking\",\n    \"currency\": \"BRL\",\n    \"description\": \"Conta principal atualizada\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/accounts/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "accounts", "1"]
+								},
+								"description": "Atualiza uma conta (campos opcionais)"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Account",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/accounts/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "accounts", "1"]
+								},
+								"description": "Remove uma conta (soft delete)"
 							},
 							"response": []
 						}
@@ -622,6 +692,75 @@
 										}
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Category by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/categories/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "categories", "1"]
+								},
+								"description": "Obtém detalhes de uma categoria específica"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Category",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Freelance - Atualizado\",\n    \"type\": \"income\",\n    \"icon\": \"💻\",\n    \"color\": \"#4CAF50\",\n    \"description\": \"Trabalhos freelance diversos\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/categories/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "categories", "1"]
+								},
+								"description": "Atualiza uma categoria (campos opcionais)"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Category",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/categories/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "categories", "1"]
+								},
+								"description": "Remove uma categoria (soft delete)"
 							},
 							"response": []
 						}
@@ -811,6 +950,75 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get Transaction by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions", "1"]
+								},
+								"description": "Obtém detalhes de uma transação específica"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Transaction",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"account_id\": 1,\n    \"category_id\": 2,\n    \"type\": \"expense\",\n    \"amount\": 150.75,\n    \"description\": \"Compras supermercado - atualizado\",\n    \"date\": \"2025-11-28T10:30:00Z\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions", "1"]
+								},
+								"description": "Atualiza uma transação (campos opcionais)"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Transaction",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "transactions", "1"]
+								},
+								"description": "Remove uma transação (soft delete)"
+							},
+							"response": []
 						}
 					]
 				},
@@ -886,6 +1094,75 @@
 										}
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Budget by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/budgets/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "budgets", "1"]
+								},
+								"description": "Obtém detalhes de um orçamento específico"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Budget",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Orçamento Alimentação - Atualizado\",\n    \"amount\": 1200.00,\n    \"period\": \"monthly\",\n    \"start_date\": \"2025-12-01T00:00:00Z\",\n    \"end_date\": \"2025-12-31T23:59:59Z\",\n    \"alert_at\": 80.0,\n    \"description\": \"Orçamento mensal para alimentação atualizado\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/budgets/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "budgets", "1"]
+								},
+								"description": "Atualiza um orçamento (campos opcionais)"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Budget",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/budgets/1",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "budget", "budgets", "1"]
+								},
+								"description": "Remove um orçamento (soft delete)"
 							},
 							"response": []
 						}

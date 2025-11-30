@@ -56,9 +56,10 @@ func ToAccountResponseList(accounts []domain.Account) []AccountResponse {
 
 // UpdateAccountRequest represents the request to update an account
 type UpdateAccountRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	IsActive    *bool  `json:"is_active"`
+	Name        *string `json:"name" validate:"omitempty,min=3,max=100"`
+	Type        *string `json:"type" validate:"omitempty,oneof=checking savings credit cash invest"`
+	Currency    *string `json:"currency" validate:"omitempty,len=3"`
+	Description *string `json:"description" validate:"omitempty,max=500"`
 }
 
 // AccountBalanceResponse represents an account with calculated balance details

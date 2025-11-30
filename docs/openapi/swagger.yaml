@@ -355,6 +355,94 @@ definitions:
       user_id:
         type: integer
     type: object
+  github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateAccountRequest:
+    properties:
+      currency:
+        type: string
+      description:
+        maxLength: 500
+        type: string
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+      type:
+        enum:
+        - checking
+        - savings
+        - credit
+        - cash
+        - invest
+        type: string
+    type: object
+  github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateBudgetRequest:
+    properties:
+      alert_at:
+        maximum: 100
+        minimum: 0
+        type: number
+      amount:
+        type: number
+      description:
+        maxLength: 500
+        type: string
+      end_date:
+        type: string
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+      period:
+        enum:
+        - monthly
+        - quarterly
+        - yearly
+        - custom
+        type: string
+      start_date:
+        type: string
+    type: object
+  github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateCategoryRequest:
+    properties:
+      color:
+        maxLength: 7
+        type: string
+      description:
+        maxLength: 500
+        type: string
+      icon:
+        maxLength: 50
+        type: string
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+      type:
+        enum:
+        - income
+        - expense
+        type: string
+    type: object
+  github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateTransactionRequest:
+    properties:
+      account_id:
+        type: integer
+      amount:
+        type: number
+      category_id:
+        type: integer
+      date:
+        type: string
+      description:
+        maxLength: 500
+        type: string
+      type:
+        enum:
+        - income
+        - expense
+        - transfer
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -408,6 +496,31 @@ paths:
       tags:
       - Budget - Accounts
   /accounts/{id}:
+    delete:
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete an account
+      tags:
+      - Budget - Accounts
     get:
       parameters:
       - description: Account ID
@@ -438,6 +551,69 @@ paths:
             additionalProperties: true
             type: object
       summary: Get account by ID with calculated balance
+      tags:
+      - Budget - Accounts
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Account update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update an account
+      tags:
+      - Budget - Accounts
+  /accounts/{id}/detail:
+    get:
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get account by ID
       tags:
       - Budget - Accounts
   /budgets:
@@ -484,6 +660,94 @@ paths:
       summary: Create a new budget
       tags:
       - Budget - Budgets
+  /budgets/{id}:
+    delete:
+      parameters:
+      - description: Budget ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a budget
+      tags:
+      - Budget - Budgets
+    get:
+      parameters:
+      - description: Budget ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get budget by ID
+      tags:
+      - Budget - Budgets
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Budget ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Budget update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateBudgetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a budget
+      tags:
+      - Budget - Budgets
   /categories:
     get:
       parameters:
@@ -526,6 +790,94 @@ paths:
             additionalProperties: true
             type: object
       summary: Create a new category
+      tags:
+      - Budget - Categories
+  /categories/{id}:
+    delete:
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a category
+      tags:
+      - Budget - Categories
+    get:
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get category by ID
+      tags:
+      - Budget - Categories
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Category update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a category
       tags:
       - Budget - Categories
   /reports/monthly:
@@ -614,6 +966,94 @@ paths:
             additionalProperties: true
             type: object
       summary: Create a new transaction
+      tags:
+      - Budget - Transactions
+  /transactions/{id}:
+    delete:
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a transaction
+      tags:
+      - Budget - Transactions
+    get:
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get transaction by ID
+      tags:
+      - Budget - Transactions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Transaction update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a transaction
       tags:
       - Budget - Transactions
   /v1/admin/permissions:
