@@ -76,12 +76,13 @@ func NewApp(enabledModules string, cfg *config.Config) *App {
 	e := echo.New()
 	e.Validator = validator.NewValidator()
 
-	// Configure CORS
+	// Configure CORS middleware
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:3001", "http://localhost:5173"},
-		AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.PATCH, echo.DELETE, echo.OPTIONS},
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.PATCH, echo.OPTIONS},
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 		AllowCredentials: true,
+		MaxAge:           3600,
 	}))
 
 	return &App{
@@ -162,6 +163,6 @@ func (a *App) Run() {
 	a.logger.Info().
 		Int("port", a.config.App.Port).
 		Str("env", a.config.App.Environment).
-		Msg("Starting API server")
+		Msg("Starting Server")
 	a.echo.Logger.Fatal(a.echo.Start(fmt.Sprintf(":%d", a.config.App.Port)))
 }
