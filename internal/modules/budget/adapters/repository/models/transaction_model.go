@@ -10,7 +10,7 @@ import (
 // TransactionModel represents the database model for Transaction
 type TransactionModel struct {
 	ID                   uint      `gorm:"primaryKey"`
-	UserID               uint      `gorm:"not null;index:idx_user_transactions"`
+	UserID               uint      `gorm:"not null;index:idx_user_transactions;constraint:OnDelete:CASCADE"`
 	AccountID            uint      `gorm:"not null;index:idx_account_transactions"`
 	CategoryID           uint      `gorm:"not null;index:idx_category_transactions"`
 	Type                 string    `gorm:"not null;size:20"`

@@ -9,7 +9,7 @@ import (
 // CategoryModel represents the database model for Category
 type CategoryModel struct {
 	ID          uint   `gorm:"primaryKey"`
-	UserID      uint   `gorm:"not null;index:idx_user_categories"`
+	UserID      uint   `gorm:"not null;index:idx_user_categories;constraint:OnDelete:CASCADE"`
 	Name        string `gorm:"not null;size:100"`
 	Type        string `gorm:"not null;size:20"`
 	Icon        string `gorm:"size:10"`

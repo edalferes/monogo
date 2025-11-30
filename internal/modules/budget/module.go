@@ -6,8 +6,8 @@ import (
 
 	"github.com/edalferes/monetics/internal/modules/auth"
 	"github.com/edalferes/monetics/internal/modules/auth/service"
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/http/handlers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
-	"github.com/edalferes/monetics/internal/modules/budget/handler"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/account"
 	budgetUseCase "github.com/edalferes/monetics/internal/modules/budget/usecase/budget"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/category"
@@ -59,11 +59,11 @@ type Module struct {
 	getMonthlyReportUseCase  *report.GetMonthlyReportUseCase
 
 	// Handlers
-	accountHandler     *handler.AccountHandler
-	categoryHandler    *handler.CategoryHandler
-	transactionHandler *handler.TransactionHandler
-	budgetHandler      *handler.BudgetHandler
-	reportHandler      *handler.ReportHandler
+	accountHandler     *handlers.AccountHandler
+	categoryHandler    *handlers.CategoryHandler
+	transactionHandler *handlers.TransactionHandler
+	budgetHandler      *handlers.BudgetHandler
+	reportHandler      *handlers.ReportHandler
 }
 
 // NewModule creates a new budget module instance
@@ -129,7 +129,7 @@ func NewModule(db *gorm.DB) *Module {
 	)
 
 	// Initialize handlers
-	module.accountHandler = handler.NewAccountHandler(
+	module.accountHandler = handlers.NewAccountHandler(
 		module.createAccountUseCase,
 		module.listAccountsUseCase,
 		module.getAccountByIDUseCase,
@@ -137,28 +137,28 @@ func NewModule(db *gorm.DB) *Module {
 		module.deleteAccountUseCase,
 		module.getAccountBalanceUseCase,
 	)
-	module.categoryHandler = handler.NewCategoryHandler(
+	module.categoryHandler = handlers.NewCategoryHandler(
 		module.createCategoryUseCase,
 		module.listCategoriesUseCase,
 		module.getCategoryByIDUseCase,
 		module.updateCategoryUseCase,
 		module.deleteCategoryUseCase,
 	)
-	module.transactionHandler = handler.NewTransactionHandler(
+	module.transactionHandler = handlers.NewTransactionHandler(
 		module.createTransactionUseCase,
 		module.listTransactionsUseCase,
 		module.getTransactionByIDUseCase,
 		module.updateTransactionUseCase,
 		module.deleteTransactionUseCase,
 	)
-	module.budgetHandler = handler.NewBudgetHandler(
+	module.budgetHandler = handlers.NewBudgetHandler(
 		module.createBudgetUseCase,
 		module.listBudgetsUseCase,
 		module.getBudgetByIDUseCase,
 		module.updateBudgetUseCase,
 		module.deleteBudgetUseCase,
 	)
-	module.reportHandler = handler.NewReportHandler(
+	module.reportHandler = handlers.NewReportHandler(
 		module.getMonthlyReportUseCase,
 	)
 

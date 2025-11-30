@@ -1,4 +1,4 @@
-package handler
+package handlers
 
 import (
 	"net/http"
@@ -7,8 +7,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/http/dto"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
-	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/transaction"
 )
 

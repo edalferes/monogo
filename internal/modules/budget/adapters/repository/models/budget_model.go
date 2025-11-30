@@ -9,7 +9,7 @@ import (
 // BudgetModel represents the database model for Budget
 type BudgetModel struct {
 	ID          uint      `gorm:"primaryKey"`
-	UserID      uint      `gorm:"not null;index:idx_user_budgets"`
+	UserID      uint      `gorm:"not null;index:idx_user_budgets;constraint:OnDelete:CASCADE"`
 	CategoryID  uint      `gorm:"not null;index:idx_category_budgets"`
 	Name        string    `gorm:"not null;size:100"`
 	Amount      float64   `gorm:"type:decimal(15,2);not null"`

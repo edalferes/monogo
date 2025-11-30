@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 
 	handler_admin "github.com/edalferes/monetics/internal/modules/auth/adapters/http/handlers/admin"
+	handler_audit "github.com/edalferes/monetics/internal/modules/auth/adapters/http/handlers/audit"
 	"github.com/edalferes/monetics/internal/modules/auth/adapters/http/handlers/login"
 	handler_user "github.com/edalferes/monetics/internal/modules/auth/adapters/http/handlers/user"
 	gormrepo "github.com/edalferes/monetics/internal/modules/auth/adapters/repository/gorm"
@@ -115,6 +116,9 @@ func WireUpWithService(group *echo.Group, db *gorm.DB, jwtSecret string, log log
 	adminGroup.GET("/permissions", adminRolePermHandler.ListPermissions)
 	adminGroup.POST("/permissions", adminRolePermHandler.CreatePermission)
 	adminGroup.DELETE("/permissions/:name", adminRolePermHandler.DeletePermission)
+	// Audit logs
+	auditHandler := handler_audit.NewHandler(auditLogRepo)
+	adminGroup.GET("/audit-logs", auditHandler.ListAuditLogs)
 
 	// User endpoints (protected, user can access their own data)
 	userHandler := &handler_user.UserHandler{

@@ -410,6 +410,31 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Audit Logs",
+					"item": [
+						{
+							"name": "List Audit Logs",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/{{VERSION}}/admin/audit-logs",
+									"host": ["{{BASE_URL}}"],
+									"path": ["{{VERSION}}", "admin", "audit-logs"]
+								},
+								"description": "Lista todos os logs de auditoria do sistema (apenas admins)"
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
