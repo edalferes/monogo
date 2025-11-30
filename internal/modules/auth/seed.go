@@ -1,10 +1,11 @@
 package auth
 
 import (
+	"gorm.io/gorm"
+
 	gormrepo "github.com/edalferes/monetics/internal/modules/auth/adapters/repository/gorm"
 	"github.com/edalferes/monetics/internal/modules/auth/domain"
 	"github.com/edalferes/monetics/internal/modules/auth/service"
-	"gorm.io/gorm"
 )
 
 const (

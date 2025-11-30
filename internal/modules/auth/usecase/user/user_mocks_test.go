@@ -1,9 +1,10 @@
 package user_test
 
 import (
+	"github.com/stretchr/testify/mock"
+
 	"github.com/edalferes/monetics/internal/modules/auth/domain"
 	"github.com/edalferes/monetics/internal/modules/auth/service"
-	"github.com/stretchr/testify/mock"
 )
 
 // MockUserRepository is a mock implementation of User interface

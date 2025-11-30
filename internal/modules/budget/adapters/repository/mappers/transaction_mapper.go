@@ -1,9 +1,10 @@
 package mappers
 
 import (
+	"github.com/lib/pq"
+
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
-	"github.com/lib/pq"
 )
 
 // TransactionMapper converts between domain.Transaction and models.TransactionModel

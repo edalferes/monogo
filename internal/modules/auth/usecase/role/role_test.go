@@ -3,10 +3,11 @@ package role
 import (
 	"testing"
 
-	"github.com/edalferes/monetics/internal/modules/auth/domain"
-	"github.com/edalferes/monetics/internal/modules/auth/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/edalferes/monetics/internal/modules/auth/domain"
+	"github.com/edalferes/monetics/internal/modules/auth/errors"
 )
 
 // MockRoleRepository is a mock implementation of Role interface

@@ -4,8 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 type MockTransactionRepository struct {

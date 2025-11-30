@@ -3,6 +3,9 @@ package auth
 import (
 	"time"
 
+	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
+
 	handler_admin "github.com/edalferes/monetics/internal/modules/auth/adapters/http/handlers/admin"
 	"github.com/edalferes/monetics/internal/modules/auth/adapters/http/handlers/login"
 	handler_user "github.com/edalferes/monetics/internal/modules/auth/adapters/http/handlers/user"
@@ -12,8 +15,6 @@ import (
 	roleUC "github.com/edalferes/monetics/internal/modules/auth/usecase/role"
 	userUC "github.com/edalferes/monetics/internal/modules/auth/usecase/user"
 	"github.com/edalferes/monetics/pkg/logger"
-	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger) {

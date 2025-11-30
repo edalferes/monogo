@@ -1,11 +1,12 @@
 package gorm
 
 import (
+	gormpkg "gorm.io/gorm"
+
 	"github.com/edalferes/monetics/internal/modules/auth/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/auth/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/auth/domain"
 	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
-	gormpkg "gorm.io/gorm"
 )
 
 type UserRepositoryGorm struct {

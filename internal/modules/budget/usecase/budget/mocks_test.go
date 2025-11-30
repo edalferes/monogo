@@ -1,10 +1,11 @@
 package budget_test
 
 import (
-"context"
+	"context"
 
-"github.com/edalferes/monetics/internal/modules/budget/domain"
-"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/mock"
+
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 type MockBudgetRepository struct {

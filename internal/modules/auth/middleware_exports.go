@@ -1,8 +1,9 @@
 package auth
 
 import (
-	authmiddleware "github.com/edalferes/monetics/internal/modules/auth/adapters/http"
 	"github.com/labstack/echo/v4"
+
+	authmiddleware "github.com/edalferes/monetics/internal/modules/auth/adapters/http"
 )
 
 // JWTMiddleware exposes the JWT middleware for use by other modules

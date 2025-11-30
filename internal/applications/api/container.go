@@ -3,10 +3,11 @@ package api
 import (
 	"sync"
 
-	"github.com/edalferes/monetics/internal/config"
-	"github.com/edalferes/monetics/pkg/logger"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
+
+	"github.com/edalferes/monetics/internal/config"
+	"github.com/edalferes/monetics/pkg/logger"
 )
 
 // ModuleContainer manages module dependencies and services

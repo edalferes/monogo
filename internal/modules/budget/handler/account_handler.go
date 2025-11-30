@@ -4,11 +4,12 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/labstack/echo/v4"
+
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/account"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/report"
-	"github.com/labstack/echo/v4"
 )
 
 // convertAccountType converts string pointer to AccountType pointer

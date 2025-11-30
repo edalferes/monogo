@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/labstack/echo/v4"
+
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
 	budgetUseCase "github.com/edalferes/monetics/internal/modules/budget/usecase/budget"
-	"github.com/labstack/echo/v4"
 )
 
 // convertBudgetPeriod converts string pointer to BudgetPeriod pointer

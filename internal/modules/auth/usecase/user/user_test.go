@@ -3,10 +3,11 @@ package user_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/edalferes/monetics/internal/modules/auth/domain"
 	"github.com/edalferes/monetics/internal/modules/auth/errors"
 	"github.com/edalferes/monetics/internal/modules/auth/usecase/user"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestRegisterUseCase_Execute(t *testing.T) {
