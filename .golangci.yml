@@ -1,21 +1,27 @@
 run:
   timeout: 5m
   modules-download-mode: readonly
+  go: '1.22'
 
 linters:
   enable:
     - gofmt
     - goimports
-    - golint
     - govet
     - ineffassign
     - misspell
+    - errcheck
+    - staticcheck
+    - unused
+  disable:
+    - golint # deprecated
 
 linters-settings:
   gofmt:
     simplify: true
   goimports:
-    local-prefixes: github.com/alpheres/monetics
+    local-prefixes: github.com/edalferes/monetics
 
 issues:
   max-same-issues: 50
+  exclude-use-default: false
