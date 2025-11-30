@@ -5,7 +5,11 @@ import (
 	"github.com/edalferes/monetics/internal/modules/auth/service"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/handler"
-	"github.com/edalferes/monetics/internal/modules/budget/usecase"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/account"
+	budgetUseCase "github.com/edalferes/monetics/internal/modules/budget/usecase/budget"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/category"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/report"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/transaction"
 	"github.com/edalferes/monetics/pkg/logger"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -21,17 +25,37 @@ type Module struct {
 	transactionRepo repository.TransactionRepository
 	budgetRepo      repository.BudgetRepository
 
-	// Use cases
-	createAccountUseCase     *usecase.CreateAccountUseCase
-	listAccountsUseCase      *usecase.ListAccountsUseCase
-	getAccountBalanceUseCase *usecase.GetAccountBalanceUseCase
-	createCategoryUseCase    *usecase.CreateCategoryUseCase
-	listCategoriesUseCase    *usecase.ListCategoriesUseCase
-	createTransactionUseCase *usecase.CreateTransactionUseCase
-	listTransactionsUseCase  *usecase.ListTransactionsUseCase
-	createBudgetUseCase      *usecase.CreateBudgetUseCase
-	listBudgetsUseCase       *usecase.ListBudgetsUseCase
-	getMonthlyReportUseCase  *usecase.GetMonthlyReportUseCase
+	// Use cases - Account
+	createAccountUseCase  *account.CreateUseCase
+	listAccountsUseCase   *account.ListUseCase
+	getAccountByIDUseCase *account.GetByIDUseCase
+	updateAccountUseCase  *account.UpdateUseCase
+	deleteAccountUseCase  *account.DeleteUseCase
+
+	// Use cases - Category
+	createCategoryUseCase  *category.CreateUseCase
+	listCategoriesUseCase  *category.ListUseCase
+	getCategoryByIDUseCase *category.GetByIDUseCase
+	updateCategoryUseCase  *category.UpdateUseCase
+	deleteCategoryUseCase  *category.DeleteUseCase
+
+	// Use cases - Transaction
+	createTransactionUseCase  *transaction.CreateUseCase
+	listTransactionsUseCase   *transaction.ListUseCase
+	getTransactionByIDUseCase *transaction.GetByIDUseCase
+	updateTransactionUseCase  *transaction.UpdateUseCase
+	deleteTransactionUseCase  *transaction.DeleteUseCase
+
+	// Use cases - Budget
+	createBudgetUseCase  *budgetUseCase.CreateUseCase
+	listBudgetsUseCase   *budgetUseCase.ListUseCase
+	getBudgetByIDUseCase *budgetUseCase.GetByIDUseCase
+	updateBudgetUseCase  *budgetUseCase.UpdateUseCase
+	deleteBudgetUseCase  *budgetUseCase.DeleteUseCase
+
+	// Use cases - Report
+	getAccountBalanceUseCase *report.GetAccountBalanceUseCase
+	getMonthlyReportUseCase  *report.GetMonthlyReportUseCase
 
 	// Handlers
 	accountHandler     *handler.AccountHandler
@@ -53,27 +77,51 @@ func NewModule(db *gorm.DB) *Module {
 	module.transactionRepo = repository.NewGormTransactionRepository(db)
 	module.budgetRepo = repository.NewGormBudgetRepository(db)
 
-	// Initialize use cases
-	module.createAccountUseCase = usecase.NewCreateAccountUseCase(module.accountRepo)
-	module.listAccountsUseCase = usecase.NewListAccountsUseCase(module.accountRepo)
-	module.getAccountBalanceUseCase = usecase.NewGetAccountBalanceUseCase(
-		module.accountRepo,
-		module.transactionRepo,
-	)
-	module.createCategoryUseCase = usecase.NewCreateCategoryUseCase(module.categoryRepo)
-	module.listCategoriesUseCase = usecase.NewListCategoriesUseCase(module.categoryRepo)
-	module.createTransactionUseCase = usecase.NewCreateTransactionUseCase(
+	// Initialize use cases - Account
+	module.createAccountUseCase = account.NewCreateUseCase(module.accountRepo)
+	module.listAccountsUseCase = account.NewListUseCase(module.accountRepo)
+	module.getAccountByIDUseCase = account.NewGetByIDUseCase(module.accountRepo)
+	module.updateAccountUseCase = account.NewUpdateUseCase(module.accountRepo)
+	module.deleteAccountUseCase = account.NewDeleteUseCase(module.accountRepo)
+
+	// Initialize use cases - Category
+	module.createCategoryUseCase = category.NewCreateUseCase(module.categoryRepo)
+	module.listCategoriesUseCase = category.NewListUseCase(module.categoryRepo)
+	module.getCategoryByIDUseCase = category.NewGetByIDUseCase(module.categoryRepo)
+	module.updateCategoryUseCase = category.NewUpdateUseCase(module.categoryRepo)
+	module.deleteCategoryUseCase = category.NewDeleteUseCase(module.categoryRepo)
+
+	// Initialize use cases - Transaction
+	module.createTransactionUseCase = transaction.NewCreateUseCase(
 		module.transactionRepo,
 		module.accountRepo,
 		module.categoryRepo,
 	)
-	module.listTransactionsUseCase = usecase.NewListTransactionsUseCase(module.transactionRepo)
-	module.createBudgetUseCase = usecase.NewCreateBudgetUseCase(
+	module.listTransactionsUseCase = transaction.NewListUseCase(module.transactionRepo)
+	module.getTransactionByIDUseCase = transaction.NewGetByIDUseCase(module.transactionRepo)
+	module.updateTransactionUseCase = transaction.NewUpdateUseCase(
+		module.transactionRepo,
+		module.accountRepo,
+		module.categoryRepo,
+	)
+	module.deleteTransactionUseCase = transaction.NewDeleteUseCase(module.transactionRepo)
+
+	// Initialize use cases - Budget
+	module.createBudgetUseCase = budgetUseCase.NewCreateUseCase(
 		module.budgetRepo,
 		module.categoryRepo,
 	)
-	module.listBudgetsUseCase = usecase.NewListBudgetsUseCase(module.budgetRepo)
-	module.getMonthlyReportUseCase = usecase.NewGetMonthlyReportUseCase(
+	module.listBudgetsUseCase = budgetUseCase.NewListUseCase(module.budgetRepo)
+	module.getBudgetByIDUseCase = budgetUseCase.NewGetByIDUseCase(module.budgetRepo)
+	module.updateBudgetUseCase = budgetUseCase.NewUpdateUseCase(module.budgetRepo)
+	module.deleteBudgetUseCase = budgetUseCase.NewDeleteUseCase(module.budgetRepo)
+
+	// Initialize use cases - Report
+	module.getAccountBalanceUseCase = report.NewGetAccountBalanceUseCase(
+		module.accountRepo,
+		module.transactionRepo,
+	)
+	module.getMonthlyReportUseCase = report.NewGetMonthlyReportUseCase(
 		module.transactionRepo,
 		module.budgetRepo,
 		module.categoryRepo,
@@ -83,19 +131,31 @@ func NewModule(db *gorm.DB) *Module {
 	module.accountHandler = handler.NewAccountHandler(
 		module.createAccountUseCase,
 		module.listAccountsUseCase,
+		module.getAccountByIDUseCase,
+		module.updateAccountUseCase,
+		module.deleteAccountUseCase,
 		module.getAccountBalanceUseCase,
 	)
 	module.categoryHandler = handler.NewCategoryHandler(
 		module.createCategoryUseCase,
 		module.listCategoriesUseCase,
+		module.getCategoryByIDUseCase,
+		module.updateCategoryUseCase,
+		module.deleteCategoryUseCase,
 	)
 	module.transactionHandler = handler.NewTransactionHandler(
 		module.createTransactionUseCase,
 		module.listTransactionsUseCase,
+		module.getTransactionByIDUseCase,
+		module.updateTransactionUseCase,
+		module.deleteTransactionUseCase,
 	)
 	module.budgetHandler = handler.NewBudgetHandler(
 		module.createBudgetUseCase,
 		module.listBudgetsUseCase,
+		module.getBudgetByIDUseCase,
+		module.updateBudgetUseCase,
+		module.deleteBudgetUseCase,
 	)
 	module.reportHandler = handler.NewReportHandler(
 		module.getMonthlyReportUseCase,
@@ -114,21 +174,33 @@ func (m *Module) RegisterRoutes(api *echo.Group, authMiddleware echo.MiddlewareF
 	accounts.POST("", m.accountHandler.CreateAccount)
 	accounts.GET("", m.accountHandler.ListAccounts)
 	accounts.GET("/:id", m.accountHandler.GetAccount)
+	accounts.GET("/:id/detail", m.accountHandler.GetAccountByID)
+	accounts.PUT("/:id", m.accountHandler.UpdateAccount)
+	accounts.DELETE("/:id", m.accountHandler.DeleteAccount)
 
 	// Category routes
 	categories := budget.Group("/categories")
 	categories.POST("", m.categoryHandler.CreateCategory)
 	categories.GET("", m.categoryHandler.ListCategories)
+	categories.GET("/:id", m.categoryHandler.GetCategoryByID)
+	categories.PUT("/:id", m.categoryHandler.UpdateCategory)
+	categories.DELETE("/:id", m.categoryHandler.DeleteCategory)
 
 	// Transaction routes
 	transactions := budget.Group("/transactions")
 	transactions.POST("", m.transactionHandler.CreateTransaction)
 	transactions.GET("", m.transactionHandler.ListTransactions)
+	transactions.GET("/:id", m.transactionHandler.GetTransactionByID)
+	transactions.PUT("/:id", m.transactionHandler.UpdateTransaction)
+	transactions.DELETE("/:id", m.transactionHandler.DeleteTransaction)
 
 	// Budget routes
 	budgets := budget.Group("/budgets")
 	budgets.POST("", m.budgetHandler.CreateBudget)
 	budgets.GET("", m.budgetHandler.ListBudgets)
+	budgets.GET("/:id", m.budgetHandler.GetBudgetByID)
+	budgets.PUT("/:id", m.budgetHandler.UpdateBudget)
+	budgets.DELETE("/:id", m.budgetHandler.DeleteBudget)
 
 	// Report routes
 	reports := budget.Group("/reports")

@@ -6,26 +6,45 @@ import (
 
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
-	"github.com/edalferes/monetics/internal/modules/budget/usecase"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/account"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/report"
 	"github.com/labstack/echo/v4"
 )
 
+// convertAccountType converts string pointer to AccountType pointer
+func convertAccountType(t *string) *domain.AccountType {
+	if t == nil {
+		return nil
+	}
+	accountType := domain.AccountType(*t)
+	return &accountType
+}
+
 // AccountHandler handles HTTP requests for accounts
 type AccountHandler struct {
-	createAccountUseCase     *usecase.CreateAccountUseCase
-	listAccountsUseCase      *usecase.ListAccountsUseCase
-	getAccountBalanceUseCase *usecase.GetAccountBalanceUseCase
+	createAccountUseCase     *account.CreateUseCase
+	listAccountsUseCase      *account.ListUseCase
+	getAccountByIDUseCase    *account.GetByIDUseCase
+	updateAccountUseCase     *account.UpdateUseCase
+	deleteAccountUseCase     *account.DeleteUseCase
+	getAccountBalanceUseCase *report.GetAccountBalanceUseCase
 }
 
 // NewAccountHandler creates a new account handler
 func NewAccountHandler(
-	createAccountUseCase *usecase.CreateAccountUseCase,
-	listAccountsUseCase *usecase.ListAccountsUseCase,
-	getAccountBalanceUseCase *usecase.GetAccountBalanceUseCase,
+	createAccountUseCase *account.CreateUseCase,
+	listAccountsUseCase *account.ListUseCase,
+	getAccountByIDUseCase *account.GetByIDUseCase,
+	updateAccountUseCase *account.UpdateUseCase,
+	deleteAccountUseCase *account.DeleteUseCase,
+	getAccountBalanceUseCase *report.GetAccountBalanceUseCase,
 ) *AccountHandler {
 	return &AccountHandler{
 		createAccountUseCase:     createAccountUseCase,
 		listAccountsUseCase:      listAccountsUseCase,
+		getAccountByIDUseCase:    getAccountByIDUseCase,
+		updateAccountUseCase:     updateAccountUseCase,
+		deleteAccountUseCase:     deleteAccountUseCase,
 		getAccountBalanceUseCase: getAccountBalanceUseCase,
 	}
 }
@@ -62,7 +81,7 @@ func (h *AccountHandler) CreateAccount(c echo.Context) error {
 		})
 	}
 
-	input := usecase.CreateAccountInput{
+	input := account.CreateInput{
 		UserID:         userID,
 		Name:           req.Name,
 		Type:           domain.AccountType(req.Type),
@@ -71,14 +90,14 @@ func (h *AccountHandler) CreateAccount(c echo.Context) error {
 		Description:    req.Description,
 	}
 
-	account, err := h.createAccountUseCase.Execute(c.Request().Context(), input)
+	acc, err := h.createAccountUseCase.Execute(c.Request().Context(), input)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusCreated, dto.ToAccountResponse(account))
+	return c.JSON(http.StatusCreated, dto.ToAccountResponse(acc))
 }
 
 // ListAccounts handles listing user accounts
@@ -147,4 +166,130 @@ func (h *AccountHandler) GetAccount(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, response)
+}
+
+// GetAccountByID handles getting account by ID
+// @Summary Get account by ID
+// @Tags Budget - Accounts
+// @Produce json
+// @Param id path int true "Account ID"
+// @Success 200 {object} dto.AccountResponse
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /accounts/{id}/detail [get]
+func (h *AccountHandler) GetAccountByID(c echo.Context) error {
+	accountID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid account ID",
+		})
+	}
+
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	acc, err := h.getAccountByIDUseCase.Execute(c.Request().Context(), userID, uint(accountID))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, dto.ToAccountResponse(acc))
+}
+
+// UpdateAccount handles account update
+// @Summary Update an account
+// @Tags Budget - Accounts
+// @Accept json
+// @Produce json
+// @Param id path int true "Account ID"
+// @Param request body dto.UpdateAccountRequest true "Account update request"
+// @Success 200 {object} dto.AccountResponse
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /accounts/{id} [put]
+func (h *AccountHandler) UpdateAccount(c echo.Context) error {
+	accountID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid account ID",
+		})
+	}
+
+	var req dto.UpdateAccountRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	input := account.UpdateInput{
+		ID:          uint(accountID),
+		UserID:      userID,
+		Name:        req.Name,
+		Type:        convertAccountType(req.Type),
+		Currency:    req.Currency,
+		Description: req.Description,
+	}
+
+	acc, err := h.updateAccountUseCase.Execute(c.Request().Context(), input)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, dto.ToAccountResponse(acc))
+}
+
+// DeleteAccount handles account deletion (soft delete)
+// @Summary Delete an account
+// @Tags Budget - Accounts
+// @Produce json
+// @Param id path int true "Account ID"
+// @Success 204
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /accounts/{id} [delete]
+func (h *AccountHandler) DeleteAccount(c echo.Context) error {
+	accountID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid account ID",
+		})
+	}
+
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	err = h.deleteAccountUseCase.Execute(c.Request().Context(), userID, uint(accountID))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }

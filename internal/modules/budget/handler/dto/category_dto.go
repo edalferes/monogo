@@ -54,8 +54,9 @@ func ToCategoryResponseList(categories []domain.Category) []CategoryResponse {
 
 // UpdateCategoryRequest represents the request to update a category
 type UpdateCategoryRequest struct {
-	Name        string `json:"name"`
-	Icon        string `json:"icon"`
-	Color       string `json:"color"`
-	Description string `json:"description"`
+	Name        *string `json:"name" validate:"omitempty,min=3,max=100"`
+	Type        *string `json:"type" validate:"omitempty,oneof=income expense"`
+	Icon        *string `json:"icon" validate:"omitempty,max=50"`
+	Color       *string `json:"color" validate:"omitempty,max=7"`
+	Description *string `json:"description" validate:"omitempty,max=500"`
 }

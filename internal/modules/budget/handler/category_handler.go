@@ -2,27 +2,46 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
-	"github.com/edalferes/monetics/internal/modules/budget/usecase"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/category"
 	"github.com/labstack/echo/v4"
 )
 
+// convertCategoryType converts string pointer to CategoryType pointer
+func convertCategoryType(t *string) *domain.CategoryType {
+	if t == nil {
+		return nil
+	}
+	categoryType := domain.CategoryType(*t)
+	return &categoryType
+}
+
 // CategoryHandler handles HTTP requests for categories
 type CategoryHandler struct {
-	createCategoryUseCase *usecase.CreateCategoryUseCase
-	listCategoriesUseCase *usecase.ListCategoriesUseCase
+	createCategoryUseCase  *category.CreateUseCase
+	listCategoriesUseCase  *category.ListUseCase
+	getCategoryByIDUseCase *category.GetByIDUseCase
+	updateCategoryUseCase  *category.UpdateUseCase
+	deleteCategoryUseCase  *category.DeleteUseCase
 }
 
 // NewCategoryHandler creates a new category handler
 func NewCategoryHandler(
-	createCategoryUseCase *usecase.CreateCategoryUseCase,
-	listCategoriesUseCase *usecase.ListCategoriesUseCase,
+	createCategoryUseCase *category.CreateUseCase,
+	listCategoriesUseCase *category.ListUseCase,
+	getCategoryByIDUseCase *category.GetByIDUseCase,
+	updateCategoryUseCase *category.UpdateUseCase,
+	deleteCategoryUseCase *category.DeleteUseCase,
 ) *CategoryHandler {
 	return &CategoryHandler{
-		createCategoryUseCase: createCategoryUseCase,
-		listCategoriesUseCase: listCategoriesUseCase,
+		createCategoryUseCase:  createCategoryUseCase,
+		listCategoriesUseCase:  listCategoriesUseCase,
+		getCategoryByIDUseCase: getCategoryByIDUseCase,
+		updateCategoryUseCase:  updateCategoryUseCase,
+		deleteCategoryUseCase:  deleteCategoryUseCase,
 	}
 }
 
@@ -56,7 +75,7 @@ func (h *CategoryHandler) CreateCategory(c echo.Context) error {
 		})
 	}
 
-	input := usecase.CreateCategoryInput{
+	input := category.CreateInput{
 		UserID:      userID,
 		Name:        req.Name,
 		Type:        domain.CategoryType(req.Type),
@@ -65,14 +84,14 @@ func (h *CategoryHandler) CreateCategory(c echo.Context) error {
 		Description: req.Description,
 	}
 
-	category, err := h.createCategoryUseCase.Execute(c.Request().Context(), input)
+	categoryResult, err := h.createCategoryUseCase.Execute(c.Request().Context(), input)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusCreated, dto.ToCategoryResponse(category))
+	return c.JSON(http.StatusCreated, dto.ToCategoryResponse(categoryResult))
 }
 
 // ListCategories handles listing user categories
@@ -90,18 +109,152 @@ func (h *CategoryHandler) ListCategories(c echo.Context) error {
 		})
 	}
 
-	var categoryType *domain.CategoryType
-	if typeParam := c.QueryParam("type"); typeParam != "" {
-		ct := domain.CategoryType(typeParam)
-		categoryType = &ct
-	}
-
-	categories, err := h.listCategoriesUseCase.Execute(c.Request().Context(), userID, categoryType)
+	categories, err := h.listCategoriesUseCase.Execute(c.Request().Context(), userID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
 	}
 
+	// Filter by type if provided
+	typeFilter := c.QueryParam("type")
+	if typeFilter != "" {
+		filtered := make([]domain.Category, 0)
+		filterType := domain.CategoryType(typeFilter)
+		for _, cat := range categories {
+			if cat.Type == filterType {
+				filtered = append(filtered, cat)
+			}
+		}
+		categories = filtered
+	}
+
 	return c.JSON(http.StatusOK, dto.ToCategoryResponseList(categories))
+}
+
+// GetCategoryByID handles getting category by ID
+// @Summary Get category by ID
+// @Tags Budget - Categories
+// @Produce json
+// @Param id path int true "Category ID"
+// @Success 200 {object} dto.CategoryResponse
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /categories/{id} [get]
+func (h *CategoryHandler) GetCategoryByID(c echo.Context) error {
+	categoryID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid category ID",
+		})
+	}
+
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	cat, err := h.getCategoryByIDUseCase.Execute(c.Request().Context(), userID, uint(categoryID))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, dto.ToCategoryResponse(cat))
+}
+
+// UpdateCategory handles category update
+// @Summary Update a category
+// @Tags Budget - Categories
+// @Accept json
+// @Produce json
+// @Param id path int true "Category ID"
+// @Param request body dto.UpdateCategoryRequest true "Category update request"
+// @Success 200 {object} dto.CategoryResponse
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /categories/{id} [put]
+func (h *CategoryHandler) UpdateCategory(c echo.Context) error {
+	categoryID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid category ID",
+		})
+	}
+
+	var req dto.UpdateCategoryRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	input := category.UpdateInput{
+		ID:          uint(categoryID),
+		UserID:      userID,
+		Name:        req.Name,
+		Type:        convertCategoryType(req.Type),
+		Icon:        req.Icon,
+		Color:       req.Color,
+		Description: req.Description,
+	}
+
+	cat, err := h.updateCategoryUseCase.Execute(c.Request().Context(), input)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, dto.ToCategoryResponse(cat))
+}
+
+// DeleteCategory handles category deletion (soft delete)
+// @Summary Delete a category
+// @Tags Budget - Categories
+// @Produce json
+// @Param id path int true "Category ID"
+// @Success 204
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /categories/{id} [delete]
+func (h *CategoryHandler) DeleteCategory(c echo.Context) error {
+	categoryID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid category ID",
+		})
+	}
+
+	userID, err := GetUserIDFromContext(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	err = h.deleteCategoryUseCase.Execute(c.Request().Context(), userID, uint(categoryID))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }

@@ -6,18 +6,18 @@ import (
 	"time"
 
 	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
-	"github.com/edalferes/monetics/internal/modules/budget/usecase"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/report"
 	"github.com/labstack/echo/v4"
 )
 
 // ReportHandler handles HTTP requests for reports
 type ReportHandler struct {
-	getMonthlyReportUseCase *usecase.GetMonthlyReportUseCase
+	getMonthlyReportUseCase *report.GetMonthlyReportUseCase
 }
 
 // NewReportHandler creates a new report handler
 func NewReportHandler(
-	getMonthlyReportUseCase *usecase.GetMonthlyReportUseCase,
+	getMonthlyReportUseCase *report.GetMonthlyReportUseCase,
 ) *ReportHandler {
 	return &ReportHandler{
 		getMonthlyReportUseCase: getMonthlyReportUseCase,

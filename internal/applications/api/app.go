@@ -11,6 +11,7 @@ import (
 	"github.com/edalferes/monetics/internal/modules/budget"
 	"github.com/edalferes/monetics/pkg/logger"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"gorm.io/gorm"
 )
@@ -73,6 +74,14 @@ func NewApp(enabledModules string, cfg *config.Config) *App {
 
 	e := echo.New()
 	e.Validator = validator.NewValidator()
+
+	// Configure CORS
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:3001", "http://localhost:5173"},
+		AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.PATCH, echo.DELETE, echo.OPTIONS},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowCredentials: true,
+	}))
 
 	return &App{
 		echo:    e,
