@@ -3,8 +3,9 @@ package account_test
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // MockAccountRepository is a mock implementation of AccountRepository

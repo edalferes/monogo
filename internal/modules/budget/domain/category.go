@@ -29,7 +29,7 @@ const (
 //		Type:        CategoryTypeExpense,
 //		Icon:        "🍽️",
 //		Color:       "#FF5733",
-//		Description: "Gastos com supermercado e restaurantes",
+//		Description: "Gastos com supermercado e restaurants",
 //	}
 type Category struct {
 	ID          uint         `json:"id"`

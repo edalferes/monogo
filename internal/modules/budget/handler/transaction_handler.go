@@ -5,10 +5,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/labstack/echo/v4"
+
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/transaction"
-	"github.com/labstack/echo/v4"
 )
 
 // convertTransactionType converts string pointer to TransactionType pointer

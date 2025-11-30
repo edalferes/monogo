@@ -1,9 +1,10 @@
 package testmodule
 
 import (
+	"github.com/labstack/echo/v4"
+
 	"github.com/edalferes/monetics/internal/modules/auth"
 	"github.com/edalferes/monetics/internal/modules/testmodule/adapters/http/handler"
-	"github.com/labstack/echo/v4"
 )
 
 // WireUp register the testmodule routes, protecting with JWT and role check

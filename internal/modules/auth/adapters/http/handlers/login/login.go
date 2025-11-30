@@ -8,12 +8,13 @@ package login
 import (
 	"net/http"
 
+	"github.com/labstack/echo/v4"
+
 	"github.com/edalferes/monetics/internal/modules/auth/adapters/http/dto"
 	"github.com/edalferes/monetics/internal/modules/auth/errors"
 	userUC "github.com/edalferes/monetics/internal/modules/auth/usecase/user"
 	"github.com/edalferes/monetics/pkg/logger"
 	"github.com/edalferes/monetics/pkg/utils"
-	"github.com/labstack/echo/v4"
 )
 
 // Handler handles HTTP requests for user authentication.

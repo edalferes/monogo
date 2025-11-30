@@ -6,11 +6,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	budgetErrors "github.com/edalferes/monetics/internal/modules/budget/errors"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/transaction"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
 func TestCreateUseCase_Execute(t *testing.T) {

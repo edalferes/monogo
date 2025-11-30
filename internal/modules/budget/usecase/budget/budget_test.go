@@ -5,10 +5,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/budget"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateUseCase_Execute(t *testing.T) {

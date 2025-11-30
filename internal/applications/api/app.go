@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
+	"gorm.io/gorm"
+
 	"github.com/edalferes/monetics/internal/config"
 	"github.com/edalferes/monetics/internal/infra/db"
 	"github.com/edalferes/monetics/internal/infra/validator"
 	"github.com/edalferes/monetics/internal/modules/auth"
 	"github.com/edalferes/monetics/internal/modules/budget"
 	"github.com/edalferes/monetics/pkg/logger"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	echoSwagger "github.com/swaggo/echo-swagger"
-	"gorm.io/gorm"
 )
 
 type App struct {

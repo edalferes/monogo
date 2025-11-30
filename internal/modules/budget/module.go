@@ -1,6 +1,9 @@
 package budget
 
 import (
+	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
+
 	"github.com/edalferes/monetics/internal/modules/auth"
 	"github.com/edalferes/monetics/internal/modules/auth/service"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
@@ -11,8 +14,6 @@ import (
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/report"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/transaction"
 	"github.com/edalferes/monetics/pkg/logger"
-	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 // Module represents the budget module

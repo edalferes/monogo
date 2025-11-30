@@ -8,7 +8,7 @@ type BudgetPeriod string
 const (
 	BudgetPeriodMonthly   BudgetPeriod = "monthly"   // Mensal
 	BudgetPeriodQuarterly BudgetPeriod = "quarterly" // Trimestral
-	BudgetPeriodYearly    BudgetPeriod = "yearly"    // Anual
+	BudgetPeriodYearly    BudgetPeriod = "yearly"    // Annual
 	BudgetPeriodCustom    BudgetPeriod = "custom"    // Personalizado
 )
 

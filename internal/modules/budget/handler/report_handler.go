@@ -5,9 +5,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/labstack/echo/v4"
+
 	"github.com/edalferes/monetics/internal/modules/budget/handler/dto"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/report"
-	"github.com/labstack/echo/v4"
 )
 
 // ReportHandler handles HTTP requests for reports

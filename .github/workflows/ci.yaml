@@ -21,6 +21,8 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  checks: write
+  actions: read
 
 jobs:
   test:
@@ -53,8 +55,42 @@ jobs:
       - name: Verify dependencies
         run: go mod verify
       
-      - name: Run tests
-        run: make test
+      - name: Install gotestsum for better test output
+        run: go install gotest.tools/gotestsum@latest
+      
+      - name: Run tests with coverage and JUnit output
+        run: |
+          gotestsum --junitfile tests.xml --format testname -- -coverprofile=coverage.out -covermode=atomic ./...
+      
+      - name: Generate coverage report
+        run: go tool cover -html=coverage.out -o coverage.html
+      
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.out
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+      
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-go${{ matrix.go-version }}
+          path: |
+            coverage.out
+            coverage.html
+            tests.xml
+          retention-days: 30
+      
+      - name: Publish Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Go Tests
+          path: tests.xml
+          reporter: java-junit
 
   build:
     name: Build

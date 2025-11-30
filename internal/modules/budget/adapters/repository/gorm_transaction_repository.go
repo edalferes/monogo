@@ -4,10 +4,11 @@ import (
 	"context"
 	"time"
 
+	"gorm.io/gorm"
+
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
-	"gorm.io/gorm"
 )
 
 type gormTransactionRepository struct {
