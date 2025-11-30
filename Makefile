@@ -22,6 +22,7 @@ help: ## Show available commands
 ## Build
 build: ## Build the application
 	@echo "Building $(BINARY_NAME)..."
+	@mkdir -p ./bin
 	@$(GOBUILD) -o $(BINARY_NAME) $(CMD_PATH)
 
 ## Swagger
@@ -33,6 +34,17 @@ swagger: ## Generate Swagger documentation
 test: ## Run tests
 	@echo "Running tests..."
 	@$(GOTEST) ./...
+
+## Test with coverage
+test-coverage: ## Run tests with coverage
+	@echo "Running tests with coverage..."
+	@$(GOTEST) -coverprofile=coverage.out ./...
+	@$(GOCMD) tool cover -html=coverage.out -o coverage.html
+
+## Test verbose
+test-verbose: ## Run tests with verbose output
+	@echo "Running tests with verbose output..."
+	@$(GOTEST) -v ./...
 
 ## Run
 run: ## Run the application

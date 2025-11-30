@@ -98,6 +98,7 @@ func WireUpWithService(group *echo.Group, db *gorm.DB, jwtSecret string, log log
 	}
 	adminGroup := group.Group("/admin")
 	adminGroup.Use(JWTMiddleware(jwtSecret))
+	adminGroup.Use(RequireRoles("admin")) // Require admin role for all admin endpoints
 	adminGroup.POST("/users", adminUserHandler.CreateUser)
 	adminGroup.GET("/users", adminUserHandler.ListUsers)
 	adminGroup.GET("/users/:id", adminUserHandler.GetUser)

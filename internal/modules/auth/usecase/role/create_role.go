@@ -10,7 +10,7 @@ type CreateRoleUseCase struct {
 }
 
 func (u *CreateRoleUseCase) Execute(name string, permissionIDs []uint) error {
-	var perms []domain.Permission
+	perms := make([]domain.Permission, 0, len(permissionIDs))
 	for _, pid := range permissionIDs {
 		perms = append(perms, domain.Permission{ID: pid})
 	}
