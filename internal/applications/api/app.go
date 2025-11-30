@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -18,61 +17,77 @@ import (
 )
 
 type App struct {
-	echo    *echo.Echo
-	db      *gorm.DB
-	logger  logger.Logger
-	modules []string // List of enabled modules
-	config  *config.Config
+	echo   *echo.Echo
+	db     *gorm.DB
+	logger logger.Logger
+	config *config.Config
 }
 
-func NewApp(enabledModules string, cfg *config.Config) *App {
-	// Parse enabled modules
-	modules := parseModules(enabledModules)
+func NewApp(cfg *config.Config) *App {
+	appLogger := initLogger(cfg)
+	database := initDatabase(cfg, appLogger)
+	migrateDatabase(database, appLogger)
+	seedDatabase(database, appLogger)
+	e := initEcho()
 
-	// Configure logger based on configuration
+	return &App{
+		echo:   e,
+		db:     database,
+		logger: appLogger,
+		config: cfg,
+	}
+}
+
+// initLogger configures and creates the application logger
+func initLogger(cfg *config.Config) logger.Logger {
 	loggerConfig := logger.DefaultConfig()
 	loggerConfig.Level = cfg.Logger.Level
 	loggerConfig.Format = cfg.Logger.Format
 	loggerConfig.Service = cfg.App.Name
+	return logger.New(loggerConfig)
+}
 
-	appLogger := logger.New(loggerConfig)
+// initDatabase connects to the database
+func initDatabase(cfg *config.Config, log logger.Logger) *gorm.DB {
 	database, err := db.NewGormDB(cfg)
 	if err != nil {
-		appLogger.Fatal().Err(err).Msg("failed to connect to database")
+		log.Fatal().Err(err).Msg("failed to connect to database")
+	}
+	return database
+}
+
+// migrateDatabase runs migrations for all modules
+func migrateDatabase(database *gorm.DB, log logger.Logger) {
+	entities := []interface{}{}
+	entities = append(entities, auth.Entities()...)
+	entities = append(entities, budget.Entities()...)
+
+	if err := database.AutoMigrate(entities...); err != nil {
+		log.Fatal().Err(err).Msg("failed to migrate database")
+	}
+	log.Info().Msg("Database migration completed")
+}
+
+// seedDatabase seeds all modules
+func seedDatabase(database *gorm.DB, log logger.Logger) {
+	// Seed auth module
+	if err := auth.Seed(database); err != nil {
+		log.Fatal().Err(err).Msg("failed to seed auth module")
 	}
 
-	// Migrate entities from enabled modules
-	var entities []interface{}
-	if hasModule(modules, "auth") {
-		entities = append(entities, auth.Entities()...)
+	// Seed budget module
+	var rootUser struct{ ID uint }
+	if err := database.Table("users").Select("id").Where("username = ?", "root").First(&rootUser).Error; err != nil {
+		log.Fatal().Err(err).Msg("failed to find root user for budget seed")
 	}
-	if hasModule(modules, "budget") {
-		entities = append(entities, budget.Entities()...)
+	if err := budget.Seed(database, rootUser.ID); err != nil {
+		log.Fatal().Err(err).Msg("failed to seed budget module")
 	}
+	log.Info().Msg("Database seeding completed")
+}
 
-	if len(entities) > 0 {
-		if err := database.AutoMigrate(entities...); err != nil {
-			appLogger.Fatal().Err(err).Msg("failed to migrate database")
-		}
-	}
-
-	// Seed enabled modules
-	if hasModule(modules, "auth") {
-		if err := auth.Seed(database); err != nil {
-			appLogger.Fatal().Err(err).Msg("failed to seed auth module")
-		}
-	}
-
-	if hasModule(modules, "budget") {
-		var rootUser struct{ ID uint }
-		if err := database.Table("users").Select("id").Where("username = ?", "root").First(&rootUser).Error; err != nil {
-			appLogger.Fatal().Err(err).Msg("failed to find root user for budget seed")
-		}
-		if err := budget.Seed(database, rootUser.ID); err != nil {
-			appLogger.Fatal().Err(err).Msg("failed to seed budget module")
-		}
-	}
-
+// initEcho creates and configures Echo instance
+func initEcho() *echo.Echo {
 	e := echo.New()
 	e.Validator = validator.NewValidator()
 
@@ -85,59 +100,18 @@ func NewApp(enabledModules string, cfg *config.Config) *App {
 		MaxAge:           3600,
 	}))
 
-	return &App{
-		echo:    e,
-		db:      database,
-		logger:  appLogger,
-		modules: modules,
-		config:  cfg,
-	}
+	return e
 }
 
-// parseModules converts module string to list
-func parseModules(input string) []string {
-	if input == "" || input == "all" {
-		return []string{"auth", "budget"}
-	}
-
-	parts := strings.Split(input, ",")
-	modules := make([]string, 0, len(parts))
-	for _, p := range parts {
-		m := strings.TrimSpace(p)
-		if m != "" {
-			modules = append(modules, m)
-		}
-	}
-	return modules
-}
-
-// hasModule checks if module is enabled
-func hasModule(modules []string, name string) bool {
-	for _, m := range modules {
-		if m == name {
-			return true
-		}
-	}
-	return false
-}
-
-// RegisterModules registers only enabled modules using dependency injection
-func (a *App) RegisterModules(cfg *config.Config) {
+// RegisterModules registers all modules
+func (a *App) RegisterModules() {
 	v1 := a.echo.Group("/v1")
 
-	// Create dependency injection container
-	container := NewModuleContainer(cfg, a.db, a.logger, v1, a.modules)
+	// Register auth module (no dependencies)
+	auth.WireUp(v1, a.db, a.config.JWT.Secret, a.logger)
 
-	// Create module registry
-	registry := NewModuleRegistry(container)
-
-	// Register all built-in modules with their dependencies
-	registry.RegisterBuiltInModules()
-
-	// Initialize modules in dependency order
-	if err := registry.Initialize(); err != nil {
-		a.logger.Fatal().Err(err).Msg("Failed to initialize modules")
-	}
+	// Register budget module (depends on auth)
+	budget.WireUp(v1, a.db, a.config.JWT.Secret, a.logger)
 }
 
 func (a *App) RegisterGlobalRoutes() {
@@ -159,7 +133,7 @@ func (a *App) RegisterGlobalRoutes() {
 
 func (a *App) Run() {
 	a.RegisterGlobalRoutes()
-	a.RegisterModules(a.config)
+	a.RegisterModules()
 	a.logger.Info().
 		Int("port", a.config.App.Port).
 		Str("env", a.config.App.Environment).

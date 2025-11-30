@@ -20,13 +20,6 @@ import (
 
 func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger) {
 	log.Info().Msg("Initializing Auth module...")
-	_ = WireUpWithService(group, db, jwtSecret, log)
-	log.Info().Msg("Auth module started successfully")
-}
-
-// WireUpWithService registers auth module routes and returns UserService for other modules
-func WireUpWithService(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger) interface{} {
-	log.Info().Msg("Initializing Auth module with service...")
 	userRepo := gormrepo.NewUserRepositoryGorm(db)
 	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
 	permRepo := gormrepo.NewPermissionRepositoryGorm(db)
@@ -128,8 +121,5 @@ func WireUpWithService(group *echo.Group, db *gorm.DB, jwtSecret string, log log
 	userGroup.Use(JWTMiddleware(jwtSecret))
 	userGroup.PUT("/password", userHandler.ChangePassword)
 
-	log.Info().Msg("Auth module with service started successfully")
-
-	// Return UserService for other modules to use
-	return service.NewUserServiceLocal(userRepo)
+	log.Info().Msg("Auth module started successfully")
 }

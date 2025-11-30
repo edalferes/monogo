@@ -5,7 +5,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/edalferes/monetics/internal/modules/auth"
-	"github.com/edalferes/monetics/internal/modules/auth/service"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/http/handlers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/account"
@@ -217,21 +216,4 @@ func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger)
 	module.RegisterRoutes(group, authMiddleware)
 
 	log.Info().Msg("Budget module initialized")
-}
-
-// WireUpWithHTTP inicializa budget usando HTTP para comunicar com auth remoto
-func WireUpWithHTTP(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger, authURL string) {
-	log.Info().Str("auth_url", authURL).Msg("Initializing budget module with HTTP auth service")
-
-	// Cria UserService HTTP para se comunicar com auth remoto
-	userService := service.NewUserServiceHTTP(authURL)
-
-	// Currently not using userService directly, but it's available
-	_ = userService
-
-	module := NewModule(db)
-	authMiddleware := auth.JWTMiddleware(jwtSecret)
-	module.RegisterRoutes(group, authMiddleware)
-
-	log.Info().Msg("Budget module initialized with HTTP communication")
 }

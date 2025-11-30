@@ -10,7 +10,6 @@ import (
 type HealthResponse struct {
 	Status  string            `json:"status"`
 	Service string            `json:"service"`
-	Modules []string          `json:"modules,omitempty"`
 	Details map[string]string `json:"details,omitempty"`
 }
 
@@ -20,7 +19,6 @@ func (app *App) HealthHandler(c echo.Context) error {
 	response := HealthResponse{
 		Status:  "healthy",
 		Service: "monetics",
-		Modules: app.modules,
 		Details: map[string]string{
 			"database": "connected",
 		},
