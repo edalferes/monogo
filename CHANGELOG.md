@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.9.0](https://github.com/edalferes/monetics/compare/v0.8.0...v0.9.0) (2025-12-01)
+
+
+### Features
+
+* update ci ([c1fe215](https://github.com/edalferes/monetics/commit/c1fe215f5095d524a52180fcc5a0fa97fbd3731c))
+* update ci ([79d5b96](https://github.com/edalferes/monetics/commit/79d5b96a1a3df2843faa55d3e14c9c465cc322b3))
+* update ci ([3cd6893](https://github.com/edalferes/monetics/commit/3cd68937cae816a915090c5c6657dbbb3f0bc8ed))
+* update ci ([920f5fa](https://github.com/edalferes/monetics/commit/920f5fae3c7d83b4824ef240a5e93e9f4eba4e1e))
+* update test module auth ([62f421b](https://github.com/edalferes/monetics/commit/62f421b67ca8e52288089fa6953d3ee6337cbcf8))
+* update test module auth ([3c6c355](https://github.com/edalferes/monetics/commit/3c6c35579ae091ca0d4b29cd85f7f3bbcd05082d))
+
+
+### Bug Fixes
+
+* update ci ([6215cd7](https://github.com/edalferes/monetics/commit/6215cd7b1cda314c417bbba8b072261a35280f98))
+* update ci ([6030b9e](https://github.com/edalferes/monetics/commit/6030b9e2e35e32fcb4e3529235dc3ce757e3bb16))
+
 ## [0.8.0](https://github.com/edalferes/monetics/compare/v0.7.0...v0.8.0) (2025-11-29)
 
 
