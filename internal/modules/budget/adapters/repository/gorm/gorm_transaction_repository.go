@@ -1,23 +1,24 @@
-package repository
+package gorm
 
 import (
 	"context"
 	"time"
 
-	"gorm.io/gorm"
+	gormpkg "gorm.io/gorm"
 
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 type gormTransactionRepository struct {
-	db     *gorm.DB
+	db     *gormpkg.DB
 	mapper mappers.TransactionMapper
 }
 
 // NewGormTransactionRepository creates a new GORM-based transaction repository
-func NewGormTransactionRepository(db *gorm.DB) TransactionRepository {
+func NewGormTransactionRepository(db *gormpkg.DB) repository.TransactionRepository {
 	return &gormTransactionRepository{
 		db:     db,
 		mapper: mappers.TransactionMapper{},

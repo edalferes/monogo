@@ -1,22 +1,23 @@
-package repository
+package gorm
 
 import (
 	"context"
 
-	"gorm.io/gorm"
+	gormpkg "gorm.io/gorm"
 
+	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 type gormBudgetRepository struct {
-	db     *gorm.DB
+	db     *gormpkg.DB
 	mapper mappers.BudgetMapper
 }
 
 // NewGormBudgetRepository creates a new GORM-based budget repository
-func NewGormBudgetRepository(db *gorm.DB) BudgetRepository {
+func NewGormBudgetRepository(db *gormpkg.DB) repository.BudgetRepository {
 	return &gormBudgetRepository{
 		db:     db,
 		mapper: mappers.BudgetMapper{},

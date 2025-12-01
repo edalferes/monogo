@@ -3,15 +3,15 @@ package budget
 import (
 	"time"
 
-	"gorm.io/gorm"
+	gormpkg "gorm.io/gorm"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	gormrepo "github.com/edalferes/monetics/internal/modules/budget/adapters/repository/gorm"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // Seed populates the database with default budget categories
-func Seed(db *gorm.DB, userID uint) error {
-	categoryRepo := repository.NewGormCategoryRepository(db)
+func Seed(db *gormpkg.DB, userID uint) error {
+	categoryRepo := gormrepo.NewGormCategoryRepository(db)
 
 	// Default income categories based on the spreadsheet
 	incomeCategories := []domain.Category{
