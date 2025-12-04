@@ -4,22 +4,22 @@ import (
 	"context"
 	"time"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // GetMonthlyReportUseCase generates monthly financial report
 type GetMonthlyReportUseCase struct {
-	transactionRepo repository.TransactionRepository
-	budgetRepo      repository.BudgetRepository
-	categoryRepo    repository.CategoryRepository
+	transactionRepo interfaces.TransactionRepository
+	budgetRepo      interfaces.BudgetRepository
+	categoryRepo    interfaces.CategoryRepository
 }
 
 // NewGetMonthlyReportUseCase creates a new use case instance
 func NewGetMonthlyReportUseCase(
-	transactionRepo repository.TransactionRepository,
-	budgetRepo repository.BudgetRepository,
-	categoryRepo repository.CategoryRepository,
+	transactionRepo interfaces.TransactionRepository,
+	budgetRepo interfaces.BudgetRepository,
+	categoryRepo interfaces.CategoryRepository,
 ) *GetMonthlyReportUseCase {
 	return &GetMonthlyReportUseCase{
 		transactionRepo: transactionRepo,

@@ -24,6 +24,7 @@ type CategoryResponse struct {
 	Icon        string    `json:"icon"`
 	Color       string    `json:"color"`
 	Description string    `json:"description"`
+	IsActive    bool      `json:"is_active"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
@@ -38,6 +39,7 @@ func ToCategoryResponse(category domain.Category) CategoryResponse {
 		Icon:        category.Icon,
 		Color:       category.Color,
 		Description: category.Description,
+		IsActive:    category.IsActive,
 		CreatedAt:   category.CreatedAt,
 		UpdatedAt:   category.UpdatedAt,
 	}

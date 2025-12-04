@@ -3,17 +3,17 @@ package account
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 // DeleteUseCase handles account deletion (soft delete)
 type DeleteUseCase struct {
-	accountRepo repository.AccountRepository
+	accountRepo interfaces.AccountRepository
 }
 
 // NewDeleteUseCase creates a new use case instance
-func NewDeleteUseCase(accountRepo repository.AccountRepository) *DeleteUseCase {
+func NewDeleteUseCase(accountRepo interfaces.AccountRepository) *DeleteUseCase {
 	return &DeleteUseCase{
 		accountRepo: accountRepo,
 	}

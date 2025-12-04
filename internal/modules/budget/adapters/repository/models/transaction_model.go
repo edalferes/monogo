@@ -17,6 +17,7 @@ type TransactionModel struct {
 	Amount               float64   `gorm:"type:decimal(15,2);not null"`
 	Description          string    `gorm:"type:text"`
 	Date                 time.Time `gorm:"not null;index:idx_transaction_date"`
+	Month                string    `gorm:"size:7;index:idx_transaction_month"` // Format: "2025-01"
 	Status               string    `gorm:"not null;size:20;default:'completed'"`
 	DestinationAccountID *uint     `gorm:"index:idx_destination_account"`
 	TransferFee          *float64  `gorm:"type:decimal(15,2)"`

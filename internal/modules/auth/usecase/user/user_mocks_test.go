@@ -4,7 +4,7 @@ import (
 	"github.com/stretchr/testify/mock"
 
 	"github.com/edalferes/monetics/internal/modules/auth/domain"
-	"github.com/edalferes/monetics/internal/modules/auth/service"
+	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 )
 
 // MockUserRepository is a mock implementation of User interface
@@ -111,4 +111,4 @@ func (m *MockPasswordService) Compare(hash, password string) error {
 }
 
 // Verify that mock implements the interface
-var _ service.PasswordService = (*MockPasswordService)(nil)
+var _ interfaces.PasswordService = (*MockPasswordService)(nil)

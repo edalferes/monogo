@@ -3,18 +3,18 @@ package category
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 // GetByIDUseCase handles retrieving a specific category
 type GetByIDUseCase struct {
-	categoryRepo repository.CategoryRepository
+	categoryRepo interfaces.CategoryRepository
 }
 
 // NewGetByIDUseCase creates a new use case instance
-func NewGetByIDUseCase(categoryRepo repository.CategoryRepository) *GetByIDUseCase {
+func NewGetByIDUseCase(categoryRepo interfaces.CategoryRepository) *GetByIDUseCase {
 	return &GetByIDUseCase{
 		categoryRepo: categoryRepo,
 	}

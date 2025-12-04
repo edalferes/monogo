@@ -5,10 +5,10 @@ import (
 
 	gormpkg "gorm.io/gorm"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 )
 
 type gormAccountRepository struct {
@@ -17,7 +17,7 @@ type gormAccountRepository struct {
 }
 
 // NewGormAccountRepository creates a new GORM-based account repository
-func NewGormAccountRepository(db *gormpkg.DB) repository.AccountRepository {
+func NewGormAccountRepository(db *gormpkg.DB) interfaces.AccountRepository {
 	return &gormAccountRepository{
 		db:     db,
 		mapper: mappers.AccountMapper{},

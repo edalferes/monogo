@@ -5,10 +5,10 @@ import (
 
 	gormpkg "gorm.io/gorm"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 )
 
 type gormBudgetRepository struct {
@@ -17,7 +17,7 @@ type gormBudgetRepository struct {
 }
 
 // NewGormBudgetRepository creates a new GORM-based budget repository
-func NewGormBudgetRepository(db *gormpkg.DB) repository.BudgetRepository {
+func NewGormBudgetRepository(db *gormpkg.DB) interfaces.BudgetRepository {
 	return &gormBudgetRepository{
 		db:     db,
 		mapper: mappers.BudgetMapper{},

@@ -3,17 +3,17 @@ package category
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 // DeleteUseCase handles category deletion (soft delete)
 type DeleteUseCase struct {
-	categoryRepo repository.CategoryRepository
+	categoryRepo interfaces.CategoryRepository
 }
 
 // NewDeleteUseCase creates a new use case instance
-func NewDeleteUseCase(categoryRepo repository.CategoryRepository) *DeleteUseCase {
+func NewDeleteUseCase(categoryRepo interfaces.CategoryRepository) *DeleteUseCase {
 	return &DeleteUseCase{
 		categoryRepo: categoryRepo,
 	}

@@ -3,15 +3,15 @@ package budget
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 type ListUseCase struct {
-	budgetRepo repository.BudgetRepository
+	budgetRepo interfaces.BudgetRepository
 }
 
-func NewListUseCase(budgetRepo repository.BudgetRepository) *ListUseCase {
+func NewListUseCase(budgetRepo interfaces.BudgetRepository) *ListUseCase {
 	return &ListUseCase{budgetRepo: budgetRepo}
 }
 

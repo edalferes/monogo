@@ -6,10 +6,10 @@ import (
 
 	gormpkg "gorm.io/gorm"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 )
 
 type gormTransactionRepository struct {
@@ -18,7 +18,7 @@ type gormTransactionRepository struct {
 }
 
 // NewGormTransactionRepository creates a new GORM-based transaction repository
-func NewGormTransactionRepository(db *gormpkg.DB) repository.TransactionRepository {
+func NewGormTransactionRepository(db *gormpkg.DB) interfaces.TransactionRepository {
 	return &gormTransactionRepository{
 		db:     db,
 		mapper: mappers.TransactionMapper{},

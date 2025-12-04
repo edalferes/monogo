@@ -1,19 +1,15 @@
-package service
+package audit
 
 import (
 	"github.com/edalferes/monetics/internal/modules/auth/domain"
 	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 )
 
-type AuditService interface {
-	Log(userID *uint, username, action, status, ip, details string) error
-}
-
 type auditService struct {
 	repo interfaces.AuditLogRepository
 }
 
-func NewAuditService(repo interfaces.AuditLogRepository) AuditService {
+func NewAuditService(repo interfaces.AuditLogRepository) interfaces.AuditService {
 	return &auditService{repo: repo}
 }
 

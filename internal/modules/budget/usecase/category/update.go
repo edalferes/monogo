@@ -3,9 +3,9 @@ package category
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 )
 
 // UpdateInput represents the input for updating a category
@@ -21,11 +21,11 @@ type UpdateInput struct {
 
 // UpdateUseCase handles category updates
 type UpdateUseCase struct {
-	categoryRepo repository.CategoryRepository
+	categoryRepo interfaces.CategoryRepository
 }
 
 // NewUpdateUseCase creates a new use case instance
-func NewUpdateUseCase(categoryRepo repository.CategoryRepository) *UpdateUseCase {
+func NewUpdateUseCase(categoryRepo interfaces.CategoryRepository) *UpdateUseCase {
 	return &UpdateUseCase{
 		categoryRepo: categoryRepo,
 	}

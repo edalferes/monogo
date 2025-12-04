@@ -3,18 +3,18 @@ package account
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 // GetByIDUseCase handles retrieving a specific account
 type GetByIDUseCase struct {
-	accountRepo repository.AccountRepository
+	accountRepo interfaces.AccountRepository
 }
 
 // NewGetByIDUseCase creates a new use case instance
-func NewGetByIDUseCase(accountRepo repository.AccountRepository) *GetByIDUseCase {
+func NewGetByIDUseCase(accountRepo interfaces.AccountRepository) *GetByIDUseCase {
 	return &GetByIDUseCase{
 		accountRepo: accountRepo,
 	}

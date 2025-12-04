@@ -6,11 +6,11 @@ import (
 
 	"github.com/edalferes/monetics/internal/modules/auth"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/http/handlers"
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	gormrepo "github.com/edalferes/monetics/internal/modules/budget/adapters/repository/gorm"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/account"
 	budgetUseCase "github.com/edalferes/monetics/internal/modules/budget/usecase/budget"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/category"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/report"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/transaction"
 	"github.com/edalferes/monetics/pkg/logger"
@@ -21,10 +21,10 @@ type Module struct {
 	db *gormpkg.DB
 
 	// Repositories
-	accountRepo     repository.AccountRepository
-	categoryRepo    repository.CategoryRepository
-	transactionRepo repository.TransactionRepository
-	budgetRepo      repository.BudgetRepository
+	accountRepo     interfaces.AccountRepository
+	categoryRepo    interfaces.CategoryRepository
+	transactionRepo interfaces.TransactionRepository
+	budgetRepo      interfaces.BudgetRepository
 
 	// Use cases - Account
 	createAccountUseCase  *account.CreateUseCase

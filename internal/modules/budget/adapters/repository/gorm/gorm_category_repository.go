@@ -5,10 +5,10 @@ import (
 
 	gormpkg "gorm.io/gorm"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 )
 
 type gormCategoryRepository struct {
@@ -17,7 +17,7 @@ type gormCategoryRepository struct {
 }
 
 // NewGormCategoryRepository creates a new GORM-based category repository
-func NewGormCategoryRepository(db *gormpkg.DB) repository.CategoryRepository {
+func NewGormCategoryRepository(db *gormpkg.DB) interfaces.CategoryRepository {
 	return &gormCategoryRepository{
 		db:     db,
 		mapper: mappers.CategoryMapper{},

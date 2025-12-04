@@ -3,21 +3,21 @@ package report
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 // GetAccountBalanceUseCase handles getting account with calculated balance
 type GetAccountBalanceUseCase struct {
-	accountRepo     repository.AccountRepository
-	transactionRepo repository.TransactionRepository
+	accountRepo     interfaces.AccountRepository
+	transactionRepo interfaces.TransactionRepository
 }
 
 // NewGetAccountBalanceUseCase creates a new use case instance
 func NewGetAccountBalanceUseCase(
-	accountRepo repository.AccountRepository,
-	transactionRepo repository.TransactionRepository,
+	accountRepo interfaces.AccountRepository,
+	transactionRepo interfaces.TransactionRepository,
 ) *GetAccountBalanceUseCase {
 	return &GetAccountBalanceUseCase{
 		accountRepo:     accountRepo,

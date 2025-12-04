@@ -3,16 +3,16 @@ package transaction
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 type GetByIDUseCase struct {
-	transactionRepo repository.TransactionRepository
+	transactionRepo interfaces.TransactionRepository
 }
 
-func NewGetByIDUseCase(transactionRepo repository.TransactionRepository) *GetByIDUseCase {
+func NewGetByIDUseCase(transactionRepo interfaces.TransactionRepository) *GetByIDUseCase {
 	return &GetByIDUseCase{transactionRepo: transactionRepo}
 }
 
