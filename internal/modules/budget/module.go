@@ -97,6 +97,7 @@ func NewModule(db *gormpkg.DB) *Module {
 		module.transactionRepo,
 		module.accountRepo,
 		module.categoryRepo,
+		module.budgetRepo,
 	)
 	module.listTransactionsUseCase = transaction.NewListUseCase(module.transactionRepo)
 	module.getTransactionByIDUseCase = transaction.NewGetByIDUseCase(module.transactionRepo)
@@ -112,7 +113,7 @@ func NewModule(db *gormpkg.DB) *Module {
 		module.budgetRepo,
 		module.categoryRepo,
 	)
-	module.listBudgetsUseCase = budgetUseCase.NewListUseCase(module.budgetRepo)
+	module.listBudgetsUseCase = budgetUseCase.NewListUseCase(module.budgetRepo, module.transactionRepo)
 	module.getBudgetByIDUseCase = budgetUseCase.NewGetByIDUseCase(module.budgetRepo)
 	module.updateBudgetUseCase = budgetUseCase.NewUpdateUseCase(module.budgetRepo)
 	module.deleteBudgetUseCase = budgetUseCase.NewDeleteUseCase(module.budgetRepo)

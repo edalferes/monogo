@@ -25,8 +25,9 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockTransactionRepo := new(MockTransactionRepository)
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
+		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
 
 		input := transaction.CreateInput{
 			UserID:      userID,
@@ -79,6 +80,8 @@ func TestCreateUseCase_Execute(t *testing.T) {
 				t.Amount == 100.50 &&
 				t.Type == domain.TransactionTypeExpense
 		})).Return(expectedTx, nil)
+		// Mock for async updateBudgetSpent goroutine
+		mockBudgetRepo.On("GetByUserID", mock.Anything, userID).Return([]domain.Budget{}, nil).Maybe()
 
 		result, err := usecase.Execute(ctx, input)
 
@@ -91,12 +94,13 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockTransactionRepo.AssertExpectations(t)
 	})
 
-	t.Run("should return error when account not found", func(t *testing.T) {
+	t.Run("should return error when account does not belong to user", func(t *testing.T) {
 		mockTransactionRepo := new(MockTransactionRepository)
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
+		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
 
 		input := transaction.CreateInput{
 			UserID:     userID,
@@ -116,12 +120,13 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockAccountRepo.AssertExpectations(t)
 	})
 
-	t.Run("should return error when category not found", func(t *testing.T) {
+	t.Run("should return error when category does not belong to user", func(t *testing.T) {
 		mockTransactionRepo := new(MockTransactionRepository)
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
+		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
 
 		input := transaction.CreateInput{
 			UserID:     userID,
@@ -155,8 +160,9 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockTransactionRepo := new(MockTransactionRepository)
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
+		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
 
 		input := transaction.CreateInput{
 			UserID:     userID,
@@ -173,12 +179,13 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		assert.Equal(t, budgetErrors.ErrInvalidTransactionType, err)
 	})
 
-	t.Run("should create transfer with valid destination account", func(t *testing.T) {
+	t.Run("should create transfer with destination account", func(t *testing.T) {
 		mockTransactionRepo := new(MockTransactionRepository)
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
+		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
 
 		destAccountID := uint(11)
 		input := transaction.CreateInput{
@@ -248,8 +255,9 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockTransactionRepo := new(MockTransactionRepository)
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
+		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
 
 		destAccountID := uint(999)
 		input := transaction.CreateInput{
@@ -292,8 +300,9 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockTransactionRepo := new(MockTransactionRepository)
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
+		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
 
 		destAccountID := uint(11)
 		input := transaction.CreateInput{
@@ -376,13 +385,23 @@ func TestListUseCase_Execute(t *testing.T) {
 			},
 		}
 
-		mockRepo.On("GetByUserID", ctx, userID).Return(expectedTransactions, nil)
+		mockRepo.On("GetByUserIDPaginated", ctx, userID, 20, 0).Return(expectedTransactions, nil)
+		mockRepo.On("CountByUserID", ctx, userID).Return(int64(2), nil)
 
-		transactions, err := usecase.Execute(ctx, userID)
+		input := transaction.ListInput{
+			UserID:   userID,
+			Page:     1,
+			PageSize: 20,
+		}
+
+		result, err := usecase.Execute(ctx, input)
 
 		assert.NoError(t, err)
-		assert.Len(t, transactions, 2)
-		assert.Equal(t, expectedTransactions, transactions)
+		assert.Len(t, result.Transactions, 2)
+		assert.Equal(t, int64(2), result.Total)
+		assert.Equal(t, 1, result.Page)
+		assert.Equal(t, 20, result.PageSize)
+		assert.Equal(t, 1, result.TotalPages)
 		mockRepo.AssertExpectations(t)
 	})
 
@@ -391,12 +410,18 @@ func TestListUseCase_Execute(t *testing.T) {
 		usecase := transaction.NewListUseCase(mockRepo)
 
 		expectedError := errors.New("database error")
-		mockRepo.On("GetByUserID", ctx, userID).Return(nil, expectedError)
+		mockRepo.On("GetByUserIDPaginated", ctx, userID, 20, 0).Return(nil, expectedError)
 
-		transactions, err := usecase.Execute(ctx, userID)
+		input := transaction.ListInput{
+			UserID:   userID,
+			Page:     1,
+			PageSize: 20,
+		}
+
+		result, err := usecase.Execute(ctx, input)
 
 		assert.Error(t, err)
-		assert.Nil(t, transactions)
+		assert.Empty(t, result.Transactions)
 		assert.Equal(t, expectedError, err)
 		mockRepo.AssertExpectations(t)
 	})

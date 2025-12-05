@@ -13,10 +13,16 @@ type CreateUseCase struct {
 	transactionRepo interfaces.TransactionRepository
 	accountRepo     interfaces.AccountRepository
 	categoryRepo    interfaces.CategoryRepository
+	budgetRepo      interfaces.BudgetRepository
 }
 
-func NewCreateUseCase(transactionRepo interfaces.TransactionRepository, accountRepo interfaces.AccountRepository, categoryRepo interfaces.CategoryRepository) *CreateUseCase {
-	return &CreateUseCase{transactionRepo: transactionRepo, accountRepo: accountRepo, categoryRepo: categoryRepo}
+func NewCreateUseCase(transactionRepo interfaces.TransactionRepository, accountRepo interfaces.AccountRepository, categoryRepo interfaces.CategoryRepository, budgetRepo interfaces.BudgetRepository) *CreateUseCase {
+	return &CreateUseCase{
+		transactionRepo: transactionRepo,
+		accountRepo:     accountRepo,
+		categoryRepo:    categoryRepo,
+		budgetRepo:      budgetRepo,
+	}
 }
 
 type CreateInput struct {
@@ -91,5 +97,49 @@ func (uc *CreateUseCase) Execute(ctx context.Context, input CreateInput) (domain
 		DestinationAccountID: destinationAccountID,
 	}
 
-	return uc.transactionRepo.Create(ctx, tx)
+	createdTx, err := uc.transactionRepo.Create(ctx, tx)
+	if err != nil {
+		return domain.Transaction{}, err
+	}
+
+	// Update budget spent if this is an expense transaction
+	if input.Type == domain.TransactionTypeExpense {
+		go uc.updateBudgetSpent(context.Background(), input.UserID, input.CategoryID, date)
+	}
+
+	return createdTx, nil
+}
+
+// updateBudgetSpent updates the spent amount for active budgets of the category
+func (uc *CreateUseCase) updateBudgetSpent(ctx context.Context, userID, categoryID uint, transactionDate time.Time) {
+	// Get active budgets for this category
+	budgets, err := uc.budgetRepo.GetByUserID(ctx, userID)
+	if err != nil {
+		return
+	}
+
+	for _, budget := range budgets {
+		// Check if budget is for this category and transaction date is within period
+		if budget.CategoryID == categoryID &&
+			budget.IsActive &&
+			!transactionDate.Before(budget.StartDate) &&
+			!transactionDate.After(budget.EndDate) {
+
+			// Calculate total spent for this budget
+			transactions, err := uc.transactionRepo.GetByDateRange(ctx, userID, budget.StartDate, budget.EndDate)
+			if err != nil {
+				continue
+			}
+
+			var spent float64
+			for _, tx := range transactions {
+				if tx.CategoryID == categoryID && tx.Type == domain.TransactionTypeExpense {
+					spent += tx.Amount
+				}
+			}
+
+			// Update budget spent
+			_ = uc.budgetRepo.UpdateSpent(ctx, budget.ID, spent)
+		}
+	}
 }

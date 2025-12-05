@@ -66,6 +66,32 @@ func (r *gormTransactionRepository) GetByUserID(ctx context.Context, userID uint
 	return r.mapper.ToDomainSlice(transactionModels), nil
 }
 
+func (r *gormTransactionRepository) GetByUserIDPaginated(ctx context.Context, userID uint, limit, offset int) ([]domain.Transaction, error) {
+	var transactionModels []models.TransactionModel
+	if err := r.db.WithContext(ctx).
+		Preload("Account").
+		Preload("Category").
+		Where("user_id = ?", userID).
+		Order("date DESC").
+		Limit(limit).
+		Offset(offset).
+		Find(&transactionModels).Error; err != nil {
+		return nil, err
+	}
+	return r.mapper.ToDomainSlice(transactionModels), nil
+}
+
+func (r *gormTransactionRepository) CountByUserID(ctx context.Context, userID uint) (int64, error) {
+	var count int64
+	if err := r.db.WithContext(ctx).
+		Model(&models.TransactionModel{}).
+		Where("user_id = ?", userID).
+		Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func (r *gormTransactionRepository) GetByAccountID(ctx context.Context, accountID uint) ([]domain.Transaction, error) {
 	var transactionModels []models.TransactionModel
 	// Get transactions where account is either source OR destination

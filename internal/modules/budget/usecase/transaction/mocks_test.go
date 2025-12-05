@@ -81,6 +81,19 @@ func (m *MockTransactionRepository) ExistsByID(ctx context.Context, id uint) (bo
 	return args.Bool(0), args.Error(1)
 }
 
+func (m *MockTransactionRepository) GetByUserIDPaginated(ctx context.Context, userID uint, limit, offset int) ([]domain.Transaction, error) {
+	args := m.Called(ctx, userID, limit, offset)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]domain.Transaction), args.Error(1)
+}
+
+func (m *MockTransactionRepository) CountByUserID(ctx context.Context, userID uint) (int64, error) {
+	args := m.Called(ctx, userID)
+	return args.Get(0).(int64), args.Error(1)
+}
+
 type MockAccountRepository struct {
 	mock.Mock
 }
@@ -165,6 +178,67 @@ func (m *MockCategoryRepository) Delete(ctx context.Context, id uint) error {
 }
 
 func (m *MockCategoryRepository) ExistsByID(ctx context.Context, id uint) (bool, error) {
+	args := m.Called(ctx, id)
+	return args.Bool(0), args.Error(1)
+}
+
+type MockBudgetRepository struct {
+	mock.Mock
+}
+
+func (m *MockBudgetRepository) Create(ctx context.Context, budget domain.Budget) (domain.Budget, error) {
+	args := m.Called(ctx, budget)
+	return args.Get(0).(domain.Budget), args.Error(1)
+}
+
+func (m *MockBudgetRepository) GetByID(ctx context.Context, id uint) (domain.Budget, error) {
+	args := m.Called(ctx, id)
+	if args.Get(0) == nil {
+		return domain.Budget{}, args.Error(1)
+	}
+	return args.Get(0).(domain.Budget), args.Error(1)
+}
+
+func (m *MockBudgetRepository) GetByUserID(ctx context.Context, userID uint) ([]domain.Budget, error) {
+	args := m.Called(ctx, userID)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]domain.Budget), args.Error(1)
+}
+
+func (m *MockBudgetRepository) GetByCategoryID(ctx context.Context, categoryID uint) ([]domain.Budget, error) {
+	args := m.Called(ctx, categoryID)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]domain.Budget), args.Error(1)
+}
+
+func (m *MockBudgetRepository) GetActive(ctx context.Context, userID uint) ([]domain.Budget, error) {
+	args := m.Called(ctx, userID)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]domain.Budget), args.Error(1)
+}
+
+func (m *MockBudgetRepository) Update(ctx context.Context, budget domain.Budget) (domain.Budget, error) {
+	args := m.Called(ctx, budget)
+	return args.Get(0).(domain.Budget), args.Error(1)
+}
+
+func (m *MockBudgetRepository) UpdateSpent(ctx context.Context, budgetID uint, spent float64) error {
+	args := m.Called(ctx, budgetID, spent)
+	return args.Error(0)
+}
+
+func (m *MockBudgetRepository) Delete(ctx context.Context, id uint) error {
+	args := m.Called(ctx, id)
+	return args.Error(0)
+}
+
+func (m *MockBudgetRepository) ExistsByID(ctx context.Context, id uint) (bool, error) {
 	args := m.Called(ctx, id)
 	return args.Bool(0), args.Error(1)
 }

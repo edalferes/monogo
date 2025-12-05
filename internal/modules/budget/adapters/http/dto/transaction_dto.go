@@ -122,6 +122,42 @@ func ToTransactionResponseList(transactions []domain.Transaction) []TransactionR
 	return responses
 }
 
+// TransactionListResponse represents paginated transaction list response
+type TransactionListResponse struct {
+	Transactions []TransactionResponse `json:"transactions"`
+	Pagination   PaginationMeta        `json:"pagination"`
+}
+
+// PaginationMeta represents pagination metadata
+type PaginationMeta struct {
+	Total      int64 `json:"total"`
+	Page       int   `json:"page"`
+	PageSize   int   `json:"page_size"`
+	TotalPages int   `json:"total_pages"`
+}
+
+// TransactionListOutput represents the use case output (avoiding circular import)
+type TransactionListOutput struct {
+	Transactions []domain.Transaction
+	Total        int64
+	Page         int
+	PageSize     int
+	TotalPages   int
+}
+
+// ToTransactionListResponse converts use case output to paginated response
+func ToTransactionListResponse(result TransactionListOutput) TransactionListResponse {
+	return TransactionListResponse{
+		Transactions: ToTransactionResponseList(result.Transactions),
+		Pagination: PaginationMeta{
+			Total:      result.Total,
+			Page:       result.Page,
+			PageSize:   result.PageSize,
+			TotalPages: result.TotalPages,
+		},
+	}
+}
+
 // UpdateTransactionRequest represents the request to update a transaction
 type UpdateTransactionRequest struct {
 	AccountID   *uint      `json:"account_id"`
