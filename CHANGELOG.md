@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/edalferes/monetics/compare/v0.9.0...v0.10.0) (2025-12-05)
+
+
+### Features
+
+* refactor budget ([18a5b23](https://github.com/edalferes/monetics/commit/18a5b235ff2a777d61055a1364b91d1eba2785b7))
+
 ## [0.9.0](https://github.com/edalferes/monetics/compare/v0.8.0...v0.9.0) (2025-12-01)
 
 
