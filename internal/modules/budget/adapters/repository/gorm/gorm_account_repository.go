@@ -1,22 +1,23 @@
-package repository
+package gorm
 
 import (
 	"context"
 
-	"gorm.io/gorm"
+	gormpkg "gorm.io/gorm"
 
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 )
 
 type gormAccountRepository struct {
-	db     *gorm.DB
+	db     *gormpkg.DB
 	mapper mappers.AccountMapper
 }
 
 // NewGormAccountRepository creates a new GORM-based account repository
-func NewGormAccountRepository(db *gorm.DB) AccountRepository {
+func NewGormAccountRepository(db *gormpkg.DB) interfaces.AccountRepository {
 	return &gormAccountRepository{
 		db:     db,
 		mapper: mappers.AccountMapper{},

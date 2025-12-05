@@ -1,22 +1,18 @@
-package service
+package token
 
 import (
 	"time"
 
+	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 	"github.com/golang-jwt/jwt/v5"
 )
-
-type JWTService interface {
-	GenerateToken(userID uint, username string, roles []string) (string, error)
-	ValidateToken(token string) (*jwt.Token, error)
-}
 
 type jwtService struct {
 	secretKey string
 	expiry    time.Duration
 }
 
-func NewJWTService(secretKey string, expiry time.Duration) JWTService {
+func NewJWTService(secretKey string, expiry time.Duration) interfaces.JWTService {
 	return &jwtService{secretKey, expiry}
 }
 

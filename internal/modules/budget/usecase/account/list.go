@@ -3,17 +3,17 @@ package account
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // ListUseCase handles listing user accounts
 type ListUseCase struct {
-	accountRepo repository.AccountRepository
+	accountRepo interfaces.AccountRepository
 }
 
 // NewListUseCase creates a new use case instance
-func NewListUseCase(accountRepo repository.AccountRepository) *ListUseCase {
+func NewListUseCase(accountRepo interfaces.AccountRepository) *ListUseCase {
 	return &ListUseCase{
 		accountRepo: accountRepo,
 	}

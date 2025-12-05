@@ -2,14 +2,15 @@ package budget
 
 import (
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
+	gormpkg "gorm.io/gorm"
 
 	"github.com/edalferes/monetics/internal/modules/auth"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/http/handlers"
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	gormrepo "github.com/edalferes/monetics/internal/modules/budget/adapters/repository/gorm"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/account"
 	budgetUseCase "github.com/edalferes/monetics/internal/modules/budget/usecase/budget"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/category"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/report"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/transaction"
 	"github.com/edalferes/monetics/pkg/logger"
@@ -17,13 +18,13 @@ import (
 
 // Module represents the budget module
 type Module struct {
-	db *gorm.DB
+	db *gormpkg.DB
 
 	// Repositories
-	accountRepo     repository.AccountRepository
-	categoryRepo    repository.CategoryRepository
-	transactionRepo repository.TransactionRepository
-	budgetRepo      repository.BudgetRepository
+	accountRepo     interfaces.AccountRepository
+	categoryRepo    interfaces.CategoryRepository
+	transactionRepo interfaces.TransactionRepository
+	budgetRepo      interfaces.BudgetRepository
 
 	// Use cases - Account
 	createAccountUseCase  *account.CreateUseCase
@@ -66,16 +67,16 @@ type Module struct {
 }
 
 // NewModule creates a new budget module instance
-func NewModule(db *gorm.DB) *Module {
+func NewModule(db *gormpkg.DB) *Module {
 	module := &Module{
 		db: db,
 	}
 
 	// Initialize repositories
-	module.accountRepo = repository.NewGormAccountRepository(db)
-	module.categoryRepo = repository.NewGormCategoryRepository(db)
-	module.transactionRepo = repository.NewGormTransactionRepository(db)
-	module.budgetRepo = repository.NewGormBudgetRepository(db)
+	module.accountRepo = gormrepo.NewGormAccountRepository(db)
+	module.categoryRepo = gormrepo.NewGormCategoryRepository(db)
+	module.transactionRepo = gormrepo.NewGormTransactionRepository(db)
+	module.budgetRepo = gormrepo.NewGormBudgetRepository(db)
 
 	// Initialize use cases - Account
 	module.createAccountUseCase = account.NewCreateUseCase(module.accountRepo)
@@ -96,6 +97,7 @@ func NewModule(db *gorm.DB) *Module {
 		module.transactionRepo,
 		module.accountRepo,
 		module.categoryRepo,
+		module.budgetRepo,
 	)
 	module.listTransactionsUseCase = transaction.NewListUseCase(module.transactionRepo)
 	module.getTransactionByIDUseCase = transaction.NewGetByIDUseCase(module.transactionRepo)
@@ -111,7 +113,7 @@ func NewModule(db *gorm.DB) *Module {
 		module.budgetRepo,
 		module.categoryRepo,
 	)
-	module.listBudgetsUseCase = budgetUseCase.NewListUseCase(module.budgetRepo)
+	module.listBudgetsUseCase = budgetUseCase.NewListUseCase(module.budgetRepo, module.transactionRepo)
 	module.getBudgetByIDUseCase = budgetUseCase.NewGetByIDUseCase(module.budgetRepo)
 	module.updateBudgetUseCase = budgetUseCase.NewUpdateUseCase(module.budgetRepo)
 	module.deleteBudgetUseCase = budgetUseCase.NewDeleteUseCase(module.budgetRepo)
@@ -208,7 +210,7 @@ func (m *Module) RegisterRoutes(api *echo.Group, authMiddleware echo.MiddlewareF
 }
 
 // WireUp initializes and registers the budget module
-func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger) {
+func WireUp(group *echo.Group, db *gormpkg.DB, jwtSecret string, log logger.Logger) {
 	log.Info().Msg("Initializing budget module")
 
 	module := NewModule(db)

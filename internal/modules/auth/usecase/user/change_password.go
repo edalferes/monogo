@@ -2,13 +2,12 @@ package user
 
 import (
 	"github.com/edalferes/monetics/internal/modules/auth/errors"
-	"github.com/edalferes/monetics/internal/modules/auth/service"
 	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 )
 
 type ChangePasswordUseCase struct {
 	UserRepo        interfaces.User
-	PasswordService service.PasswordService
+	PasswordService interfaces.PasswordService
 }
 
 // Execute changes the user's password after verifying the current password

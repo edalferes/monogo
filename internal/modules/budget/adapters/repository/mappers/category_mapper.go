@@ -18,6 +18,7 @@ func (m CategoryMapper) ToModel(category domain.Category) models.CategoryModel {
 		Icon:        category.Icon,
 		Color:       category.Color,
 		Description: category.Description,
+		IsActive:    category.IsActive,
 		CreatedAt:   category.CreatedAt,
 		UpdatedAt:   category.UpdatedAt,
 	}
@@ -33,6 +34,7 @@ func (m CategoryMapper) ToDomain(categoryModel models.CategoryModel) domain.Cate
 		Icon:        categoryModel.Icon,
 		Color:       categoryModel.Color,
 		Description: categoryModel.Description,
+		IsActive:    categoryModel.IsActive,
 		CreatedAt:   categoryModel.CreatedAt,
 		UpdatedAt:   categoryModel.UpdatedAt,
 	}

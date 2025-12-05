@@ -1,4 +1,4 @@
-package repository
+package interfaces
 
 import "github.com/edalferes/monetics/internal/modules/auth/domain"
 

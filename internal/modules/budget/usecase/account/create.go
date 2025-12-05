@@ -3,18 +3,18 @@ package account
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 // CreateUseCase handles account creation
 type CreateUseCase struct {
-	accountRepo repository.AccountRepository
+	accountRepo interfaces.AccountRepository
 }
 
 // NewCreateUseCase creates a new use case instance
-func NewCreateUseCase(accountRepo repository.AccountRepository) *CreateUseCase {
+func NewCreateUseCase(accountRepo interfaces.AccountRepository) *CreateUseCase {
 	return &CreateUseCase{
 		accountRepo: accountRepo,
 	}

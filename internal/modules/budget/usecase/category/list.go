@@ -3,17 +3,17 @@ package category
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // ListUseCase handles listing user categories
 type ListUseCase struct {
-	categoryRepo repository.CategoryRepository
+	categoryRepo interfaces.CategoryRepository
 }
 
 // NewListUseCase creates a new use case instance
-func NewListUseCase(categoryRepo repository.CategoryRepository) *ListUseCase {
+func NewListUseCase(categoryRepo interfaces.CategoryRepository) *ListUseCase {
 	return &ListUseCase{
 		categoryRepo: categoryRepo,
 	}

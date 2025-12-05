@@ -98,16 +98,13 @@ func (h *TransactionHandler) CreateTransaction(c echo.Context) error {
 	return c.JSON(http.StatusCreated, dto.ToTransactionResponse(tx))
 }
 
-// ListTransactions handles listing user transactions
+// ListTransactions handles listing user transactions with pagination
 // @Summary List user transactions
 // @Tags Budget - Transactions
 // @Produce json
-// @Param account_id query int false "Filter by account ID"
-// @Param category_id query int false "Filter by category ID"
-// @Param type query string false "Filter by type (income, expense, transfer)"
-// @Param start_date query string false "Filter by start date (RFC3339)"
-// @Param end_date query string false "Filter by end date (RFC3339)"
-// @Success 200 {array} dto.TransactionResponse
+// @Param page query int false "Page number (default: 1)"
+// @Param page_size query int false "Items per page (default: 20, max: 100)"
+// @Success 200 {object} dto.TransactionListResponse
 // @Router /transactions [get]
 func (h *TransactionHandler) ListTransactions(c echo.Context) error {
 	userID, err := GetUserIDFromContext(c)
@@ -117,15 +114,45 @@ func (h *TransactionHandler) ListTransactions(c echo.Context) error {
 		})
 	}
 
-	// TODO: Implement filters (account_id, category_id, type, date range) if needed
-	transactions, err := h.listTransactionsUseCase.Execute(c.Request().Context(), userID)
+	// Parse pagination parameters
+	page := 1
+	pageSize := 20
+
+	if p := c.QueryParam("page"); p != "" {
+		if parsedPage, err := strconv.Atoi(p); err == nil && parsedPage > 0 {
+			page = parsedPage
+		}
+	}
+
+	if ps := c.QueryParam("page_size"); ps != "" {
+		if parsedSize, err := strconv.Atoi(ps); err == nil && parsedSize > 0 {
+			pageSize = parsedSize
+		}
+	}
+
+	input := transaction.ListInput{
+		UserID:   userID,
+		Page:     page,
+		PageSize: pageSize,
+	}
+
+	result, err := h.listTransactionsUseCase.Execute(c.Request().Context(), input)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusOK, dto.ToTransactionResponseList(transactions))
+	// Convert to DTO format
+	dtoResult := dto.TransactionListOutput{
+		Transactions: result.Transactions,
+		Total:        result.Total,
+		Page:         result.Page,
+		PageSize:     result.PageSize,
+		TotalPages:   result.TotalPages,
+	}
+
+	return c.JSON(http.StatusOK, dto.ToTransactionListResponse(dtoResult))
 }
 
 // GetTransactionByID handles getting transaction by ID

@@ -3,7 +3,7 @@ package account
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
@@ -20,11 +20,11 @@ type UpdateInput struct {
 
 // UpdateUseCase handles account updates
 type UpdateUseCase struct {
-	accountRepo repository.AccountRepository
+	accountRepo interfaces.AccountRepository
 }
 
 // NewUpdateUseCase creates a new use case instance
-func NewUpdateUseCase(accountRepo repository.AccountRepository) *UpdateUseCase {
+func NewUpdateUseCase(accountRepo interfaces.AccountRepository) *UpdateUseCase {
 	return &UpdateUseCase{
 		accountRepo: accountRepo,
 	}

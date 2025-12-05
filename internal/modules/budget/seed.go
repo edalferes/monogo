@@ -3,15 +3,15 @@ package budget
 import (
 	"time"
 
-	"gorm.io/gorm"
+	gormpkg "gorm.io/gorm"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	gormrepo "github.com/edalferes/monetics/internal/modules/budget/adapters/repository/gorm"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 )
 
 // Seed populates the database with default budget categories
-func Seed(db *gorm.DB, userID uint) error {
-	categoryRepo := repository.NewGormCategoryRepository(db)
+func Seed(db *gormpkg.DB, userID uint) error {
+	categoryRepo := gormrepo.NewGormCategoryRepository(db)
 
 	// Default income categories based on the spreadsheet
 	incomeCategories := []domain.Category{
@@ -43,7 +43,7 @@ func Seed(db *gorm.DB, userID uint) error {
 
 		// Transporte
 		{UserID: userID, Name: "Combustível", Type: domain.CategoryTypeExpense, Icon: "⛽", Color: "#FF9800"},
-		{UserID: userID, Name: "Uber/Táxi", Type: domain.CategoryTypeExpense, Icon: "🚕", Color: "#FF5722"},
+		{UserID: userID, Name: "Uber", Type: domain.CategoryTypeExpense, Icon: "🚕", Color: "#FF5722"},
 		{UserID: userID, Name: "Transporte Público", Type: domain.CategoryTypeExpense, Icon: "🚌", Color: "#F44336"},
 		{UserID: userID, Name: "Manutenção Veículo", Type: domain.CategoryTypeExpense, Icon: "🔧", Color: "#E91E63"},
 		{UserID: userID, Name: "Seguro Auto", Type: domain.CategoryTypeExpense, Icon: "🚗", Color: "#9C27B0"},
@@ -67,13 +67,13 @@ func Seed(db *gorm.DB, userID uint) error {
 		{UserID: userID, Name: "Streaming", Type: domain.CategoryTypeExpense, Icon: "📺", Color: "#FFC107"},
 		{UserID: userID, Name: "Viagens/Passeios", Type: domain.CategoryTypeExpense, Icon: "✈️", Color: "#FF9800"},
 		{UserID: userID, Name: "Hobbies", Type: domain.CategoryTypeExpense, Icon: "🎮", Color: "#FF5722"},
-		{UserID: userID, Name: "Restaurants", Type: domain.CategoryTypeExpense, Icon: "🍴", Color: "#F44336"},
+		{UserID: userID, Name: "Restaurantes", Type: domain.CategoryTypeExpense, Icon: "🍴", Color: "#F44336"},
 		{UserID: userID, Name: "Cinema/Teatro", Type: domain.CategoryTypeExpense, Icon: "🎭", Color: "#E91E63"},
 
 		// Pessoal
 		{UserID: userID, Name: "Roupas", Type: domain.CategoryTypeExpense, Icon: "👔", Color: "#9C27B0"},
 		{UserID: userID, Name: "Beleza/Estética", Type: domain.CategoryTypeExpense, Icon: "💄", Color: "#673AB7"},
-		{UserID: userID, Name: "Presents", Type: domain.CategoryTypeExpense, Icon: "🎁", Color: "#3F51B5"},
+		{UserID: userID, Name: "Presentes", Type: domain.CategoryTypeExpense, Icon: "🎁", Color: "#3F51B5"},
 		{UserID: userID, Name: "Pets", Type: domain.CategoryTypeExpense, Icon: "🐾", Color: "#2196F3"},
 	}
 

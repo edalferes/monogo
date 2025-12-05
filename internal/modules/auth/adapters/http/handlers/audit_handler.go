@@ -1,4 +1,4 @@
-package audit
+package handlers
 
 import (
 	"net/http"
@@ -9,12 +9,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type Handler struct {
+type AuditHandler struct {
 	auditLogRepo interfaces.AuditLogRepository
 }
 
-func NewHandler(auditLogRepo interfaces.AuditLogRepository) *Handler {
-	return &Handler{
+func NewAuditHandler(auditLogRepo interfaces.AuditLogRepository) *AuditHandler {
+	return &AuditHandler{
 		auditLogRepo: auditLogRepo,
 	}
 }
@@ -28,7 +28,7 @@ func NewHandler(auditLogRepo interfaces.AuditLogRepository) *Handler {
 // @Success 200 {object} responses.SuccessResponse{data=[]dto.AuditLogResponse}
 // @Failure 500 {object} responses.ErrorResponse
 // @Router /auth/audit-logs [get]
-func (h *Handler) ListAuditLogs(c echo.Context) error {
+func (h *AuditHandler) ListAuditLogs(c echo.Context) error {
 	logs, err := h.auditLogRepo.ListAll()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, pkgresponses.ErrorResponse{

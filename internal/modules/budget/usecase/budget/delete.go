@@ -3,15 +3,15 @@ package budget
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 type DeleteUseCase struct {
-	budgetRepo repository.BudgetRepository
+	budgetRepo interfaces.BudgetRepository
 }
 
-func NewDeleteUseCase(budgetRepo repository.BudgetRepository) *DeleteUseCase {
+func NewDeleteUseCase(budgetRepo interfaces.BudgetRepository) *DeleteUseCase {
 	return &DeleteUseCase{budgetRepo: budgetRepo}
 }
 

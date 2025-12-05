@@ -3,15 +3,15 @@ package transaction
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 type DeleteUseCase struct {
-	transactionRepo repository.TransactionRepository
+	transactionRepo interfaces.TransactionRepository
 }
 
-func NewDeleteUseCase(transactionRepo repository.TransactionRepository) *DeleteUseCase {
+func NewDeleteUseCase(transactionRepo interfaces.TransactionRepository) *DeleteUseCase {
 	return &DeleteUseCase{transactionRepo: transactionRepo}
 }
 

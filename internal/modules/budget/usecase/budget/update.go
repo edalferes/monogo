@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
@@ -22,10 +22,10 @@ type UpdateInput struct {
 }
 
 type UpdateUseCase struct {
-	budgetRepo repository.BudgetRepository
+	budgetRepo interfaces.BudgetRepository
 }
 
-func NewUpdateUseCase(budgetRepo repository.BudgetRepository) *UpdateUseCase {
+func NewUpdateUseCase(budgetRepo interfaces.BudgetRepository) *UpdateUseCase {
 	return &UpdateUseCase{budgetRepo: budgetRepo}
 }
 

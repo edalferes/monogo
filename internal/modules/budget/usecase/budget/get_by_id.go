@@ -3,16 +3,16 @@ package budget
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 type GetByIDUseCase struct {
-	budgetRepo repository.BudgetRepository
+	budgetRepo interfaces.BudgetRepository
 }
 
-func NewGetByIDUseCase(budgetRepo repository.BudgetRepository) *GetByIDUseCase {
+func NewGetByIDUseCase(budgetRepo interfaces.BudgetRepository) *GetByIDUseCase {
 	return &GetByIDUseCase{budgetRepo: budgetRepo}
 }
 

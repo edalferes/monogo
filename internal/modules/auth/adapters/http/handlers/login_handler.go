@@ -3,7 +3,7 @@
 // This package implements the HTTP adapter layer for authentication operations,
 // specifically handling login requests and JWT token generation. It follows
 // Clean Architecture principles by delegating business logic to use cases.
-package login
+package handlers
 
 import (
 	"net/http"
@@ -34,13 +34,13 @@ import (
 //
 // Example usage:
 //
-//	handler := &Handler{
+//	handler := &LoginHandler{
 //		LoginUseCase: loginUseCase,
 //		Logger:       logger,
 //	}
 //
 //	e.POST("/auth/login", handler.Login)
-type Handler struct {
+type LoginHandler struct {
 	LoginUseCase *userUC.LoginWithAuditUseCase // Use case for authentication logic
 	Logger       logger.Logger                 // Logger for HTTP-layer events
 }
@@ -57,7 +57,7 @@ type Handler struct {
 // @Failure 401 {object} map[string]string "invalid credentials"
 // @Failure 500 {object} map[string]string "internal error"
 // @Router /v1/auth/login [post]
-func (h *Handler) Login(c echo.Context) error {
+func (h *LoginHandler) Login(c echo.Context) error {
 	var input dto.LoginDTO
 	if err := c.Bind(&input); err != nil {
 		h.Logger.Error().Err(err).Msg("failed to bind login request")

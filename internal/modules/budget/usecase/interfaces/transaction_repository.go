@@ -1,4 +1,4 @@
-package repository
+package interfaces
 
 import (
 	"context"
@@ -12,6 +12,8 @@ type TransactionRepository interface {
 	Create(ctx context.Context, transaction domain.Transaction) (domain.Transaction, error)
 	GetByID(ctx context.Context, id uint) (domain.Transaction, error)
 	GetByUserID(ctx context.Context, userID uint) ([]domain.Transaction, error)
+	GetByUserIDPaginated(ctx context.Context, userID uint, limit, offset int) ([]domain.Transaction, error)
+	CountByUserID(ctx context.Context, userID uint) (int64, error)
 	GetByAccountID(ctx context.Context, accountID uint) ([]domain.Transaction, error)
 	GetByCategoryID(ctx context.Context, categoryID uint) ([]domain.Transaction, error)
 	GetByDateRange(ctx context.Context, userID uint, startDate, endDate time.Time) ([]domain.Transaction, error)

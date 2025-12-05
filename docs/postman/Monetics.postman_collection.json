@@ -890,9 +890,21 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions",
+									"raw": "{{BASE_URL}}/{{VERSION}}/budget/transactions?page=1&page_size=20",
 									"host": ["{{BASE_URL}}"],
-									"path": ["{{VERSION}}", "budget", "transactions"]
+									"path": ["{{VERSION}}", "budget", "transactions"],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"description": "Page number (default: 1)"
+										},
+										{
+											"key": "page_size",
+											"value": "20",
+											"description": "Items per page (default: 20, max: 100)"
+										}
+									]
 								}
 							},
 							"response": []

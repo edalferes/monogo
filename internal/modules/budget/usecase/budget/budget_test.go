@@ -94,20 +94,29 @@ func TestListUseCase_Execute(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		mockRepo := new(MockBudgetRepository)
-		uc := budget.NewListUseCase(mockRepo)
+		mockTransactionRepo := new(MockTransactionRepository)
+		uc := budget.NewListUseCase(mockRepo, mockTransactionRepo)
+
+		startDate1 := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
+		endDate1 := time.Date(2024, 1, 31, 0, 0, 0, 0, time.UTC)
+		startDate2 := time.Date(2024, 2, 1, 0, 0, 0, 0, time.UTC)
+		endDate2 := time.Date(2024, 2, 29, 0, 0, 0, 0, time.UTC)
 
 		expected := []domain.Budget{
-			{ID: 1, UserID: 1, Name: "Janeiro"},
-			{ID: 2, UserID: 1, Name: "Fevereiro"},
+			{ID: 1, UserID: 1, Name: "Janeiro", CategoryID: 1, Amount: 1000.0, StartDate: startDate1, EndDate: endDate1},
+			{ID: 2, UserID: 1, Name: "Fevereiro", CategoryID: 2, Amount: 1500.0, StartDate: startDate2, EndDate: endDate2},
 		}
 
 		mockRepo.On("GetByUserID", ctx, uint(1)).Return(expected, nil)
+		mockTransactionRepo.On("GetByDateRange", ctx, uint(1), startDate1, endDate1).Return([]domain.Transaction{}, nil)
+		mockTransactionRepo.On("GetByDateRange", ctx, uint(1), startDate2, endDate2).Return([]domain.Transaction{}, nil)
 
 		result, err := uc.Execute(ctx, 1)
 
 		assert.NoError(t, err)
 		assert.Len(t, result, 2)
 		mockRepo.AssertExpectations(t)
+		mockTransactionRepo.AssertExpectations(t)
 	})
 }
 

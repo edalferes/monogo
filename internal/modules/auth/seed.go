@@ -3,9 +3,9 @@ package auth
 import (
 	"gorm.io/gorm"
 
+	"github.com/edalferes/monetics/internal/modules/auth/adapters/crypto"
 	gormrepo "github.com/edalferes/monetics/internal/modules/auth/adapters/repository/gorm"
 	"github.com/edalferes/monetics/internal/modules/auth/domain"
-	"github.com/edalferes/monetics/internal/modules/auth/service"
 )
 
 const (
@@ -17,7 +17,7 @@ func Seed(db *gorm.DB) error {
 	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
 	permRepo := gormrepo.NewPermissionRepositoryGorm(db)
 	userRepo := gormrepo.NewUserRepositoryGorm(db)
-	passwordService := service.NewPasswordService()
+	passwordService := crypto.NewBcryptPasswordService()
 
 	defaultRoles := []string{"admin", "user"}
 	defaultPerms := []string{"read", "write", "delete"}

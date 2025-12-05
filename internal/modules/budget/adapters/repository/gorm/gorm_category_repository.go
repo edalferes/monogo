@@ -1,22 +1,23 @@
-package repository
+package gorm
 
 import (
 	"context"
 
-	"gorm.io/gorm"
+	gormpkg "gorm.io/gorm"
 
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/mappers"
 	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository/models"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 )
 
 type gormCategoryRepository struct {
-	db     *gorm.DB
+	db     *gormpkg.DB
 	mapper mappers.CategoryMapper
 }
 
 // NewGormCategoryRepository creates a new GORM-based category repository
-func NewGormCategoryRepository(db *gorm.DB) CategoryRepository {
+func NewGormCategoryRepository(db *gormpkg.DB) interfaces.CategoryRepository {
 	return &gormCategoryRepository{
 		db:     db,
 		mapper: mappers.CategoryMapper{},

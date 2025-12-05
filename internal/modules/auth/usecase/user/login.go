@@ -2,14 +2,13 @@ package user
 
 import (
 	"github.com/edalferes/monetics/internal/modules/auth/errors"
-	"github.com/edalferes/monetics/internal/modules/auth/service"
 	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
 )
 
 type LoginUseCase struct {
 	UserRepo        interfaces.User
-	PasswordService service.PasswordService
-	JWTService      service.JWTService
+	PasswordService interfaces.PasswordService
+	JWTService      interfaces.JWTService
 }
 
 func (u *LoginUseCase) Execute(username, password string) (string, error) {

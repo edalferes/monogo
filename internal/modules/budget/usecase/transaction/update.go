@@ -3,7 +3,7 @@ package transaction
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
@@ -22,16 +22,16 @@ type UpdateInput struct {
 
 // UpdateUseCase handles transaction updates
 type UpdateUseCase struct {
-	transactionRepo repository.TransactionRepository
-	accountRepo     repository.AccountRepository
-	categoryRepo    repository.CategoryRepository
+	transactionRepo interfaces.TransactionRepository
+	accountRepo     interfaces.AccountRepository
+	categoryRepo    interfaces.CategoryRepository
 }
 
 // NewUpdateUseCase creates a new use case instance
 func NewUpdateUseCase(
-	transactionRepo repository.TransactionRepository,
-	accountRepo repository.AccountRepository,
-	categoryRepo repository.CategoryRepository,
+	transactionRepo interfaces.TransactionRepository,
+	accountRepo interfaces.AccountRepository,
+	categoryRepo interfaces.CategoryRepository,
 ) *UpdateUseCase {
 	return &UpdateUseCase{
 		transactionRepo: transactionRepo,

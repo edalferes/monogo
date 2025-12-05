@@ -4,17 +4,17 @@ import (
 	"context"
 	"time"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
 )
 
 type CreateUseCase struct {
-	budgetRepo   repository.BudgetRepository
-	categoryRepo repository.CategoryRepository
+	budgetRepo   interfaces.BudgetRepository
+	categoryRepo interfaces.CategoryRepository
 }
 
-func NewCreateUseCase(budgetRepo repository.BudgetRepository, categoryRepo repository.CategoryRepository) *CreateUseCase {
+func NewCreateUseCase(budgetRepo interfaces.BudgetRepository, categoryRepo interfaces.CategoryRepository) *CreateUseCase {
 	return &CreateUseCase{budgetRepo: budgetRepo, categoryRepo: categoryRepo}
 }
 

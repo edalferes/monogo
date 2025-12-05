@@ -54,6 +54,7 @@ type Transaction struct {
 	Amount      float64           `json:"amount"`
 	Description string            `json:"description"`
 	Date        time.Time         `json:"date"`
+	Month       string            `json:"month"` // Format: "2025-01" for easy grouping and filtering
 	Status      TransactionStatus `json:"status"`
 	// Transfer specific fields
 	DestinationAccountID *uint    `json:"destination_account_id,omitempty"` // For transfers
@@ -68,4 +69,7 @@ type Transaction struct {
 	Attachments []string  `json:"attachments,omitempty"` // URLs de comprovantes
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+	// Relations (populated by repository with Preload)
+	Account  *Account  `json:"account,omitempty"`
+	Category *Category `json:"category,omitempty"`
 }

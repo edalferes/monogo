@@ -3,18 +3,18 @@ package category
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 )
 
 // CreateUseCase handles category creation
 type CreateUseCase struct {
-	categoryRepo repository.CategoryRepository
+	categoryRepo interfaces.CategoryRepository
 }
 
 // NewCreateUseCase creates a new use case instance
-func NewCreateUseCase(categoryRepo repository.CategoryRepository) *CreateUseCase {
+func NewCreateUseCase(categoryRepo interfaces.CategoryRepository) *CreateUseCase {
 	return &CreateUseCase{
 		categoryRepo: categoryRepo,
 	}
