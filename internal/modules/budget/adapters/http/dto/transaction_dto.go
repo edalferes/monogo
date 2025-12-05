@@ -12,7 +12,7 @@ type CreateTransactionRequest struct {
 	CategoryID           uint       `json:"category_id" validate:"required"`
 	Type                 string     `json:"type" validate:"required,oneof=income expense transfer"`
 	Amount               float64    `json:"amount" validate:"required,gt=0"`
-	Description          string     `json:"description" validate:"required"`
+	Description          string     `json:"description"`
 	Date                 time.Time  `json:"date" validate:"required"`
 	Tags                 []string   `json:"tags"`
 	Attachments          []string   `json:"attachments"`
@@ -23,36 +23,78 @@ type CreateTransactionRequest struct {
 	TransferFee          *float64   `json:"transfer_fee"`
 }
 
+// AccountSummary represents account info in transaction response
+type AccountSummary struct {
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Type     string `json:"type"`
+	Currency string `json:"currency"`
+}
+
+// CategorySummary represents category info in transaction response
+type CategorySummary struct {
+	ID    uint   `json:"id"`
+	Name  string `json:"name"`
+	Type  string `json:"type"`
+	Icon  string `json:"icon,omitempty"`
+	Color string `json:"color,omitempty"`
+}
+
 // TransactionResponse represents a transaction in API responses
 type TransactionResponse struct {
-	ID                   uint       `json:"id"`
-	UserID               uint       `json:"user_id"`
-	AccountID            uint       `json:"account_id"`
-	CategoryID           uint       `json:"category_id"`
-	Type                 string     `json:"type"`
-	Amount               float64    `json:"amount"`
-	Description          string     `json:"description"`
-	Date                 time.Time  `json:"date"`
-	Status               string     `json:"status"`
-	Tags                 []string   `json:"tags,omitempty"`
-	Attachments          []string   `json:"attachments,omitempty"`
-	IsRecurring          bool       `json:"is_recurring"`
-	RecurrenceRule       string     `json:"recurrence_rule,omitempty"`
-	RecurrenceEnd        *time.Time `json:"recurrence_end,omitempty"`
-	ParentID             *uint      `json:"parent_id,omitempty"`
-	DestinationAccountID *uint      `json:"destination_account_id,omitempty"`
-	TransferFee          *float64   `json:"transfer_fee,omitempty"`
-	CreatedAt            time.Time  `json:"created_at"`
-	UpdatedAt            time.Time  `json:"updated_at"`
+	ID                   uint             `json:"id"`
+	UserID               uint             `json:"user_id"`
+	AccountID            uint             `json:"account_id"`
+	Account              *AccountSummary  `json:"account,omitempty"`
+	CategoryID           uint             `json:"category_id"`
+	Category             *CategorySummary `json:"category,omitempty"`
+	Type                 string           `json:"type"`
+	Amount               float64          `json:"amount"`
+	Description          string           `json:"description"`
+	Date                 time.Time        `json:"date"`
+	Status               string           `json:"status"`
+	Tags                 []string         `json:"tags,omitempty"`
+	Attachments          []string         `json:"attachments,omitempty"`
+	IsRecurring          bool             `json:"is_recurring"`
+	RecurrenceRule       string           `json:"recurrence_rule,omitempty"`
+	RecurrenceEnd        *time.Time       `json:"recurrence_end,omitempty"`
+	ParentID             *uint            `json:"parent_id,omitempty"`
+	DestinationAccountID *uint            `json:"destination_account_id,omitempty"`
+	TransferFee          *float64         `json:"transfer_fee,omitempty"`
+	CreatedAt            time.Time        `json:"created_at"`
+	UpdatedAt            time.Time        `json:"updated_at"`
 }
 
 // ToTransactionResponse converts domain.Transaction to TransactionResponse
 func ToTransactionResponse(transaction domain.Transaction) TransactionResponse {
+	var account *AccountSummary
+	if transaction.Account != nil {
+		account = &AccountSummary{
+			ID:       transaction.Account.ID,
+			Name:     transaction.Account.Name,
+			Type:     string(transaction.Account.Type),
+			Currency: transaction.Account.Currency,
+		}
+	}
+
+	var category *CategorySummary
+	if transaction.Category != nil {
+		category = &CategorySummary{
+			ID:    transaction.Category.ID,
+			Name:  transaction.Category.Name,
+			Type:  string(transaction.Category.Type),
+			Icon:  transaction.Category.Icon,
+			Color: transaction.Category.Color,
+		}
+	}
+
 	return TransactionResponse{
 		ID:                   transaction.ID,
 		UserID:               transaction.UserID,
 		AccountID:            transaction.AccountID,
+		Account:              account,
 		CategoryID:           transaction.CategoryID,
+		Category:             category,
 		Type:                 string(transaction.Type),
 		Amount:               transaction.Amount,
 		Description:          transaction.Description,

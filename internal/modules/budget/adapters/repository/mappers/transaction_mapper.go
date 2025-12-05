@@ -38,6 +38,21 @@ func (m TransactionMapper) ToModel(transaction domain.Transaction) models.Transa
 
 // ToDomain converts models.TransactionModel to domain.Transaction
 func (m TransactionMapper) ToDomain(transactionModel models.TransactionModel) domain.Transaction {
+	accountMapper := AccountMapper{}
+	categoryMapper := CategoryMapper{}
+
+	var account *domain.Account
+	if transactionModel.Account.ID != 0 {
+		mappedAccount := accountMapper.ToDomain(transactionModel.Account)
+		account = &mappedAccount
+	}
+
+	var category *domain.Category
+	if transactionModel.Category.ID != 0 {
+		mappedCategory := categoryMapper.ToDomain(transactionModel.Category)
+		category = &mappedCategory
+	}
+
 	return domain.Transaction{
 		ID:                   transactionModel.ID,
 		UserID:               transactionModel.UserID,
@@ -59,6 +74,8 @@ func (m TransactionMapper) ToDomain(transactionModel models.TransactionModel) do
 		TransferFee:          transactionModel.TransferFee,
 		CreatedAt:            transactionModel.CreatedAt,
 		UpdatedAt:            transactionModel.UpdatedAt,
+		Account:              account,
+		Category:             category,
 	}
 }
 

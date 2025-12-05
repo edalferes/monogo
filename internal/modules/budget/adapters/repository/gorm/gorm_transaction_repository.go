@@ -30,12 +30,24 @@ func (r *gormTransactionRepository) Create(ctx context.Context, transaction doma
 	if err := r.db.WithContext(ctx).Create(&model).Error; err != nil {
 		return domain.Transaction{}, err
 	}
+
+	// Reload with relationships
+	if err := r.db.WithContext(ctx).
+		Preload("Account").
+		Preload("Category").
+		First(&model, model.ID).Error; err != nil {
+		return domain.Transaction{}, err
+	}
+
 	return r.mapper.ToDomain(model), nil
 }
 
 func (r *gormTransactionRepository) GetByID(ctx context.Context, id uint) (domain.Transaction, error) {
 	var model models.TransactionModel
-	if err := r.db.WithContext(ctx).First(&model, id).Error; err != nil {
+	if err := r.db.WithContext(ctx).
+		Preload("Account").
+		Preload("Category").
+		First(&model, id).Error; err != nil {
 		return domain.Transaction{}, err
 	}
 	return r.mapper.ToDomain(model), nil
@@ -43,7 +55,12 @@ func (r *gormTransactionRepository) GetByID(ctx context.Context, id uint) (domai
 
 func (r *gormTransactionRepository) GetByUserID(ctx context.Context, userID uint) ([]domain.Transaction, error) {
 	var transactionModels []models.TransactionModel
-	if err := r.db.WithContext(ctx).Where("user_id = ?", userID).Order("date DESC").Find(&transactionModels).Error; err != nil {
+	if err := r.db.WithContext(ctx).
+		Preload("Account").
+		Preload("Category").
+		Where("user_id = ?", userID).
+		Order("date DESC").
+		Find(&transactionModels).Error; err != nil {
 		return nil, err
 	}
 	return r.mapper.ToDomainSlice(transactionModels), nil
@@ -51,7 +68,11 @@ func (r *gormTransactionRepository) GetByUserID(ctx context.Context, userID uint
 
 func (r *gormTransactionRepository) GetByAccountID(ctx context.Context, accountID uint) ([]domain.Transaction, error) {
 	var transactionModels []models.TransactionModel
-	if err := r.db.WithContext(ctx).Where("account_id = ?", accountID).Order("date DESC").Find(&transactionModels).Error; err != nil {
+	// Get transactions where account is either source OR destination
+	if err := r.db.WithContext(ctx).
+		Where("account_id = ? OR destination_account_id = ?", accountID, accountID).
+		Order("date DESC").
+		Find(&transactionModels).Error; err != nil {
 		return nil, err
 	}
 	return r.mapper.ToDomainSlice(transactionModels), nil

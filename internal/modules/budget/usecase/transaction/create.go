@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 )
 
 type CreateUseCase struct {
@@ -57,8 +57,12 @@ func (uc *CreateUseCase) Execute(ctx context.Context, input CreateInput) (domain
 		return domain.Transaction{}, errors.ErrUnauthorizedAccess
 	}
 
-	// Validate destination account for transfers
-	if input.DestinationAccountID != nil {
+	// Normalize destination_account_id: treat 0 as nil
+	var destinationAccountID *uint
+	if input.DestinationAccountID != nil && *input.DestinationAccountID > 0 {
+		destinationAccountID = input.DestinationAccountID
+
+		// Validate destination account for transfers
 		destAccount, err := uc.accountRepo.GetByID(ctx, *input.DestinationAccountID)
 		if err != nil {
 			return domain.Transaction{}, errors.ErrAccountNotFound
@@ -74,6 +78,7 @@ func (uc *CreateUseCase) Execute(ctx context.Context, input CreateInput) (domain
 		return domain.Transaction{}, errors.ErrInvalidDate
 	}
 
+	// Create the main transaction (debit from source account)
 	tx := domain.Transaction{
 		UserID:               input.UserID,
 		AccountID:            input.AccountID,
@@ -83,7 +88,7 @@ func (uc *CreateUseCase) Execute(ctx context.Context, input CreateInput) (domain
 		Description:          input.Description,
 		Date:                 date,
 		Status:               domain.TransactionStatusCompleted,
-		DestinationAccountID: input.DestinationAccountID,
+		DestinationAccountID: destinationAccountID,
 	}
 
 	return uc.transactionRepo.Create(ctx, tx)

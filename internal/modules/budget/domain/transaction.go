@@ -69,4 +69,7 @@ type Transaction struct {
 	Attachments []string  `json:"attachments,omitempty"` // URLs de comprovantes
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+	// Relations (populated by repository with Preload)
+	Account  *Account  `json:"account,omitempty"`
+	Category *Category `json:"category,omitempty"`
 }
