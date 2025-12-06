@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.11.0](https://github.com/edalferes/monetics/compare/v0.10.0...v0.11.0) (2025-12-06)
+
+
+### Features
+
+* add logs usecases ([62e362b](https://github.com/edalferes/monetics/commit/62e362b22db732954ea573f70c7157453e644fc2))
+* add logs usecases ([374066a](https://github.com/edalferes/monetics/commit/374066ad2d95ba274bfeea0a520762b39e030636))
+
 ## [0.10.0](https://github.com/edalferes/monetics/compare/v0.9.0...v0.10.0) (2025-12-05)
 
 
