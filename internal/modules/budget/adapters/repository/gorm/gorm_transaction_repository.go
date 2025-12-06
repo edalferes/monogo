@@ -151,3 +151,48 @@ func (r *gormTransactionRepository) ExistsByID(ctx context.Context, id uint) (bo
 	err := r.db.WithContext(ctx).Model(&models.TransactionModel{}).Where("id = ?", id).Count(&count).Error
 	return count > 0, err
 }
+
+func (r *gormTransactionRepository) GetByUserIDPaginatedWithFilters(ctx context.Context, userID uint, limit, offset int, startDate, endDate *time.Time) ([]domain.Transaction, error) {
+	query := r.db.WithContext(ctx).
+		Preload("Account").
+		Preload("Category").
+		Where("user_id = ?", userID)
+
+	if startDate != nil {
+		query = query.Where("date >= ?", *startDate)
+	}
+	if endDate != nil {
+		query = query.Where("date <= ?", *endDate)
+	}
+
+	var transactionModels []models.TransactionModel
+	if err := query.
+		Order("date DESC").
+		Limit(limit).
+		Offset(offset).
+		Find(&transactionModels).Error; err != nil {
+		return nil, err
+	}
+
+	return r.mapper.ToDomainSlice(transactionModels), nil
+}
+
+func (r *gormTransactionRepository) CountByUserIDWithFilters(ctx context.Context, userID uint, startDate, endDate *time.Time) (int64, error) {
+	query := r.db.WithContext(ctx).
+		Model(&models.TransactionModel{}).
+		Where("user_id = ?", userID)
+
+	if startDate != nil {
+		query = query.Where("date >= ?", *startDate)
+	}
+	if endDate != nil {
+		query = query.Where("date <= ?", *endDate)
+	}
+
+	var count int64
+	if err := query.Count(&count).Error; err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
