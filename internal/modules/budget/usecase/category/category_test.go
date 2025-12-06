@@ -1,6 +1,7 @@
 package category_test
 
 import (
+	"github.com/edalferes/monetics/pkg/logger"
 	"context"
 	"testing"
 
@@ -16,7 +17,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 
 	t.Run("success with all fields", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewCreateUseCase(mockRepo)
+		uc := category.NewCreateUseCase(mockRepo, logger.NewDefault())
 
 		input := category.CreateInput{
 			UserID:      1,
@@ -57,7 +58,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 
 	t.Run("error - empty name", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewCreateUseCase(mockRepo)
+		uc := category.NewCreateUseCase(mockRepo, logger.NewDefault())
 
 		input := category.CreateInput{
 			UserID: 1,
@@ -74,7 +75,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 
 	t.Run("error - invalid category type", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewCreateUseCase(mockRepo)
+		uc := category.NewCreateUseCase(mockRepo, logger.NewDefault())
 
 		input := category.CreateInput{
 			UserID: 1,
@@ -95,7 +96,7 @@ func TestListUseCase_Execute(t *testing.T) {
 
 	t.Run("success with categories", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewListUseCase(mockRepo)
+		uc := category.NewListUseCase(mockRepo, logger.NewDefault())
 
 		expectedCategories := []domain.Category{
 			{ID: 1, UserID: 1, Name: "Salário", Type: domain.CategoryTypeIncome},
@@ -118,7 +119,7 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewGetByIDUseCase(mockRepo)
+		uc := category.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
 		expectedCategory := domain.Category{
 			ID:     1,
@@ -138,7 +139,7 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("error - unauthorized access", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewGetByIDUseCase(mockRepo)
+		uc := category.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
 		categoryFromDB := domain.Category{
 			ID:     1,
@@ -162,7 +163,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 
 	t.Run("success - update name", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewUpdateUseCase(mockRepo)
+		uc := category.NewUpdateUseCase(mockRepo, logger.NewDefault())
 
 		existingCategory := domain.Category{
 			ID:     1,
@@ -193,7 +194,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 
 	t.Run("error - empty name", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewUpdateUseCase(mockRepo)
+		uc := category.NewUpdateUseCase(mockRepo, logger.NewDefault())
 
 		existingCategory := domain.Category{
 			ID:     1,
@@ -224,7 +225,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewDeleteUseCase(mockRepo)
+		uc := category.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		existingCategory := domain.Category{
 			ID:     1,
@@ -243,7 +244,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("error - unauthorized access", func(t *testing.T) {
 		mockRepo := new(MockCategoryRepository)
-		uc := category.NewDeleteUseCase(mockRepo)
+		uc := category.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		existingCategory := domain.Category{
 			ID:     1,

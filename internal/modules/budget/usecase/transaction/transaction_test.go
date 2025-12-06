@@ -1,6 +1,7 @@
 package transaction_test
 
 import (
+	"github.com/edalferes/monetics/pkg/logger"
 	"context"
 	"errors"
 	"testing"
@@ -27,7 +28,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockCategoryRepo := new(MockCategoryRepository)
 		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo, logger.NewDefault())
 
 		input := transaction.CreateInput{
 			UserID:      userID,
@@ -100,7 +101,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockCategoryRepo := new(MockCategoryRepository)
 		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo, logger.NewDefault())
 
 		input := transaction.CreateInput{
 			UserID:     userID,
@@ -126,7 +127,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockCategoryRepo := new(MockCategoryRepository)
 		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo, logger.NewDefault())
 
 		input := transaction.CreateInput{
 			UserID:     userID,
@@ -162,7 +163,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockCategoryRepo := new(MockCategoryRepository)
 		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo, logger.NewDefault())
 
 		input := transaction.CreateInput{
 			UserID:     userID,
@@ -185,7 +186,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockCategoryRepo := new(MockCategoryRepository)
 		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo, logger.NewDefault())
 
 		destAccountID := uint(11)
 		input := transaction.CreateInput{
@@ -257,7 +258,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockCategoryRepo := new(MockCategoryRepository)
 		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo, logger.NewDefault())
 
 		destAccountID := uint(999)
 		input := transaction.CreateInput{
@@ -302,7 +303,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 		mockCategoryRepo := new(MockCategoryRepository)
 		mockBudgetRepo := new(MockBudgetRepository)
 
-		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo)
+		usecase := transaction.NewCreateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, mockBudgetRepo, logger.NewDefault())
 
 		destAccountID := uint(11)
 		input := transaction.CreateInput{
@@ -356,7 +357,7 @@ func TestListUseCase_Execute(t *testing.T) {
 
 	t.Run("should list transactions successfully", func(t *testing.T) {
 		mockRepo := new(MockTransactionRepository)
-		usecase := transaction.NewListUseCase(mockRepo)
+		usecase := transaction.NewListUseCase(mockRepo, logger.NewDefault())
 
 		expectedTransactions := []domain.Transaction{
 			{
@@ -407,7 +408,7 @@ func TestListUseCase_Execute(t *testing.T) {
 
 	t.Run("should return error on repository failure", func(t *testing.T) {
 		mockRepo := new(MockTransactionRepository)
-		usecase := transaction.NewListUseCase(mockRepo)
+		usecase := transaction.NewListUseCase(mockRepo, logger.NewDefault())
 
 		expectedError := errors.New("database error")
 		mockRepo.On("GetByUserIDPaginated", ctx, userID, 20, 0).Return(nil, expectedError)
@@ -435,7 +436,7 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("should get transaction by id successfully", func(t *testing.T) {
 		mockRepo := new(MockTransactionRepository)
-		usecase := transaction.NewGetByIDUseCase(mockRepo)
+		usecase := transaction.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
 		expectedTransaction := domain.Transaction{
 			ID:          transactionID,
@@ -461,7 +462,7 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("should return error when transaction not found", func(t *testing.T) {
 		mockRepo := new(MockTransactionRepository)
-		usecase := transaction.NewGetByIDUseCase(mockRepo)
+		usecase := transaction.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
 		mockRepo.On("GetByID", ctx, transactionID).Return(domain.Transaction{}, budgetErrors.ErrTransactionNotFound)
 
@@ -480,7 +481,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("should delete transaction successfully", func(t *testing.T) {
 		mockRepo := new(MockTransactionRepository)
-		usecase := transaction.NewDeleteUseCase(mockRepo)
+		usecase := transaction.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		existingTx := domain.Transaction{
 			ID:        transactionID,
@@ -500,7 +501,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("should return error when transaction not found", func(t *testing.T) {
 		mockRepo := new(MockTransactionRepository)
-		usecase := transaction.NewDeleteUseCase(mockRepo)
+		usecase := transaction.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		mockRepo.On("GetByID", ctx, transactionID).Return(domain.Transaction{}, budgetErrors.ErrTransactionNotFound)
 
@@ -512,7 +513,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("should return error when unauthorized", func(t *testing.T) {
 		mockRepo := new(MockTransactionRepository)
-		usecase := transaction.NewDeleteUseCase(mockRepo)
+		usecase := transaction.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		existingTx := domain.Transaction{
 			ID:        transactionID,
@@ -544,7 +545,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
 
-		usecase := transaction.NewUpdateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewUpdateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, logger.NewDefault())
 
 		existingTx := domain.Transaction{
 			ID:          transactionID,
@@ -592,7 +593,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
 
-		usecase := transaction.NewUpdateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewUpdateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, logger.NewDefault())
 
 		newAmount := 200.00
 
@@ -615,7 +616,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
 
-		usecase := transaction.NewUpdateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewUpdateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, logger.NewDefault())
 
 		existingTx := domain.Transaction{
 			ID:        transactionID,
@@ -646,7 +647,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 		mockAccountRepo := new(MockAccountRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
 
-		usecase := transaction.NewUpdateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo)
+		usecase := transaction.NewUpdateUseCase(mockTransactionRepo, mockAccountRepo, mockCategoryRepo, logger.NewDefault())
 
 		existingTx := domain.Transaction{
 			ID:        transactionID,

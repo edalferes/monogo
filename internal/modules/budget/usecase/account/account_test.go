@@ -1,6 +1,7 @@
 package account_test
 
 import (
+	"github.com/edalferes/monetics/pkg/logger"
 	"context"
 	"testing"
 
@@ -16,7 +17,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 
 	t.Run("success with all fields", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewCreateUseCase(mockRepo)
+		uc := account.NewCreateUseCase(mockRepo, logger.NewDefault())
 
 		input := account.CreateInput{
 			UserID:      1,
@@ -53,7 +54,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 
 	t.Run("success with default currency", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewCreateUseCase(mockRepo)
+		uc := account.NewCreateUseCase(mockRepo, logger.NewDefault())
 
 		input := account.CreateInput{
 			UserID: 1,
@@ -86,7 +87,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 
 	t.Run("error - empty name", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewCreateUseCase(mockRepo)
+		uc := account.NewCreateUseCase(mockRepo, logger.NewDefault())
 
 		input := account.CreateInput{
 			UserID: 1,
@@ -103,7 +104,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 
 	t.Run("error - invalid account type", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewCreateUseCase(mockRepo)
+		uc := account.NewCreateUseCase(mockRepo, logger.NewDefault())
 
 		input := account.CreateInput{
 			UserID: 1,
@@ -124,7 +125,7 @@ func TestListUseCase_Execute(t *testing.T) {
 
 	t.Run("success with accounts", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewListUseCase(mockRepo)
+		uc := account.NewListUseCase(mockRepo, logger.NewDefault())
 
 		expectedAccounts := []domain.Account{
 			{ID: 1, UserID: 1, Name: "Account 1", Type: domain.AccountTypeChecking},
@@ -143,7 +144,7 @@ func TestListUseCase_Execute(t *testing.T) {
 
 	t.Run("success with no accounts", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewListUseCase(mockRepo)
+		uc := account.NewListUseCase(mockRepo, logger.NewDefault())
 
 		mockRepo.On("GetByUserID", ctx, uint(1)).Return([]domain.Account{}, nil)
 
@@ -160,7 +161,7 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewGetByIDUseCase(mockRepo)
+		uc := account.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
 		expectedAccount := domain.Account{
 			ID:     1,
@@ -180,7 +181,7 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("error - account not found", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewGetByIDUseCase(mockRepo)
+		uc := account.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
 		mockRepo.On("GetByID", ctx, uint(999)).Return(nil, errors.ErrAccountNotFound)
 
@@ -194,7 +195,7 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("error - unauthorized access", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewGetByIDUseCase(mockRepo)
+		uc := account.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
 		accountFromDB := domain.Account{
 			ID:     1,
@@ -214,7 +215,7 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("error - zero account ID", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewGetByIDUseCase(mockRepo)
+		uc := account.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
 		result, err := uc.Execute(ctx, 1, 0)
 
@@ -229,7 +230,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 
 	t.Run("success - update name", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewUpdateUseCase(mockRepo)
+		uc := account.NewUpdateUseCase(mockRepo, logger.NewDefault())
 
 		existingAccount := domain.Account{
 			ID:       1,
@@ -261,7 +262,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 
 	t.Run("success - update type", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewUpdateUseCase(mockRepo)
+		uc := account.NewUpdateUseCase(mockRepo, logger.NewDefault())
 
 		existingAccount := domain.Account{
 			ID:     1,
@@ -292,7 +293,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 
 	t.Run("error - empty name", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewUpdateUseCase(mockRepo)
+		uc := account.NewUpdateUseCase(mockRepo, logger.NewDefault())
 
 		existingAccount := domain.Account{
 			ID:     1,
@@ -319,7 +320,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 
 	t.Run("error - invalid account type", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewUpdateUseCase(mockRepo)
+		uc := account.NewUpdateUseCase(mockRepo, logger.NewDefault())
 
 		existingAccount := domain.Account{
 			ID:     1,
@@ -346,7 +347,7 @@ func TestUpdateUseCase_Execute(t *testing.T) {
 
 	t.Run("error - unauthorized access", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewUpdateUseCase(mockRepo)
+		uc := account.NewUpdateUseCase(mockRepo, logger.NewDefault())
 
 		existingAccount := domain.Account{
 			ID:     1,
@@ -377,7 +378,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewDeleteUseCase(mockRepo)
+		uc := account.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		existingAccount := domain.Account{
 			ID:     1,
@@ -396,7 +397,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("error - account not found", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewDeleteUseCase(mockRepo)
+		uc := account.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		mockRepo.On("GetByID", ctx, uint(999)).Return(nil, errors.ErrAccountNotFound)
 
@@ -409,7 +410,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("error - unauthorized access", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewDeleteUseCase(mockRepo)
+		uc := account.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		existingAccount := domain.Account{
 			ID:     1,
@@ -428,7 +429,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("error - zero account ID", func(t *testing.T) {
 		mockRepo := new(MockAccountRepository)
-		uc := account.NewDeleteUseCase(mockRepo)
+		uc := account.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		err := uc.Execute(ctx, 1, 0)
 

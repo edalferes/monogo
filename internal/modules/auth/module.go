@@ -53,25 +53,16 @@ func NewModule(db *gorm.DB, jwtSecret string, log logger.Logger) *Module {
 	auditService := audit.NewAuditService(auditLogRepo)
 
 	// Use Cases
-	loginUC := &userUC.LoginWithAuditUseCase{
-		UserRepo:        userRepo,
-		PasswordService: passwordService,
-		JWTService:      jwtService,
-		AuditService:    auditService,
-	}
+	loginUC := userUC.NewLoginWithAuditUseCase(userRepo, passwordService, jwtService, auditService, log)
 
-	listUsersUC := &userUC.ListUsersUseCase{UserRepo: userRepo}
-	createUserUC := &userUC.RegisterUseCase{
-		User:            userRepo,
-		Role:            roleRepo,
-		PasswordService: passwordService,
-	}
-	getUserByIDUC := &userUC.GetUserByIDUseCase{UserRepo: userRepo}
+	listUsersUC := userUC.NewListUsersUseCase(userRepo, log)
+	createUserUC := userUC.NewRegisterUseCase(userRepo, roleRepo, passwordService, log)
+	getUserByIDUC := userUC.NewGetUserByIDUseCase(userRepo, log)
 	updateUserUC := &userUC.UpdateUserByAdminUseCase{
 		UserRepo:        userRepo,
 		PasswordService: passwordService,
 	}
-	deleteUserUC := &userUC.DeleteUserUseCase{UserRepo: userRepo}
+	deleteUserUC := userUC.NewDeleteUserUseCase(userRepo, log)
 	assignRoleUC := &userUC.AssignRoleUseCase{
 		UserRepo: userRepo,
 		RoleRepo: roleRepo,
@@ -80,10 +71,7 @@ func NewModule(db *gorm.DB, jwtSecret string, log logger.Logger) *Module {
 		UserRepo: userRepo,
 		RoleRepo: roleRepo,
 	}
-	changePasswordUC := &userUC.ChangePasswordUseCase{
-		UserRepo:        userRepo,
-		PasswordService: passwordService,
-	}
+	changePasswordUC := userUC.NewChangePasswordUseCase(userRepo, passwordService, log)
 
 	listRolesUC := &roleUC.ListRolesUseCase{RoleRepo: roleRepo}
 	createRoleUC := &roleUC.CreateRoleUseCase{RoleRepo: roleRepo}
