@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.12.0](https://github.com/edalferes/monetics/compare/v0.11.0...v0.12.0) (2025-12-06)
+
+
+### Features
+
+* update method filter ([6bc81fe](https://github.com/edalferes/monetics/commit/6bc81fe99f98873cd81c73825bde649d962b9467))
+* update method filter ([681f183](https://github.com/edalferes/monetics/commit/681f1830d105303b55b3dfda11650ac69305cc9c))
+* update test ([f930d21](https://github.com/edalferes/monetics/commit/f930d21f284be393946e65448570f3c51173cd65))
+
 ## [0.11.0](https://github.com/edalferes/monetics/compare/v0.10.0...v0.11.0) (2025-12-06)
 
 
