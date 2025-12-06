@@ -5,23 +5,29 @@ import (
 
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
+	"github.com/edalferes/monetics/pkg/logger"
 )
 
 type ListUseCase struct {
 	budgetRepo      interfaces.BudgetRepository
 	transactionRepo interfaces.TransactionRepository
+	logger          logger.Logger
 }
 
-func NewListUseCase(budgetRepo interfaces.BudgetRepository, transactionRepo interfaces.TransactionRepository) *ListUseCase {
+func NewListUseCase(budgetRepo interfaces.BudgetRepository, transactionRepo interfaces.TransactionRepository, log logger.Logger) *ListUseCase {
 	return &ListUseCase{
 		budgetRepo:      budgetRepo,
 		transactionRepo: transactionRepo,
+		logger:          log.With().Str("usecase", "budget.list").Logger(),
 	}
 }
 
 func (uc *ListUseCase) Execute(ctx context.Context, userID uint) ([]domain.Budget, error) {
+	uc.logger.Debug().Uint("user_id", userID).Msg("listing budgets")
+
 	budgets, err := uc.budgetRepo.GetByUserID(ctx, userID)
 	if err != nil {
+		uc.logger.Error().Err(err).Uint("user_id", userID).Msg("failed to get budgets")
 		return nil, err
 	}
 
@@ -29,12 +35,13 @@ func (uc *ListUseCase) Execute(ctx context.Context, userID uint) ([]domain.Budge
 	for i := range budgets {
 		spent, err := uc.calculateSpent(ctx, budgets[i])
 		if err != nil {
-			// Log error but continue with other budgets
+			uc.logger.Error().Err(err).Uint("budget_id", budgets[i].ID).Msg("failed to calculate spent, skipping")
 			continue
 		}
 		budgets[i].Spent = spent
 	}
 
+	uc.logger.Info().Uint("user_id", userID).Int("count", len(budgets)).Msg("budgets listed successfully")
 	return budgets, nil
 }
 
@@ -43,6 +50,7 @@ func (uc *ListUseCase) calculateSpent(ctx context.Context, budget domain.Budget)
 	// Get transactions by category within budget period
 	transactions, err := uc.transactionRepo.GetByDateRange(ctx, budget.UserID, budget.StartDate, budget.EndDate)
 	if err != nil {
+		uc.logger.Error().Err(err).Uint("budget_id", budget.ID).Msg("failed to get transactions for spent calculation")
 		return 0, err
 	}
 

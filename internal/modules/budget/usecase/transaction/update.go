@@ -3,9 +3,10 @@ package transaction
 import (
 	"context"
 
-	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
+	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
+	"github.com/edalferes/monetics/pkg/logger"
 )
 
 // UpdateInput represents the input for updating a transaction
@@ -25,6 +26,7 @@ type UpdateUseCase struct {
 	transactionRepo interfaces.TransactionRepository
 	accountRepo     interfaces.AccountRepository
 	categoryRepo    interfaces.CategoryRepository
+	logger          logger.Logger
 }
 
 // NewUpdateUseCase creates a new use case instance
@@ -32,28 +34,38 @@ func NewUpdateUseCase(
 	transactionRepo interfaces.TransactionRepository,
 	accountRepo interfaces.AccountRepository,
 	categoryRepo interfaces.CategoryRepository,
+	log logger.Logger,
 ) *UpdateUseCase {
 	return &UpdateUseCase{
 		transactionRepo: transactionRepo,
 		accountRepo:     accountRepo,
 		categoryRepo:    categoryRepo,
+		logger:          log.With().Str("usecase", "transaction.update").Logger(),
 	}
 }
 
 // Execute updates an existing transaction
 func (uc *UpdateUseCase) Execute(ctx context.Context, input UpdateInput) (domain.Transaction, error) {
+	uc.logger.Debug().Uint("transaction_id", input.ID).Uint("user_id", input.UserID).Msg("updating transaction")
+
 	if input.ID == 0 {
+		uc.logger.Error().Msg("invalid transaction_id: cannot be zero")
 		return domain.Transaction{}, errors.ErrTransactionNotFound
 	}
 
 	// Get existing transaction
 	tx, err := uc.transactionRepo.GetByID(ctx, input.ID)
 	if err != nil {
+		uc.logger.Error().Err(err).Uint("transaction_id", input.ID).Msg("transaction not found")
 		return domain.Transaction{}, err
 	}
 
 	// Ensure the transaction belongs to the user
 	if tx.UserID != input.UserID {
+		uc.logger.Warn().
+			Uint("transaction_user_id", tx.UserID).
+			Uint("request_user_id", input.UserID).
+			Msg("unauthorized access: transaction belongs to different user")
 		return domain.Transaction{}, errors.ErrTransactionNotFound
 	}
 
@@ -61,9 +73,11 @@ func (uc *UpdateUseCase) Execute(ctx context.Context, input UpdateInput) (domain
 	if input.AccountID != nil {
 		account, err := uc.accountRepo.GetByID(ctx, *input.AccountID)
 		if err != nil {
+			uc.logger.Error().Err(err).Uint("account_id", *input.AccountID).Msg("account not found for update")
 			return domain.Transaction{}, errors.ErrAccountNotFound
 		}
 		if account.UserID != input.UserID {
+			uc.logger.Warn().Uint("account_user_id", account.UserID).Uint("request_user_id", input.UserID).Msg("unauthorized account access")
 			return domain.Transaction{}, errors.ErrUnauthorizedAccess
 		}
 		tx.AccountID = *input.AccountID
@@ -73,9 +87,11 @@ func (uc *UpdateUseCase) Execute(ctx context.Context, input UpdateInput) (domain
 	if input.CategoryID != nil {
 		category, err := uc.categoryRepo.GetByID(ctx, *input.CategoryID)
 		if err != nil {
+			uc.logger.Error().Err(err).Uint("category_id", *input.CategoryID).Msg("category not found for update")
 			return domain.Transaction{}, errors.ErrCategoryNotFound
 		}
 		if category.UserID != input.UserID {
+			uc.logger.Warn().Uint("category_user_id", category.UserID).Uint("request_user_id", input.UserID).Msg("unauthorized category access")
 			return domain.Transaction{}, errors.ErrUnauthorizedAccess
 		}
 		tx.CategoryID = *input.CategoryID
@@ -84,6 +100,7 @@ func (uc *UpdateUseCase) Execute(ctx context.Context, input UpdateInput) (domain
 	// Update type if provided
 	if input.Type != nil {
 		if !isValidTransactionType(*input.Type) {
+			uc.logger.Error().Str("type", string(*input.Type)).Msg("invalid transaction type")
 			return domain.Transaction{}, errors.ErrInvalidTransactionType
 		}
 		tx.Type = *input.Type
@@ -92,6 +109,7 @@ func (uc *UpdateUseCase) Execute(ctx context.Context, input UpdateInput) (domain
 	// Update amount if provided
 	if input.Amount != nil {
 		if *input.Amount <= 0 {
+			uc.logger.Error().Msg("invalid amount: must be positive")
 			return domain.Transaction{}, errors.ErrInvalidAmount
 		}
 		tx.Amount = *input.Amount
@@ -102,5 +120,12 @@ func (uc *UpdateUseCase) Execute(ctx context.Context, input UpdateInput) (domain
 		tx.Description = *input.Description
 	}
 
-	return uc.transactionRepo.Update(ctx, tx)
+	updatedTx, err := uc.transactionRepo.Update(ctx, tx)
+	if err != nil {
+		uc.logger.Error().Err(err).Uint("transaction_id", input.ID).Msg("failed to update transaction")
+		return domain.Transaction{}, err
+	}
+
+	uc.logger.Info().Uint("transaction_id", input.ID).Msg("transaction updated successfully")
+	return updatedTx, nil
 }

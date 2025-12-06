@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/edalferes/monetics/pkg/logger"
+
 	"github.com/stretchr/testify/assert"
 
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
@@ -18,7 +20,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		mockBudgetRepo := new(MockBudgetRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
-		uc := budget.NewCreateUseCase(mockBudgetRepo, mockCategoryRepo)
+		uc := budget.NewCreateUseCase(mockBudgetRepo, mockCategoryRepo, logger.NewDefault())
 
 		startDate := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
 		endDate := time.Date(2025, 1, 31, 23, 59, 59, 0, time.UTC)
@@ -72,7 +74,7 @@ func TestCreateUseCase_Execute(t *testing.T) {
 	t.Run("error - invalid amount", func(t *testing.T) {
 		mockBudgetRepo := new(MockBudgetRepository)
 		mockCategoryRepo := new(MockCategoryRepository)
-		uc := budget.NewCreateUseCase(mockBudgetRepo, mockCategoryRepo)
+		uc := budget.NewCreateUseCase(mockBudgetRepo, mockCategoryRepo, logger.NewDefault())
 
 		input := budget.CreateInput{
 			UserID:     1,
@@ -95,7 +97,7 @@ func TestListUseCase_Execute(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		mockRepo := new(MockBudgetRepository)
 		mockTransactionRepo := new(MockTransactionRepository)
-		uc := budget.NewListUseCase(mockRepo, mockTransactionRepo)
+		uc := budget.NewListUseCase(mockRepo, mockTransactionRepo, logger.NewDefault())
 
 		startDate1 := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
 		endDate1 := time.Date(2024, 1, 31, 0, 0, 0, 0, time.UTC)
@@ -125,7 +127,7 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		mockRepo := new(MockBudgetRepository)
-		uc := budget.NewGetByIDUseCase(mockRepo)
+		uc := budget.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
 		expected := domain.Budget{ID: 1, UserID: 1, Name: "Janeiro"}
 		mockRepo.On("GetByID", ctx, uint(1)).Return(expected, nil)
@@ -139,12 +141,12 @@ func TestGetByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("error - unauthorized", func(t *testing.T) {
 		mockRepo := new(MockBudgetRepository)
-		uc := budget.NewGetByIDUseCase(mockRepo)
+		uc := budget.NewGetByIDUseCase(mockRepo, logger.NewDefault())
 
-		budgetFromDB := domain.Budget{ID: 1, UserID: 1}
+		budgetFromDB := domain.Budget{ID: 1, UserID: 2}
 		mockRepo.On("GetByID", ctx, uint(1)).Return(budgetFromDB, nil)
 
-		_, err := uc.Execute(ctx, 2, 1)
+		_, err := uc.Execute(ctx, 1, 1)
 
 		assert.Error(t, err)
 		assert.Equal(t, errors.ErrBudgetNotFound, err)
@@ -156,7 +158,7 @@ func TestDeleteUseCase_Execute(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		mockRepo := new(MockBudgetRepository)
-		uc := budget.NewDeleteUseCase(mockRepo)
+		uc := budget.NewDeleteUseCase(mockRepo, logger.NewDefault())
 
 		budgetFromDB := domain.Budget{ID: 1, UserID: 1}
 		mockRepo.On("GetByID", ctx, uint(1)).Return(budgetFromDB, nil)

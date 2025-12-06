@@ -3,6 +3,8 @@ package user_test
 import (
 	"testing"
 
+	"github.com/edalferes/monetics/pkg/logger"
+
 	"github.com/stretchr/testify/assert"
 
 	"github.com/edalferes/monetics/internal/modules/auth/domain"
@@ -15,10 +17,9 @@ func TestRegisterUseCase_Execute(t *testing.T) {
 		mockUserRepo := new(MockUserRepository)
 		mockRoleRepo := new(MockRoleRepository)
 		mockPasswordService := new(MockPasswordService)
-		uc := user.RegisterUseCase{
-			User:            mockUserRepo,
-			Role:            mockRoleRepo,
-			PasswordService: mockPasswordService,
+		uc := user.NewRegisterUseCase(mockUserRepo, mockRoleRepo, mockPasswordService, logger.NewDefault())
+		_ = uc
+		if false {
 		}
 
 		username := "newuser"
@@ -55,10 +56,9 @@ func TestRegisterUseCase_Execute(t *testing.T) {
 		mockUserRepo := new(MockUserRepository)
 		mockRoleRepo := new(MockRoleRepository)
 		mockPasswordService := new(MockPasswordService)
-		uc := user.RegisterUseCase{
-			User:            mockUserRepo,
-			Role:            mockRoleRepo,
-			PasswordService: mockPasswordService,
+		uc := user.NewRegisterUseCase(mockUserRepo, mockRoleRepo, mockPasswordService, logger.NewDefault())
+		_ = uc
+		if false {
 		}
 
 		username := "existinguser"
@@ -79,10 +79,9 @@ func TestRegisterUseCase_Execute(t *testing.T) {
 		mockUserRepo := new(MockUserRepository)
 		mockRoleRepo := new(MockRoleRepository)
 		mockPasswordService := new(MockPasswordService)
-		uc := user.RegisterUseCase{
-			User:            mockUserRepo,
-			Role:            mockRoleRepo,
-			PasswordService: mockPasswordService,
+		uc := user.NewRegisterUseCase(mockUserRepo, mockRoleRepo, mockPasswordService, logger.NewDefault())
+		_ = uc
+		if false {
 		}
 
 		username := "newuser"
@@ -111,9 +110,7 @@ func TestRegisterUseCase_Execute(t *testing.T) {
 func TestListUsersUseCase_Execute(t *testing.T) {
 	t.Run("success - list all users", func(t *testing.T) {
 		mockUserRepo := new(MockUserRepository)
-		uc := user.ListUsersUseCase{
-			UserRepo: mockUserRepo,
-		}
+		uc := user.NewListUsersUseCase(mockUserRepo, logger.NewDefault())
 
 		expectedUsers := []domain.User{
 			{ID: 1, Username: "user1"},
@@ -131,9 +128,7 @@ func TestListUsersUseCase_Execute(t *testing.T) {
 
 	t.Run("error - repository error", func(t *testing.T) {
 		mockUserRepo := new(MockUserRepository)
-		uc := user.ListUsersUseCase{
-			UserRepo: mockUserRepo,
-		}
+		uc := user.NewListUsersUseCase(mockUserRepo, logger.NewDefault())
 
 		expectedError := errors.ErrInvalidData
 		mockUserRepo.On("ListAll").Return(nil, expectedError)
@@ -150,9 +145,7 @@ func TestListUsersUseCase_Execute(t *testing.T) {
 func TestGetUserByIDUseCase_Execute(t *testing.T) {
 	t.Run("success - find user by id", func(t *testing.T) {
 		mockUserRepo := new(MockUserRepository)
-		uc := user.GetUserByIDUseCase{
-			UserRepo: mockUserRepo,
-		}
+		uc := user.NewGetUserByIDUseCase(mockUserRepo, logger.NewDefault())
 
 		userID := uint(1)
 		expectedUser := &domain.User{ID: userID, Username: "testuser"}
@@ -168,9 +161,7 @@ func TestGetUserByIDUseCase_Execute(t *testing.T) {
 
 	t.Run("error - user not found", func(t *testing.T) {
 		mockUserRepo := new(MockUserRepository)
-		uc := user.GetUserByIDUseCase{
-			UserRepo: mockUserRepo,
-		}
+		uc := user.NewGetUserByIDUseCase(mockUserRepo, logger.NewDefault())
 
 		userID := uint(999)
 		mockUserRepo.On("FindByID", userID).Return(nil, errors.ErrUserNotFound)
@@ -289,9 +280,7 @@ func TestUpdateUserUseCase_Execute(t *testing.T) {
 func TestDeleteUserUseCase_Execute(t *testing.T) {
 	t.Run("success - delete user", func(t *testing.T) {
 		mockUserRepo := new(MockUserRepository)
-		uc := user.DeleteUserUseCase{
-			UserRepo: mockUserRepo,
-		}
+		uc := user.NewDeleteUserUseCase(mockUserRepo, logger.NewDefault())
 
 		userID := uint(1)
 		mockUserRepo.On("Delete", userID).Return(nil)
@@ -304,9 +293,7 @@ func TestDeleteUserUseCase_Execute(t *testing.T) {
 
 	t.Run("error - repository error", func(t *testing.T) {
 		mockUserRepo := new(MockUserRepository)
-		uc := user.DeleteUserUseCase{
-			UserRepo: mockUserRepo,
-		}
+		uc := user.NewDeleteUserUseCase(mockUserRepo, logger.NewDefault())
 
 		userID := uint(1)
 		expectedError := errors.ErrInvalidData

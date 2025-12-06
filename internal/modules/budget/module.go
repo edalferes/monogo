@@ -67,7 +67,7 @@ type Module struct {
 }
 
 // NewModule creates a new budget module instance
-func NewModule(db *gormpkg.DB) *Module {
+func NewModule(db *gormpkg.DB, log logger.Logger) *Module {
 	module := &Module{
 		db: db,
 	}
@@ -79,18 +79,18 @@ func NewModule(db *gormpkg.DB) *Module {
 	module.budgetRepo = gormrepo.NewGormBudgetRepository(db)
 
 	// Initialize use cases - Account
-	module.createAccountUseCase = account.NewCreateUseCase(module.accountRepo)
-	module.listAccountsUseCase = account.NewListUseCase(module.accountRepo)
-	module.getAccountByIDUseCase = account.NewGetByIDUseCase(module.accountRepo)
-	module.updateAccountUseCase = account.NewUpdateUseCase(module.accountRepo)
-	module.deleteAccountUseCase = account.NewDeleteUseCase(module.accountRepo)
+	module.createAccountUseCase = account.NewCreateUseCase(module.accountRepo, log)
+	module.listAccountsUseCase = account.NewListUseCase(module.accountRepo, log)
+	module.getAccountByIDUseCase = account.NewGetByIDUseCase(module.accountRepo, log)
+	module.updateAccountUseCase = account.NewUpdateUseCase(module.accountRepo, log)
+	module.deleteAccountUseCase = account.NewDeleteUseCase(module.accountRepo, log)
 
 	// Initialize use cases - Category
-	module.createCategoryUseCase = category.NewCreateUseCase(module.categoryRepo)
-	module.listCategoriesUseCase = category.NewListUseCase(module.categoryRepo)
-	module.getCategoryByIDUseCase = category.NewGetByIDUseCase(module.categoryRepo)
-	module.updateCategoryUseCase = category.NewUpdateUseCase(module.categoryRepo)
-	module.deleteCategoryUseCase = category.NewDeleteUseCase(module.categoryRepo)
+	module.createCategoryUseCase = category.NewCreateUseCase(module.categoryRepo, log)
+	module.listCategoriesUseCase = category.NewListUseCase(module.categoryRepo, log)
+	module.getCategoryByIDUseCase = category.NewGetByIDUseCase(module.categoryRepo, log)
+	module.updateCategoryUseCase = category.NewUpdateUseCase(module.categoryRepo, log)
+	module.deleteCategoryUseCase = category.NewDeleteUseCase(module.categoryRepo, log)
 
 	// Initialize use cases - Transaction
 	module.createTransactionUseCase = transaction.NewCreateUseCase(
@@ -98,25 +98,28 @@ func NewModule(db *gormpkg.DB) *Module {
 		module.accountRepo,
 		module.categoryRepo,
 		module.budgetRepo,
+		log,
 	)
-	module.listTransactionsUseCase = transaction.NewListUseCase(module.transactionRepo)
-	module.getTransactionByIDUseCase = transaction.NewGetByIDUseCase(module.transactionRepo)
+	module.listTransactionsUseCase = transaction.NewListUseCase(module.transactionRepo, log)
+	module.getTransactionByIDUseCase = transaction.NewGetByIDUseCase(module.transactionRepo, log)
 	module.updateTransactionUseCase = transaction.NewUpdateUseCase(
 		module.transactionRepo,
 		module.accountRepo,
 		module.categoryRepo,
+		log,
 	)
-	module.deleteTransactionUseCase = transaction.NewDeleteUseCase(module.transactionRepo)
+	module.deleteTransactionUseCase = transaction.NewDeleteUseCase(module.transactionRepo, log)
 
 	// Initialize use cases - Budget
 	module.createBudgetUseCase = budgetUseCase.NewCreateUseCase(
 		module.budgetRepo,
 		module.categoryRepo,
+		log,
 	)
-	module.listBudgetsUseCase = budgetUseCase.NewListUseCase(module.budgetRepo, module.transactionRepo)
-	module.getBudgetByIDUseCase = budgetUseCase.NewGetByIDUseCase(module.budgetRepo)
-	module.updateBudgetUseCase = budgetUseCase.NewUpdateUseCase(module.budgetRepo)
-	module.deleteBudgetUseCase = budgetUseCase.NewDeleteUseCase(module.budgetRepo)
+	module.listBudgetsUseCase = budgetUseCase.NewListUseCase(module.budgetRepo, module.transactionRepo, log)
+	module.getBudgetByIDUseCase = budgetUseCase.NewGetByIDUseCase(module.budgetRepo, log)
+	module.updateBudgetUseCase = budgetUseCase.NewUpdateUseCase(module.budgetRepo, log)
+	module.deleteBudgetUseCase = budgetUseCase.NewDeleteUseCase(module.budgetRepo, log)
 
 	// Initialize use cases - Report
 	module.getAccountBalanceUseCase = report.NewGetAccountBalanceUseCase(
@@ -213,7 +216,7 @@ func (m *Module) RegisterRoutes(api *echo.Group, authMiddleware echo.MiddlewareF
 func WireUp(group *echo.Group, db *gormpkg.DB, jwtSecret string, log logger.Logger) {
 	log.Info().Msg("Initializing budget module")
 
-	module := NewModule(db)
+	module := NewModule(db, log)
 	authMiddleware := auth.JWTMiddleware(jwtSecret)
 	module.RegisterRoutes(group, authMiddleware)
 
