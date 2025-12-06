@@ -94,6 +94,19 @@ func (m *MockTransactionRepository) CountByUserID(ctx context.Context, userID ui
 	return args.Get(0).(int64), args.Error(1)
 }
 
+func (m *MockTransactionRepository) GetByUserIDPaginatedWithFilters(ctx context.Context, userID uint, limit, offset int, startDate, endDate *time.Time) ([]domain.Transaction, error) {
+	args := m.Called(ctx, userID, limit, offset, startDate, endDate)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]domain.Transaction), args.Error(1)
+}
+
+func (m *MockTransactionRepository) CountByUserIDWithFilters(ctx context.Context, userID uint, startDate, endDate *time.Time) (int64, error) {
+	args := m.Called(ctx, userID, startDate, endDate)
+	return args.Get(0).(int64), args.Error(1)
+}
+
 type MockAccountRepository struct {
 	mock.Mock
 }

@@ -104,6 +104,8 @@ func (h *TransactionHandler) CreateTransaction(c echo.Context) error {
 // @Produce json
 // @Param page query int false "Page number (default: 1)"
 // @Param page_size query int false "Items per page (default: 20, max: 100)"
+// @Param start_date query string false "Start date filter (RFC3339 format, e.g., 2025-02-01T00:00:00Z)"
+// @Param end_date query string false "End date filter (RFC3339 format, e.g., 2025-02-28T23:59:59Z)"
 // @Success 200 {object} dto.TransactionListResponse
 // @Router /transactions [get]
 func (h *TransactionHandler) ListTransactions(c echo.Context) error {
@@ -130,10 +132,21 @@ func (h *TransactionHandler) ListTransactions(c echo.Context) error {
 		}
 	}
 
+	// Parse date filters
+	var startDate, endDate *string
+	if sd := c.QueryParam("start_date"); sd != "" {
+		startDate = &sd
+	}
+	if ed := c.QueryParam("end_date"); ed != "" {
+		endDate = &ed
+	}
+
 	input := transaction.ListInput{
-		UserID:   userID,
-		Page:     page,
-		PageSize: pageSize,
+		UserID:    userID,
+		Page:      page,
+		PageSize:  pageSize,
+		StartDate: startDate,
+		EndDate:   endDate,
 	}
 
 	result, err := h.listTransactionsUseCase.Execute(c.Request().Context(), input)

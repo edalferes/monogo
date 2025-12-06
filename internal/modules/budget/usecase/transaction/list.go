@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"context"
+	"time"
 
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
@@ -21,9 +22,11 @@ func NewListUseCase(transactionRepo interfaces.TransactionRepository, log logger
 }
 
 type ListInput struct {
-	UserID   uint
-	Page     int
-	PageSize int
+	UserID    uint
+	Page      int
+	PageSize  int
+	StartDate *string
+	EndDate   *string
 }
 
 type ListOutput struct {
@@ -35,11 +38,17 @@ type ListOutput struct {
 }
 
 func (uc *ListUseCase) Execute(ctx context.Context, input ListInput) (ListOutput, error) {
-	uc.logger.Debug().
+	logEvent := uc.logger.Debug().
 		Uint("user_id", input.UserID).
 		Int("page", input.Page).
-		Int("page_size", input.PageSize).
-		Msg("listing transactions")
+		Int("page_size", input.PageSize)
+	if input.StartDate != nil {
+		logEvent = logEvent.Str("start_date", *input.StartDate)
+	}
+	if input.EndDate != nil {
+		logEvent = logEvent.Str("end_date", *input.EndDate)
+	}
+	logEvent.Msg("listing transactions")
 
 	// Default pagination values
 	if input.Page <= 0 {
@@ -55,18 +64,52 @@ func (uc *ListUseCase) Execute(ctx context.Context, input ListInput) (ListOutput
 	// Calculate offset
 	offset := (input.Page - 1) * input.PageSize
 
-	// Get paginated transactions
-	transactions, err := uc.transactionRepo.GetByUserIDPaginated(ctx, input.UserID, input.PageSize, offset)
-	if err != nil {
-		uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to get paginated transactions")
-		return ListOutput{}, err
+	// Parse date filters if provided
+	var startDate, endDate *time.Time
+	if input.StartDate != nil {
+		if parsed, err := time.Parse(time.RFC3339, *input.StartDate); err == nil {
+			startDate = &parsed
+		} else {
+			uc.logger.Error().Err(err).Str("start_date", *input.StartDate).Msg("failed to parse start_date")
+			return ListOutput{}, err
+		}
+	}
+	if input.EndDate != nil {
+		if parsed, err := time.Parse(time.RFC3339, *input.EndDate); err == nil {
+			endDate = &parsed
+		} else {
+			uc.logger.Error().Err(err).Str("end_date", *input.EndDate).Msg("failed to parse end_date")
+			return ListOutput{}, err
+		}
 	}
 
-	// Get total count
-	total, err := uc.transactionRepo.CountByUserID(ctx, input.UserID)
-	if err != nil {
-		uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to count transactions")
-		return ListOutput{}, err
+	// Get paginated transactions (with or without date filters)
+	var transactions []domain.Transaction
+	var total int64
+	var err error
+
+	if startDate != nil || endDate != nil {
+		transactions, err = uc.transactionRepo.GetByUserIDPaginatedWithFilters(ctx, input.UserID, input.PageSize, offset, startDate, endDate)
+		if err != nil {
+			uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to get paginated transactions with filters")
+			return ListOutput{}, err
+		}
+		total, err = uc.transactionRepo.CountByUserIDWithFilters(ctx, input.UserID, startDate, endDate)
+		if err != nil {
+			uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to count transactions with filters")
+			return ListOutput{}, err
+		}
+	} else {
+		transactions, err = uc.transactionRepo.GetByUserIDPaginated(ctx, input.UserID, input.PageSize, offset)
+		if err != nil {
+			uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to get paginated transactions")
+			return ListOutput{}, err
+		}
+		total, err = uc.transactionRepo.CountByUserID(ctx, input.UserID)
+		if err != nil {
+			uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to count transactions")
+			return ListOutput{}, err
+		}
 	}
 
 	// Calculate total pages
