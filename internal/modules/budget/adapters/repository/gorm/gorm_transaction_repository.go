@@ -159,10 +159,10 @@ func (r *gormTransactionRepository) GetByUserIDPaginatedWithFilters(ctx context.
 		Where("user_id = ?", userID)
 
 	if startDate != nil {
-		query = query.Where("date >= ?", *startDate)
+		query = query.Where("date >= ?", startDate)
 	}
 	if endDate != nil {
-		query = query.Where("date <= ?", *endDate)
+		query = query.Where("date <= ?", endDate)
 	}
 
 	var transactionModels []models.TransactionModel
@@ -183,10 +183,10 @@ func (r *gormTransactionRepository) CountByUserIDWithFilters(ctx context.Context
 		Where("user_id = ?", userID)
 
 	if startDate != nil {
-		query = query.Where("date >= ?", *startDate)
+		query = query.Where("date >= ?", startDate)
 	}
 	if endDate != nil {
-		query = query.Where("date <= ?", *endDate)
+		query = query.Where("date <= ?", endDate)
 	}
 
 	var count int64
