@@ -108,7 +108,7 @@ func (a *App) RegisterModules() {
 	v1 := a.echo.Group("/v1")
 
 	// Register auth module (no dependencies)
-	auth.WireUp(v1, a.db, a.config.JWT.Secret, a.logger)
+	auth.WireUp(v1, a.db, a.config.JWT.Secret, a.config.JWT.ExpiryHour, a.logger)
 
 	// Register budget module (depends on auth)
 	budget.WireUp(v1, a.db, a.config.JWT.Secret, a.logger)

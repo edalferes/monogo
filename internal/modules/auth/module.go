@@ -42,14 +42,14 @@ type Module struct {
 	userHandler          *handlers.UserHandler
 }
 
-func NewModule(db *gorm.DB, jwtSecret string, log logger.Logger) *Module {
+func NewModule(db *gorm.DB, jwtSecret string, jwtExpiryHours int, log logger.Logger) *Module {
 	userRepo := gormrepo.NewUserRepositoryGorm(db)
 	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
 	permRepo := gormrepo.NewPermissionRepositoryGorm(db)
 	auditLogRepo := gormrepo.NewAuditLogRepositoryGorm(db)
 
 	passwordService := crypto.NewBcryptPasswordService()
-	jwtService := token.NewJWTService(jwtSecret, time.Hour)
+	jwtService := token.NewJWTService(jwtSecret, time.Duration(jwtExpiryHours)*time.Hour)
 	auditService := audit.NewAuditService(auditLogRepo)
 
 	// Use Cases
@@ -161,9 +161,9 @@ func (m *Module) RegisterRoutes(group *echo.Group) {
 	userGroup.PUT("/password", m.userHandler.ChangePassword)
 }
 
-func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, log logger.Logger) {
+func WireUp(group *echo.Group, db *gorm.DB, jwtSecret string, jwtExpiryHours int, log logger.Logger) {
 	log.Info().Msg("Initializing Auth module...")
-	module := NewModule(db, jwtSecret, log)
+	module := NewModule(db, jwtSecret, jwtExpiryHours, log)
 	module.RegisterRoutes(group)
 	log.Info().Msg("Auth module started successfully")
 }
