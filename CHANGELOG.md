@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.13.0](https://github.com/edalferes/monetics/compare/v0.12.0...v0.13.0) (2025-12-10)
+
+
+### Features
+
+* JWT_EXPIRY_HOUR update ([56d67a2](https://github.com/edalferes/monetics/commit/56d67a228cc74d252a4aee0a5105023564de5b19))
+* remove layers mappers ([d8a692a](https://github.com/edalferes/monetics/commit/d8a692a2a19ebe4c7636cc0ae56efd5d71e3fe55))
+* update list transaction ([2ae7941](https://github.com/edalferes/monetics/commit/2ae7941239a1be956e45b31893b105f28a4ce7dc))
+
 ## [0.12.0](https://github.com/edalferes/monetics/compare/v0.11.0...v0.12.0) (2025-12-06)
 
 
