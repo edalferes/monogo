@@ -8,6 +8,7 @@ type Config struct {
 	Database DatabaseConfig `mapstructure:"database" yaml:"database"`
 	JWT      JWTConfig      `mapstructure:"jwt" yaml:"jwt"`
 	Logger   LoggerConfig   `mapstructure:"logger" yaml:"logger"`
+	RootUser RootUserConfig `mapstructure:"root_user" yaml:"root_user"`
 }
 
 // AppConfig application configuration
@@ -38,6 +39,12 @@ type JWTConfig struct {
 type LoggerConfig struct {
 	Level  string `mapstructure:"level" yaml:"level"`
 	Format string `mapstructure:"format" yaml:"format"`
+}
+
+// RootUserConfig root user credentials for seeding
+type RootUserConfig struct {
+	Username string `mapstructure:"username" yaml:"username"`
+	Password string `mapstructure:"password" yaml:"password"`
 }
 
 // Utility methods for Config

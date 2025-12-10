@@ -27,7 +27,7 @@ func NewApp(cfg *config.Config) *App {
 	appLogger := initLogger(cfg)
 	database := initDatabase(cfg, appLogger)
 	migrateDatabase(database, appLogger)
-	seedDatabase(database, appLogger)
+	seedDatabase(database, appLogger, cfg)
 	e := initEcho()
 
 	return &App{
@@ -69,15 +69,15 @@ func migrateDatabase(database *gorm.DB, log logger.Logger) {
 }
 
 // seedDatabase seeds all modules
-func seedDatabase(database *gorm.DB, log logger.Logger) {
+func seedDatabase(database *gorm.DB, log logger.Logger, cfg *config.Config) {
 	// Seed auth module
-	if err := auth.Seed(database); err != nil {
+	if err := auth.Seed(database, cfg.RootUser.Username, cfg.RootUser.Password); err != nil {
 		log.Fatal().Err(err).Msg("failed to seed auth module")
 	}
 
 	// Seed budget module
 	var rootUser struct{ ID uint }
-	if err := database.Table("users").Select("id").Where("username = ?", "root").First(&rootUser).Error; err != nil {
+	if err := database.Table("users").Select("id").Where("username = ?", cfg.RootUser.Username).First(&rootUser).Error; err != nil {
 		log.Fatal().Err(err).Msg("failed to find root user for budget seed")
 	}
 	if err := budget.Seed(database, rootUser.ID); err != nil {

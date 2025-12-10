@@ -22,9 +22,6 @@ logger:
   level: "debug"      # debug, info, warn, error, fatal
   format: "console"     # json, console
 
-# Module service URLs (for remote module communication)
-modules:
-  auth:
-    url: "${AUTH_SERVICE_URL:http://auth-service:8080}"
-  budget:
-    url: "${BUDGET_SERVICE_URL:http://budget-service:8080}"
+root_user:
+  username: "root" # Set via ROOT_USERNAME env var
+  password: "ZDcxMDUxZmM4M2Jl"  # Set via ROOT_PASSWORD env var

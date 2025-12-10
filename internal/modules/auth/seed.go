@@ -8,12 +8,7 @@ import (
 	"github.com/edalferes/monetics/internal/modules/auth/domain"
 )
 
-const (
-	RootUsername string = "root"
-	RootPassword string = "ZDcxMDUxZmM4M2Jl"
-)
-
-func Seed(db *gorm.DB) error {
+func Seed(db *gorm.DB, rootUsername, rootPassword string) error {
 	roleRepo := repository.NewRoleRepository(db)
 	permRepo := repository.NewPermissionRepository(db)
 	userRepo := repository.NewUserRepository(db)
@@ -65,8 +60,6 @@ func Seed(db *gorm.DB) error {
 	}
 
 	// Seed root user
-	rootUsername := RootUsername
-	rootPassword := RootPassword
 	_, err = userRepo.FindByUsername(rootUsername)
 	if err != nil {
 		adminRole, err := roleRepo.FindByName("admin")
