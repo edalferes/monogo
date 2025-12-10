@@ -30,7 +30,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse"
                             }
                         }
                     },
@@ -61,7 +61,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateAccountRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateAccountRequest"
                         }
                     }
                 ],
@@ -69,7 +69,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse"
                         }
                     },
                     "400": {
@@ -111,7 +111,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountBalanceResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountBalanceResponse"
                         }
                     },
                     "400": {
@@ -162,7 +162,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateAccountRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateAccountRequest"
                         }
                     }
                 ],
@@ -170,7 +170,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse"
                         }
                     },
                     "400": {
@@ -249,7 +249,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse"
                         }
                     },
                     "400": {
@@ -264,6 +264,40 @@ const docTemplate = `{
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/audit-logs": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a list of all audit logs",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Audit"
+                ],
+                "summary": "List all audit logs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_responses.AuditLogResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_edalferes_monetics_pkg_responses.ErrorResponse"
                         }
                     }
                 }
@@ -292,7 +326,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse"
                             }
                         }
                     }
@@ -316,7 +350,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateBudgetRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateBudgetRequest"
                         }
                     }
                 ],
@@ -324,7 +358,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse"
                         }
                     },
                     "400": {
@@ -359,7 +393,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse"
                         }
                     },
                     "400": {
@@ -403,7 +437,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateBudgetRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateBudgetRequest"
                         }
                     }
                 ],
@@ -411,7 +445,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse"
                         }
                     },
                     "400": {
@@ -491,7 +525,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse"
+                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse"
                             }
                         }
                     }
@@ -515,7 +549,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateCategoryRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateCategoryRequest"
                         }
                     }
                 ],
@@ -523,7 +557,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse"
                         }
                     },
                     "400": {
@@ -558,7 +592,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse"
                         }
                     },
                     "400": {
@@ -602,7 +636,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateCategoryRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateCategoryRequest"
                         }
                     }
                 ],
@@ -610,7 +644,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse"
                         }
                     },
                     "400": {
@@ -696,7 +730,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.MonthlyReportResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.MonthlyReportResponse"
                         }
                     },
                     "400": {
@@ -721,31 +755,25 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Filter by account ID",
-                        "name": "account_id",
+                        "description": "Page number (default: 1)",
+                        "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Filter by category ID",
-                        "name": "category_id",
+                        "description": "Items per page (default: 20, max: 100)",
+                        "name": "page_size",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Filter by type (income, expense, transfer)",
-                        "name": "type",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by start date (RFC3339)",
+                        "description": "Start date filter (RFC3339 format, e.g., 2025-02-01T00:00:00Z)",
                         "name": "start_date",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Filter by end date (RFC3339)",
+                        "description": "End date filter (RFC3339 format, e.g., 2025-02-28T23:59:59Z)",
                         "name": "end_date",
                         "in": "query"
                     }
@@ -754,10 +782,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse"
-                            }
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionListResponse"
                         }
                     }
                 }
@@ -780,7 +805,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateTransactionRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateTransactionRequest"
                         }
                     }
                 ],
@@ -788,7 +813,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse"
                         }
                     },
                     "400": {
@@ -823,7 +848,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse"
                         }
                     },
                     "400": {
@@ -867,7 +892,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateTransactionRequest"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateTransactionRequest"
                         }
                     }
                 ],
@@ -875,7 +900,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse"
+                            "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse"
                         }
                     },
                     "400": {
@@ -1756,15 +1781,42 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_edalferes_monetics_internal_modules_auth_adapters_http_responses.AuditLogResponse": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_edalferes_monetics_internal_modules_auth_domain.Permission": {
             "type": "object",
             "properties": {
                 "id": {
-                    "description": "Unique identifier",
                     "type": "integer"
                 },
                 "name": {
-                    "description": "Unique permission name (resource:action format)",
                     "type": "string"
                 }
             }
@@ -1773,15 +1825,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "description": "Unique identifier",
                     "type": "integer"
                 },
                 "name": {
-                    "description": "Unique role name",
                     "type": "string"
                 },
                 "permissions": {
-                    "description": "Associated permissions",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.Permission"
@@ -1793,27 +1842,24 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "description": "Unique identifier",
                     "type": "integer"
                 },
                 "roles": {
-                    "description": "Associated roles for authorization",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.Role"
                     }
                 },
                 "username": {
-                    "description": "Unique username for login",
                     "type": "string"
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountBalanceResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountBalanceResponse": {
             "type": "object",
             "properties": {
                 "account": {
-                    "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse"
+                    "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse"
                 },
                 "current_balance": {
                     "type": "number"
@@ -1829,7 +1875,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse": {
             "type": "object",
             "properties": {
                 "balance": {
@@ -1864,7 +1910,24 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountSummary": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse": {
             "type": "object",
             "properties": {
                 "alert_at": {
@@ -1923,7 +1986,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryBreakdownItem": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryBreakdownItem": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -1943,7 +2006,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse": {
             "type": "object",
             "properties": {
                 "color": {
@@ -1961,6 +2024,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "is_active": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -1975,7 +2041,27 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateAccountRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategorySummary": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateAccountRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -2006,7 +2092,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateBudgetRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateBudgetRequest": {
             "type": "object",
             "required": [
                 "amount",
@@ -2049,7 +2135,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateCategoryRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateCategoryRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -2077,14 +2163,13 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateTransactionRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateTransactionRequest": {
             "type": "object",
             "required": [
                 "account_id",
                 "amount",
                 "category_id",
                 "date",
-                "description",
                 "type"
             ],
             "properties": {
@@ -2140,7 +2225,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.MonthlyReportResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.MonthlyReportResponse": {
             "type": "object",
             "properties": {
                 "balance": {
@@ -2149,7 +2234,7 @@ const docTemplate = `{
                 "category_breakdown": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryBreakdownItem"
+                        "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryBreakdownItem"
                     }
                 },
                 "month": {
@@ -2169,9 +2254,43 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.PaginationMeta": {
             "type": "object",
             "properties": {
+                "page": {
+                    "type": "integer"
+                },
+                "page_size": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionListResponse": {
+            "type": "object",
+            "properties": {
+                "pagination": {
+                    "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.PaginationMeta"
+                },
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse"
+                    }
+                }
+            }
+        },
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountSummary"
+                },
                 "account_id": {
                     "type": "integer"
                 },
@@ -2183,6 +2302,9 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                },
+                "category": {
+                    "$ref": "#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategorySummary"
                 },
                 "category_id": {
                     "type": "integer"
@@ -2237,7 +2359,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateAccountRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateAccountRequest": {
             "type": "object",
             "properties": {
                 "currency": {
@@ -2264,7 +2386,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateBudgetRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateBudgetRequest": {
             "type": "object",
             "properties": {
                 "alert_at": {
@@ -2301,7 +2423,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateCategoryRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateCategoryRequest": {
             "type": "object",
             "properties": {
                 "color": {
@@ -2330,7 +2452,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateTransactionRequest": {
+        "github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateTransactionRequest": {
             "type": "object",
             "properties": {
                 "account_id": {
@@ -2356,6 +2478,14 @@ const docTemplate = `{
                         "expense",
                         "transfer"
                     ]
+                }
+            }
+        },
+        "github_com_edalferes_monetics_pkg_responses.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
                 }
             }
         }

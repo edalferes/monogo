@@ -25,8 +25,8 @@ func NewAuditHandler(auditLogRepo interfaces.AuditLogRepository) *AuditHandler {
 // @Tags Audit
 // @Security BearerAuth
 // @Produce json
-// @Success 200 {object} responses.SuccessResponse{data=[]dto.AuditLogResponse}
-// @Failure 500 {object} responses.ErrorResponse
+// @Success 200 {array} responses.AuditLogResponse
+// @Failure 500 {object} pkgresponses.ErrorResponse
 // @Router /auth/audit-logs [get]
 func (h *AuditHandler) ListAuditLogs(c echo.Context) error {
 	logs, err := h.auditLogRepo.ListAll()

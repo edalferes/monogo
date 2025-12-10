@@ -29,25 +29,39 @@ definitions:
     - password
     - username
     type: object
+  github_com_edalferes_monetics_internal_modules_auth_adapters_http_responses.AuditLogResponse:
+    properties:
+      action:
+        type: string
+      created_at:
+        type: string
+      details:
+        type: string
+      id:
+        type: integer
+      ip:
+        type: string
+      status:
+        type: string
+      user_id:
+        type: integer
+      username:
+        type: string
+    type: object
   github_com_edalferes_monetics_internal_modules_auth_domain.Permission:
     properties:
       id:
-        description: Unique identifier
         type: integer
       name:
-        description: Unique permission name (resource:action format)
         type: string
     type: object
   github_com_edalferes_monetics_internal_modules_auth_domain.Role:
     properties:
       id:
-        description: Unique identifier
         type: integer
       name:
-        description: Unique role name
         type: string
       permissions:
-        description: Associated permissions
         items:
           $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.Permission'
         type: array
@@ -55,21 +69,18 @@ definitions:
   github_com_edalferes_monetics_internal_modules_auth_domain.User:
     properties:
       id:
-        description: Unique identifier
         type: integer
       roles:
-        description: Associated roles for authorization
         items:
           $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_auth_domain.Role'
         type: array
       username:
-        description: Unique username for login
         type: string
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountBalanceResponse:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountBalanceResponse:
     properties:
       account:
-        $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse'
+        $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse'
       current_balance:
         type: number
       total_expense:
@@ -79,7 +90,7 @@ definitions:
       total_transfers:
         type: number
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse:
     properties:
       balance:
         type: number
@@ -102,7 +113,18 @@ definitions:
       user_id:
         type: integer
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountSummary:
+    properties:
+      currency:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse:
     properties:
       alert_at:
         type: number
@@ -141,7 +163,7 @@ definitions:
       user_id:
         type: integer
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryBreakdownItem:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryBreakdownItem:
     properties:
       amount:
         type: number
@@ -154,7 +176,7 @@ definitions:
       percentage:
         type: number
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse:
     properties:
       color:
         type: string
@@ -166,6 +188,8 @@ definitions:
         type: string
       id:
         type: integer
+      is_active:
+        type: boolean
       name:
         type: string
       type:
@@ -175,7 +199,20 @@ definitions:
       user_id:
         type: integer
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateAccountRequest:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategorySummary:
+    properties:
+      color:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateAccountRequest:
     properties:
       currency:
         type: string
@@ -197,7 +234,7 @@ definitions:
     - name
     - type
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateBudgetRequest:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateBudgetRequest:
     properties:
       alert_at:
         type: number
@@ -228,7 +265,7 @@ definitions:
     - period
     - start_date
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateCategoryRequest:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateCategoryRequest:
     properties:
       color:
         type: string
@@ -247,7 +284,7 @@ definitions:
     - name
     - type
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateTransactionRequest:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateTransactionRequest:
     properties:
       account_id:
         type: integer
@@ -288,16 +325,15 @@ definitions:
     - amount
     - category_id
     - date
-    - description
     - type
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.MonthlyReportResponse:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.MonthlyReportResponse:
     properties:
       balance:
         type: number
       category_breakdown:
         items:
-          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryBreakdownItem'
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryBreakdownItem'
         type: array
       month:
         type: integer
@@ -310,8 +346,30 @@ definitions:
       year:
         type: integer
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.PaginationMeta:
     properties:
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionListResponse:
+    properties:
+      pagination:
+        $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.PaginationMeta'
+      transactions:
+        items:
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse'
+        type: array
+    type: object
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse:
+    properties:
+      account:
+        $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountSummary'
       account_id:
         type: integer
       amount:
@@ -320,6 +378,8 @@ definitions:
         items:
           type: string
         type: array
+      category:
+        $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategorySummary'
       category_id:
         type: integer
       created_at:
@@ -355,7 +415,7 @@ definitions:
       user_id:
         type: integer
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateAccountRequest:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateAccountRequest:
     properties:
       currency:
         type: string
@@ -375,7 +435,7 @@ definitions:
         - invest
         type: string
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateBudgetRequest:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateBudgetRequest:
     properties:
       alert_at:
         maximum: 100
@@ -402,7 +462,7 @@ definitions:
       start_date:
         type: string
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateCategoryRequest:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateCategoryRequest:
     properties:
       color:
         maxLength: 7
@@ -423,7 +483,7 @@ definitions:
         - expense
         type: string
     type: object
-  github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateTransactionRequest:
+  github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateTransactionRequest:
     properties:
       account_id:
         type: integer
@@ -443,6 +503,11 @@ definitions:
         - transfer
         type: string
     type: object
+  github_com_edalferes_monetics_pkg_responses.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -455,7 +520,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse'
+              $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse'
             type: array
         "500":
           description: Internal Server Error
@@ -474,14 +539,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateAccountRequest'
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateAccountRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse'
         "400":
           description: Bad Request
           schema:
@@ -534,7 +599,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountBalanceResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountBalanceResponse'
         "400":
           description: Bad Request
           schema:
@@ -567,14 +632,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateAccountRequest'
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateAccountRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse'
         "400":
           description: Bad Request
           schema:
@@ -602,7 +667,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.AccountResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.AccountResponse'
         "400":
           description: Bad Request
           schema:
@@ -616,6 +681,27 @@ paths:
       summary: Get account by ID
       tags:
       - Budget - Accounts
+  /auth/audit-logs:
+    get:
+      description: Get a list of all audit logs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_auth_adapters_http_responses.AuditLogResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_edalferes_monetics_pkg_responses.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List all audit logs
+      tags:
+      - Audit
   /budgets:
     get:
       parameters:
@@ -630,7 +716,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse'
+              $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse'
             type: array
       summary: List user budgets
       tags:
@@ -644,14 +730,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateBudgetRequest'
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateBudgetRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse'
         "400":
           description: Bad Request
           schema:
@@ -699,7 +785,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse'
         "400":
           description: Bad Request
           schema:
@@ -727,14 +813,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateBudgetRequest'
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateBudgetRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.BudgetResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.BudgetResponse'
         "400":
           description: Bad Request
           schema:
@@ -762,7 +848,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse'
+              $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse'
             type: array
       summary: List user categories
       tags:
@@ -776,14 +862,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateCategoryRequest'
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateCategoryRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse'
         "400":
           description: Bad Request
           schema:
@@ -831,7 +917,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse'
         "400":
           description: Bad Request
           schema:
@@ -859,14 +945,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateCategoryRequest'
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateCategoryRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CategoryResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CategoryResponse'
         "400":
           description: Bad Request
           schema:
@@ -899,7 +985,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.MonthlyReportResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.MonthlyReportResponse'
         "400":
           description: Bad Request
           schema:
@@ -911,23 +997,19 @@ paths:
   /transactions:
     get:
       parameters:
-      - description: Filter by account ID
+      - description: 'Page number (default: 1)'
         in: query
-        name: account_id
+        name: page
         type: integer
-      - description: Filter by category ID
+      - description: 'Items per page (default: 20, max: 100)'
         in: query
-        name: category_id
+        name: page_size
         type: integer
-      - description: Filter by type (income, expense, transfer)
-        in: query
-        name: type
-        type: string
-      - description: Filter by start date (RFC3339)
+      - description: Start date filter (RFC3339 format, e.g., 2025-02-01T00:00:00Z)
         in: query
         name: start_date
         type: string
-      - description: Filter by end date (RFC3339)
+      - description: End date filter (RFC3339 format, e.g., 2025-02-28T23:59:59Z)
         in: query
         name: end_date
         type: string
@@ -937,9 +1019,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse'
-            type: array
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionListResponse'
       summary: List user transactions
       tags:
       - Budget - Transactions
@@ -952,14 +1032,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.CreateTransactionRequest'
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.CreateTransactionRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse'
         "400":
           description: Bad Request
           schema:
@@ -1007,7 +1087,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse'
         "400":
           description: Bad Request
           schema:
@@ -1035,14 +1115,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.UpdateTransactionRequest'
+          $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.UpdateTransactionRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_handler_dto.TransactionResponse'
+            $ref: '#/definitions/github_com_edalferes_monetics_internal_modules_budget_adapters_http_dto.TransactionResponse'
         "400":
           description: Bad Request
           schema:
