@@ -32,14 +32,18 @@ const (
 //		Description: "Gastos com supermercado e restaurants",
 //	}
 type Category struct {
-	ID          uint         `json:"id"`
-	UserID      uint         `json:"user_id"`
-	Name        string       `json:"name"`
-	Type        CategoryType `json:"type"`
-	Icon        string       `json:"icon,omitempty"`
-	Color       string       `json:"color,omitempty"`
-	Description string       `json:"description,omitempty"`
-	IsActive    bool         `json:"is_active"`
+	ID          uint         `json:"id" gorm:"primaryKey"`
+	UserID      uint         `json:"user_id" gorm:"not null;index:idx_user_categories;constraint:OnDelete:CASCADE"`
+	Name        string       `json:"name" gorm:"not null;size:100"`
+	Type        CategoryType `json:"type" gorm:"not null;size:20"`
+	Icon        string       `json:"icon,omitempty" gorm:"size:50"`
+	Color       string       `json:"color,omitempty" gorm:"size:20"`
+	Description string       `json:"description,omitempty" gorm:"type:text"`
+	IsActive    bool         `json:"is_active" gorm:"default:true"`
 	CreatedAt   time.Time    `json:"created_at"`
 	UpdatedAt   time.Time    `json:"updated_at"`
+}
+
+func (Category) TableName() string {
+	return "budget_categories"
 }

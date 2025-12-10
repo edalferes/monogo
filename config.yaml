@@ -19,8 +19,8 @@ jwt:
   expiry_hour: 24
 
 logger:
-  level: "info"      # debug, info, warn, error, fatal
-  format: "json"     # json, console
+  level: "debug"      # debug, info, warn, error, fatal
+  format: "console"     # json, console
 
 # Module service URLs (for remote module communication)
 modules:

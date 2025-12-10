@@ -91,6 +91,10 @@ func initEcho() *echo.Echo {
 	e := echo.New()
 	e.Validator = validator.NewValidator()
 
+	// Hide Echo banner and port
+	e.HideBanner = true
+	e.HidePort = true
+
 	// Configure CORS middleware
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins:     []string{"*"},
@@ -115,19 +119,16 @@ func (a *App) RegisterModules() {
 }
 
 func (a *App) RegisterGlobalRoutes() {
-	// Health and readiness probes (Kubernetes/Loki style)
-	a.echo.GET("/health", a.HealthHandler)
-	a.echo.GET("/ready", a.ReadyHandler)
-	a.echo.GET("/live", a.LivenessHandler)
+	// K8s probes
+	a.echo.GET("/health", a.LivenessHandler)
+	a.echo.GET("/ready", a.ReadinessHandler)
 
-	// Legacy health endpoint for backward compatibility
-	a.echo.GET("/healthz", func(c echo.Context) error {
-		return c.String(200, "ok")
-	})
-
+	// metrics endpoint (placeholder) #TODO: implement metrics collection
 	a.echo.GET("/metrics", func(c echo.Context) error {
 		return c.String(200, "metrics: not implemented")
 	})
+
+	// Swagger docs
 	a.echo.GET("/swagger/*", echoSwagger.WrapHandler)
 }
 

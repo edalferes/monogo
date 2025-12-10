@@ -36,20 +36,24 @@ const (
 //		EndDate:    time.Date(2025, 1, 31, 23, 59, 59, 0, time.UTC),
 //	}
 type Budget struct {
-	ID          uint         `json:"id"`
-	UserID      uint         `json:"user_id"`
-	CategoryID  uint         `json:"category_id"`
-	Name        string       `json:"name"`
-	Amount      float64      `json:"amount"` // Valor planejado
-	Spent       float64      `json:"spent"`  // Valor gasto (calculado)
-	Period      BudgetPeriod `json:"period"`
-	StartDate   time.Time    `json:"start_date"`
-	EndDate     time.Time    `json:"end_date"`
-	AlertAt     *float64     `json:"alert_at,omitempty"` // Percentual para alerta (ex: 80.0)
-	IsActive    bool         `json:"is_active"`
-	Description string       `json:"description,omitempty"`
+	ID          uint         `json:"id" gorm:"primaryKey"`
+	UserID      uint         `json:"user_id" gorm:"not null;index:idx_user_budgets;constraint:OnDelete:CASCADE"`
+	CategoryID  uint         `json:"category_id" gorm:"not null;index:idx_category_budgets"`
+	Name        string       `json:"name" gorm:"not null;size:200"`
+	Amount      float64      `json:"amount" gorm:"type:decimal(15,2);not null"`
+	Spent       float64      `json:"spent" gorm:"type:decimal(15,2);default:0"`
+	Period      BudgetPeriod `json:"period" gorm:"not null;size:20"`
+	StartDate   time.Time    `json:"start_date" gorm:"not null;index:idx_budget_period"`
+	EndDate     time.Time    `json:"end_date" gorm:"not null;index:idx_budget_period"`
+	AlertAt     *float64     `json:"alert_at,omitempty" gorm:"type:decimal(5,2)"`
+	IsActive    bool         `json:"is_active" gorm:"default:true"`
+	Description string       `json:"description,omitempty" gorm:"type:text"`
 	CreatedAt   time.Time    `json:"created_at"`
 	UpdatedAt   time.Time    `json:"updated_at"`
+}
+
+func (Budget) TableName() string {
+	return "budget_budgets"
 }
 
 // RemainingAmount returns how much budget is left

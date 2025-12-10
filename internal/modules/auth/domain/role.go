@@ -33,7 +33,11 @@ package domain
 //		},
 //	}
 type Role struct {
-	ID          uint         `json:"id"`          // Unique identifier
-	Name        string       `json:"name"`        // Unique role name
-	Permissions []Permission `json:"permissions"` // Associated permissions
+	ID          uint         `json:"id" gorm:"primaryKey"`
+	Name        string       `json:"name" gorm:"unique;not null"`
+	Permissions []Permission `json:"permissions" gorm:"many2many:role_permissions;constraint:OnDelete:CASCADE"`
+}
+
+func (Role) TableName() string {
+	return "roles"
 }

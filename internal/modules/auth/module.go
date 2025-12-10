@@ -8,7 +8,7 @@ import (
 
 	"github.com/edalferes/monetics/internal/modules/auth/adapters/crypto"
 	"github.com/edalferes/monetics/internal/modules/auth/adapters/http/handlers"
-	gormrepo "github.com/edalferes/monetics/internal/modules/auth/adapters/repository/gorm"
+	"github.com/edalferes/monetics/internal/modules/auth/adapters/repository"
 	"github.com/edalferes/monetics/internal/modules/auth/adapters/token"
 	"github.com/edalferes/monetics/internal/modules/auth/usecase/audit"
 	"github.com/edalferes/monetics/internal/modules/auth/usecase/interfaces"
@@ -43,10 +43,10 @@ type Module struct {
 }
 
 func NewModule(db *gorm.DB, jwtSecret string, jwtExpiryHours int, log logger.Logger) *Module {
-	userRepo := gormrepo.NewUserRepositoryGorm(db)
-	roleRepo := gormrepo.NewRoleRepositoryGorm(db)
-	permRepo := gormrepo.NewPermissionRepositoryGorm(db)
-	auditLogRepo := gormrepo.NewAuditLogRepositoryGorm(db)
+	userRepo := repository.NewUserRepository(db)
+	roleRepo := repository.NewRoleRepository(db)
+	permRepo := repository.NewPermissionRepository(db)
+	auditLogRepo := repository.NewAuditLogRepository(db)
 
 	passwordService := crypto.NewBcryptPasswordService()
 	jwtService := token.NewJWTService(jwtSecret, time.Duration(jwtExpiryHours)*time.Hour)

@@ -46,12 +46,16 @@ import "time"
 //		Details:  `{"user_agent": "Mozilla/5.0...", "session_id": "abc123"}`,
 //	}
 type AuditLog struct {
-	ID        uint      `json:"id"`                // Unique identifier
-	UserID    *uint     `json:"user_id,omitempty"` // User ID (nullable for system actions)
-	Username  string    `json:"username"`          // Username (always present for tracking)
-	Action    string    `json:"action"`            // Action performed (see naming conventions)
-	Status    string    `json:"status"`            // Result status (success/failed/blocked)
-	IP        string    `json:"ip"`                // Client IP address
-	Details   string    `json:"details,omitempty"` // Additional context as JSON string
-	CreatedAt time.Time `json:"created_at"`        // Timestamp of the action
+	ID        uint      `json:"id" gorm:"primaryKey"`
+	UserID    *uint     `json:"user_id,omitempty" gorm:"index"`
+	Username  string    `json:"username" gorm:"not null"`
+	Action    string    `json:"action" gorm:"not null;index"`
+	Status    string    `json:"status" gorm:"not null;index"`
+	IP        string    `json:"ip" gorm:"size:45"`
+	Details   string    `json:"details,omitempty" gorm:"type:text"`
+	CreatedAt time.Time `json:"created_at" gorm:"index"`
+}
+
+func (AuditLog) TableName() string {
+	return "audit_logs"
 }

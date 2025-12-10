@@ -46,30 +46,34 @@ const (
 //		Status:      TransactionStatusCompleted,
 //	}
 type Transaction struct {
-	ID          uint              `json:"id"`
-	UserID      uint              `json:"user_id"`
-	AccountID   uint              `json:"account_id"` // Conta origem
-	CategoryID  uint              `json:"category_id"`
-	Type        TransactionType   `json:"type"`
-	Amount      float64           `json:"amount"`
-	Description string            `json:"description"`
-	Date        time.Time         `json:"date"`
-	Month       string            `json:"month"` // Format: "2025-01" for easy grouping and filtering
-	Status      TransactionStatus `json:"status"`
+	ID          uint              `json:"id" gorm:"primaryKey"`
+	UserID      uint              `json:"user_id" gorm:"not null;index:idx_user_transactions;constraint:OnDelete:CASCADE"`
+	AccountID   uint              `json:"account_id" gorm:"not null;index:idx_account_transactions"`
+	CategoryID  uint              `json:"category_id" gorm:"not null;index:idx_category_transactions"`
+	Type        TransactionType   `json:"type" gorm:"not null;size:20"`
+	Amount      float64           `json:"amount" gorm:"type:decimal(15,2);not null"`
+	Description string            `json:"description" gorm:"type:text"`
+	Date        time.Time         `json:"date" gorm:"not null;index:idx_transaction_date"`
+	Month       string            `json:"month" gorm:"size:7;index:idx_transaction_month"`
+	Status      TransactionStatus `json:"status" gorm:"not null;size:20;default:'completed'"`
 	// Transfer specific fields
-	DestinationAccountID *uint    `json:"destination_account_id,omitempty"` // For transfers
-	TransferFee          *float64 `json:"transfer_fee,omitempty"`           // Transfer fee
+	DestinationAccountID *uint    `json:"destination_account_id,omitempty" gorm:"index:idx_destination_account"`
+	TransferFee          *float64 `json:"transfer_fee,omitempty" gorm:"type:decimal(15,2)"`
 	// Recurrence
-	IsRecurring    bool       `json:"is_recurring"`
-	RecurrenceRule string     `json:"recurrence_rule,omitempty"` // "monthly", "weekly", etc.
+	IsRecurring    bool       `json:"is_recurring" gorm:"default:false"`
+	RecurrenceRule string     `json:"recurrence_rule,omitempty" gorm:"size:50"`
 	RecurrenceEnd  *time.Time `json:"recurrence_end,omitempty"`
-	ParentID       *uint      `json:"parent_id,omitempty"` // For recurring transactions
+	ParentID       *uint      `json:"parent_id,omitempty" gorm:"index:idx_parent_transaction"`
 	// Metadata
-	Tags        []string  `json:"tags,omitempty"`
-	Attachments []string  `json:"attachments,omitempty"` // URLs de comprovantes
+	Tags        []string  `json:"tags,omitempty" gorm:"type:text;serializer:json"`
+	Attachments []string  `json:"attachments,omitempty" gorm:"type:text;serializer:json"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	// Relations (populated by repository with Preload)
-	Account  *Account  `json:"account,omitempty"`
-	Category *Category `json:"category,omitempty"`
+	Account  *Account  `json:"account,omitempty" gorm:"foreignKey:AccountID"`
+	Category *Category `json:"category,omitempty" gorm:"foreignKey:CategoryID"`
+}
+
+func (Transaction) TableName() string {
+	return "budget_transactions"
 }

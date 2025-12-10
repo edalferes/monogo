@@ -35,14 +35,18 @@ const (
 //		Description: "Conta corrente principal",
 //	}
 type Account struct {
-	ID          uint        `json:"id"`
-	UserID      uint        `json:"user_id"`
-	Name        string      `json:"name"`
-	Type        AccountType `json:"type"`
-	Balance     float64     `json:"balance"`
-	Currency    string      `json:"currency"`
-	Description string      `json:"description,omitempty"`
-	IsActive    bool        `json:"is_active"`
+	ID          uint        `json:"id" gorm:"primaryKey"`
+	UserID      uint        `json:"user_id" gorm:"not null;index:idx_user_accounts;constraint:OnDelete:CASCADE"`
+	Name        string      `json:"name" gorm:"not null;size:100"`
+	Type        AccountType `json:"type" gorm:"not null;size:20"`
+	Balance     float64     `json:"balance" gorm:"type:decimal(15,2);default:0"`
+	Currency    string      `json:"currency" gorm:"size:3;default:'BRL'"`
+	Description string      `json:"description,omitempty" gorm:"type:text"`
+	IsActive    bool        `json:"is_active" gorm:"default:true"`
 	CreatedAt   time.Time   `json:"created_at"`
 	UpdatedAt   time.Time   `json:"updated_at"`
+}
+
+func (Account) TableName() string {
+	return "budget_accounts"
 }

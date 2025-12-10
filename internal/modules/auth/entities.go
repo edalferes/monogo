@@ -1,12 +1,12 @@
 package auth
 
-import "github.com/edalferes/monetics/internal/modules/auth/adapters/repository/models"
+import "github.com/edalferes/monetics/internal/modules/auth/domain"
 
 func Entities() []interface{} {
 	return []interface{}{
-		&models.UserModel{},
-		&models.RoleModel{},
-		&models.PermissionModel{},
-		&models.AuditLogModel{},
+		&domain.User{},
+		&domain.Role{},
+		&domain.Permission{},
+		&domain.AuditLog{},
 	}
 }

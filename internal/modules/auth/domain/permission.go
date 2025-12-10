@@ -31,6 +31,10 @@ package domain
 //		{Name: "roles:write"},
 //	}
 type Permission struct {
-	ID   uint   `json:"id"`   // Unique identifier
-	Name string `json:"name"` // Unique permission name (resource:action format)
+	ID   uint   `json:"id" gorm:"primaryKey"`
+	Name string `json:"name" gorm:"unique;not null"`
+}
+
+func (Permission) TableName() string {
+	return "permissions"
 }
