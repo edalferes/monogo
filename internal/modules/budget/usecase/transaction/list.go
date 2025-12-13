@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
+	"github.com/edalferes/monetics/internal/modules/budget/helpers"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/pkg/logger"
 )
@@ -67,20 +68,22 @@ func (uc *ListUseCase) Execute(ctx context.Context, input ListInput) (ListOutput
 	// Parse date filters if provided
 	var startDate, endDate *time.Time
 	if input.StartDate != nil {
-		if parsed, err := time.Parse(time.RFC3339, *input.StartDate); err == nil {
-			startDate = &parsed
-		} else {
+		parsed, err := helpers.ParseFlexibleDate(*input.StartDate)
+		if err != nil {
 			uc.logger.Error().Err(err).Str("start_date", *input.StartDate).Msg("failed to parse start_date")
 			return ListOutput{}, err
 		}
+		startDate = &parsed
 	}
 	if input.EndDate != nil {
-		if parsed, err := time.Parse(time.RFC3339, *input.EndDate); err == nil {
-			endDate = &parsed
-		} else {
+		parsed, err := helpers.ParseFlexibleDate(*input.EndDate)
+		if err != nil {
 			uc.logger.Error().Err(err).Str("end_date", *input.EndDate).Msg("failed to parse end_date")
 			return ListOutput{}, err
 		}
+		// Set end date to end of day (23:59:59)
+		endOfDay := parsed.Add(23*time.Hour + 59*time.Minute + 59*time.Second)
+		endDate = &endOfDay
 	}
 
 	// Get paginated transactions (with or without date filters)

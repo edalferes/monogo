@@ -29,8 +29,8 @@ package domain
 type User struct {
 	ID       uint   `json:"id" gorm:"primaryKey"`
 	Username string `json:"username" gorm:"unique;not null"`
-	Password string `json:"-" gorm:"not null;column:password_hash"`
-	Roles    []Role `json:"roles" gorm:"many2many:user_roles;constraint:OnDelete:CASCADE"`
+	Password string `json:"-" gorm:"not null;column:password"`
+	Roles    []Role `json:"roles" gorm:"many2many:user_roles;joinForeignKey:user_model_id;joinReferences:role_model_id;constraint:OnDelete:CASCADE"`
 }
 
 func (User) TableName() string {

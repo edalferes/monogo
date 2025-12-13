@@ -11,7 +11,7 @@ database:
   port: 5432
   user: "postgres"
   password: "postgres"  # Set via DB_PASSWORD env var
-  name: "monetics"
+  name: "monetics_database"  # Set via DB_NAME env var
   ssl_mode: "disable"
 
 jwt:

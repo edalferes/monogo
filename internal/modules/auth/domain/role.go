@@ -35,7 +35,7 @@ package domain
 type Role struct {
 	ID          uint         `json:"id" gorm:"primaryKey"`
 	Name        string       `json:"name" gorm:"unique;not null"`
-	Permissions []Permission `json:"permissions" gorm:"many2many:role_permissions;constraint:OnDelete:CASCADE"`
+	Permissions []Permission `json:"permissions" gorm:"many2many:role_permissions;joinForeignKey:role_model_id;joinReferences:permission_model_id;constraint:OnDelete:CASCADE"`
 }
 
 func (Role) TableName() string {

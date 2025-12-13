@@ -6,6 +6,7 @@ import (
 
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
+	"github.com/edalferes/monetics/internal/modules/budget/helpers"
 	"github.com/edalferes/monetics/internal/modules/budget/usecase/interfaces"
 	"github.com/edalferes/monetics/pkg/logger"
 )
@@ -108,7 +109,7 @@ func (uc *CreateUseCase) Execute(ctx context.Context, input CreateInput) (domain
 	}
 
 	// Parse date
-	date, err := time.Parse(time.RFC3339, input.Date)
+	date, err := helpers.ParseFlexibleDate(input.Date)
 	if err != nil {
 		uc.logger.Error().Err(err).Str("date", input.Date).Msg("invalid date format")
 		return domain.Transaction{}, errors.ErrInvalidDate
