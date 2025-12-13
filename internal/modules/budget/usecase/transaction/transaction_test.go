@@ -386,8 +386,8 @@ func TestListUseCase_Execute(t *testing.T) {
 			},
 		}
 
-		mockRepo.On("GetByUserIDPaginated", ctx, userID, 20, 0).Return(expectedTransactions, nil)
-		mockRepo.On("CountByUserID", ctx, userID).Return(int64(2), nil)
+	mockRepo.On("GetByUserIDPaginatedWithAllFilters", ctx, userID, 20, 0, (*domain.TransactionType)(nil), (*uint)(nil), (*uint)(nil), (*time.Time)(nil), (*time.Time)(nil)).Return(expectedTransactions, nil)
+	mockRepo.On("CountByUserIDWithAllFilters", ctx, userID, (*domain.TransactionType)(nil), (*uint)(nil), (*uint)(nil), (*time.Time)(nil), (*time.Time)(nil)).Return(int64(2), nil)
 
 		input := transaction.ListInput{
 			UserID:   userID,
@@ -411,7 +411,7 @@ func TestListUseCase_Execute(t *testing.T) {
 		usecase := transaction.NewListUseCase(mockRepo, logger.NewDefault())
 
 		expectedError := errors.New("database error")
-		mockRepo.On("GetByUserIDPaginated", ctx, userID, 20, 0).Return(nil, expectedError)
+		mockRepo.On("GetByUserIDPaginatedWithAllFilters", ctx, userID, 20, 0, (*domain.TransactionType)(nil), (*uint)(nil), (*uint)(nil), (*time.Time)(nil), (*time.Time)(nil)).Return(nil, expectedError)
 
 		input := transaction.ListInput{
 			UserID:   userID,
