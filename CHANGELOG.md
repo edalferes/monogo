@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.15.0](https://github.com/edalferes/monetics/compare/v0.14.0...v0.15.0) (2025-12-13)
+
+
+### Features
+
+* update check permission refactor ([f5edc03](https://github.com/edalferes/monetics/commit/f5edc03e51174589959cce778fe2981476fc8505))
+* update list ([5eee057](https://github.com/edalferes/monetics/commit/5eee05756ea9d6dfc1017b48300955e491e9c748))
+* update seed configuration ([26d7c64](https://github.com/edalferes/monetics/commit/26d7c643abbafd83582f479b1ddeadd7bc1c4225))
+* update test ([42baa51](https://github.com/edalferes/monetics/commit/42baa51d9e3e45691400b99d075bf8aed66ca740))
+* update test ([8b5ecab](https://github.com/edalferes/monetics/commit/8b5ecabfaa703d08c87e66d64d9da146e74e0627))
+
 ## [0.14.0](https://github.com/edalferes/monetics/compare/v0.13.0...v0.14.0) (2025-12-10)
 
 
