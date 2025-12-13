@@ -250,7 +250,7 @@ func (h *CategoryHandler) DeleteCategory(c echo.Context) error {
 		})
 	}
 
-	err = h.deleteCategoryUseCase.Execute(c.Request().Context(), userID, uint(categoryID))
+	err = h.deleteCategoryUseCase.Execute(c.Request().Context(), uint(categoryID), userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"error": err.Error(),

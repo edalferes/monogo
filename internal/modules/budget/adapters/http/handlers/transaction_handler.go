@@ -104,8 +104,11 @@ func (h *TransactionHandler) CreateTransaction(c echo.Context) error {
 // @Produce json
 // @Param page query int false "Page number (default: 1)"
 // @Param page_size query int false "Items per page (default: 20, max: 100)"
-// @Param start_date query string false "Start date filter (RFC3339 format, e.g., 2025-02-01T00:00:00Z)"
-// @Param end_date query string false "End date filter (RFC3339 format, e.g., 2025-02-28T23:59:59Z)"
+// @Param type query string false "Transaction type filter (income, expense, transfer)"
+// @Param account_id query int false "Account ID filter"
+// @Param category_id query int false "Category ID filter"
+// @Param start_date query string false "Start date filter (RFC3339 or YYYY-MM-DD format)"
+// @Param end_date query string false "End date filter (RFC3339 or YYYY-MM-DD format)"
 // @Success 200 {object} dto.TransactionListResponse
 // @Router /transactions [get]
 func (h *TransactionHandler) ListTransactions(c echo.Context) error {
@@ -132,6 +135,27 @@ func (h *TransactionHandler) ListTransactions(c echo.Context) error {
 		}
 	}
 
+	// Parse filter parameters
+	var transactionType *domain.TransactionType
+	if t := c.QueryParam("type"); t != "" {
+		txType := domain.TransactionType(t)
+		transactionType = &txType
+	}
+
+	var accountID, categoryID *uint
+	if aid := c.QueryParam("account_id"); aid != "" {
+		if parsedID, err := strconv.ParseUint(aid, 10, 32); err == nil {
+			id := uint(parsedID)
+			accountID = &id
+		}
+	}
+	if cid := c.QueryParam("category_id"); cid != "" {
+		if parsedID, err := strconv.ParseUint(cid, 10, 32); err == nil {
+			id := uint(parsedID)
+			categoryID = &id
+		}
+	}
+
 	// Parse date filters
 	var startDate, endDate *string
 	if sd := c.QueryParam("start_date"); sd != "" {
@@ -142,11 +166,14 @@ func (h *TransactionHandler) ListTransactions(c echo.Context) error {
 	}
 
 	input := transaction.ListInput{
-		UserID:    userID,
-		Page:      page,
-		PageSize:  pageSize,
-		StartDate: startDate,
-		EndDate:   endDate,
+		UserID:     userID,
+		Page:       page,
+		PageSize:   pageSize,
+		Type:       transactionType,
+		AccountID:  accountID,
+		CategoryID: categoryID,
+		StartDate:  startDate,
+		EndDate:    endDate,
 	}
 
 	result, err := h.listTransactionsUseCase.Execute(c.Request().Context(), input)

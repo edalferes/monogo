@@ -23,11 +23,14 @@ func NewListUseCase(transactionRepo interfaces.TransactionRepository, log logger
 }
 
 type ListInput struct {
-	UserID    uint
-	Page      int
-	PageSize  int
-	StartDate *string
-	EndDate   *string
+	UserID     uint
+	Page       int
+	PageSize   int
+	Type       *domain.TransactionType
+	AccountID  *uint
+	CategoryID *uint
+	StartDate  *string
+	EndDate    *string
 }
 
 type ListOutput struct {
@@ -86,33 +89,40 @@ func (uc *ListUseCase) Execute(ctx context.Context, input ListInput) (ListOutput
 		endDate = &endOfDay
 	}
 
-	// Get paginated transactions (with or without date filters)
+	// Get paginated transactions with all filters
 	var transactions []domain.Transaction
 	var total int64
 	var err error
 
-	if startDate != nil || endDate != nil {
-		transactions, err = uc.transactionRepo.GetByUserIDPaginatedWithFilters(ctx, input.UserID, input.PageSize, offset, startDate, endDate)
-		if err != nil {
-			uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to get paginated transactions with filters")
-			return ListOutput{}, err
-		}
-		total, err = uc.transactionRepo.CountByUserIDWithFilters(ctx, input.UserID, startDate, endDate)
-		if err != nil {
-			uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to count transactions with filters")
-			return ListOutput{}, err
-		}
-	} else {
-		transactions, err = uc.transactionRepo.GetByUserIDPaginated(ctx, input.UserID, input.PageSize, offset)
-		if err != nil {
-			uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to get paginated transactions")
-			return ListOutput{}, err
-		}
-		total, err = uc.transactionRepo.CountByUserID(ctx, input.UserID)
-		if err != nil {
-			uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to count transactions")
-			return ListOutput{}, err
-		}
+	// Build query with filters
+	transactions, err = uc.transactionRepo.GetByUserIDPaginatedWithAllFilters(
+		ctx,
+		input.UserID,
+		input.PageSize,
+		offset,
+		input.Type,
+		input.AccountID,
+		input.CategoryID,
+		startDate,
+		endDate,
+	)
+	if err != nil {
+		uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to get paginated transactions")
+		return ListOutput{}, err
+	}
+
+	total, err = uc.transactionRepo.CountByUserIDWithAllFilters(
+		ctx,
+		input.UserID,
+		input.Type,
+		input.AccountID,
+		input.CategoryID,
+		startDate,
+		endDate,
+	)
+	if err != nil {
+		uc.logger.Error().Err(err).Uint("user_id", input.UserID).Msg("failed to count transactions")
+		return ListOutput{}, err
 	}
 
 	// Calculate total pages

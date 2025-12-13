@@ -190,3 +190,81 @@ func (r *TransactionRepository) CountByUserIDWithFilters(ctx context.Context, us
 
 	return count, nil
 }
+
+// GetByUserIDPaginatedWithAllFilters retrieves paginated transactions with all filters
+func (r *TransactionRepository) GetByUserIDPaginatedWithAllFilters(
+	ctx context.Context,
+	userID uint,
+	limit, offset int,
+	txType *domain.TransactionType,
+	accountID, categoryID *uint,
+	startDate, endDate *time.Time,
+) ([]domain.Transaction, error) {
+	query := r.db.WithContext(ctx).
+		Preload("Account").
+		Preload("Category").
+		Where("user_id = ?", userID)
+
+	if txType != nil {
+		query = query.Where("type = ?", *txType)
+	}
+	if accountID != nil {
+		query = query.Where("account_id = ?", *accountID)
+	}
+	if categoryID != nil {
+		query = query.Where("category_id = ?", *categoryID)
+	}
+	if startDate != nil {
+		query = query.Where("date >= ?", startDate)
+	}
+	if endDate != nil {
+		query = query.Where("date <= ?", endDate)
+	}
+
+	var transactions []domain.Transaction
+	if err := query.
+		Order("date DESC").
+		Limit(limit).
+		Offset(offset).
+		Find(&transactions).Error; err != nil {
+		return nil, err
+	}
+
+	return transactions, nil
+}
+
+// CountByUserIDWithAllFilters counts transactions with all filters
+func (r *TransactionRepository) CountByUserIDWithAllFilters(
+	ctx context.Context,
+	userID uint,
+	txType *domain.TransactionType,
+	accountID, categoryID *uint,
+	startDate, endDate *time.Time,
+) (int64, error) {
+	query := r.db.WithContext(ctx).
+		Model(&domain.Transaction{}).
+		Where("user_id = ?", userID)
+
+	if txType != nil {
+		query = query.Where("type = ?", *txType)
+	}
+	if accountID != nil {
+		query = query.Where("account_id = ?", *accountID)
+	}
+	if categoryID != nil {
+		query = query.Where("category_id = ?", *categoryID)
+	}
+	if startDate != nil {
+		query = query.Where("date >= ?", startDate)
+	}
+	if endDate != nil {
+		query = query.Where("date <= ?", endDate)
+	}
+
+	var count int64
+	if err := query.Count(&count).Error; err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
