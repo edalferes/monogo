@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/edalferes/monetics/compare/v0.15.0...v0.16.0) (2025-12-13)
+
+
+### Features
+
+* update roles ([ba455a9](https://github.com/edalferes/monetics/commit/ba455a9da5464d9f6556a87ab60613099b388cdc))
+
 ## [0.15.0](https://github.com/edalferes/monetics/compare/v0.14.0...v0.15.0) (2025-12-13)
 
 
