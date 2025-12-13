@@ -19,7 +19,7 @@ package domain
 // Persistence considerations:
 //   - ID should be mapped to roles.id (primary key)
 //   - Name should be mapped to roles.name (unique constraint)
-//   - Permissions relationship should be loaded when needed
+//   - Permissions relationship should be loaded when neededs
 //
 // Example:
 //
