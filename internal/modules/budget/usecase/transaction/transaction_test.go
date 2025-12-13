@@ -1,11 +1,12 @@
 package transaction_test
 
 import (
-	"github.com/edalferes/monetics/pkg/logger"
 	"context"
 	"errors"
 	"testing"
 	"time"
+
+	"github.com/edalferes/monetics/pkg/logger"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -386,8 +387,8 @@ func TestListUseCase_Execute(t *testing.T) {
 			},
 		}
 
-	mockRepo.On("GetByUserIDPaginatedWithAllFilters", ctx, userID, 20, 0, (*domain.TransactionType)(nil), (*uint)(nil), (*uint)(nil), (*time.Time)(nil), (*time.Time)(nil)).Return(expectedTransactions, nil)
-	mockRepo.On("CountByUserIDWithAllFilters", ctx, userID, (*domain.TransactionType)(nil), (*uint)(nil), (*uint)(nil), (*time.Time)(nil), (*time.Time)(nil)).Return(int64(2), nil)
+		mockRepo.On("GetByUserIDPaginatedWithAllFilters", ctx, userID, 20, 0, (*domain.TransactionType)(nil), (*uint)(nil), (*uint)(nil), (*time.Time)(nil), (*time.Time)(nil)).Return(expectedTransactions, nil)
+		mockRepo.On("CountByUserIDWithAllFilters", ctx, userID, (*domain.TransactionType)(nil), (*uint)(nil), (*uint)(nil), (*time.Time)(nil), (*time.Time)(nil)).Return(int64(2), nil)
 
 		input := transaction.ListInput{
 			UserID:   userID,
