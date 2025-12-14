@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-// Load loads configuration with validation
+// Load loads configuration with validations
 func Load(opts ...LoadOptions) (*Config, error) {
 	loader := NewLoader()
 	validator := NewValidator()
