@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/edalferes/monetics/compare/v0.17.0...v0.18.0) (2025-12-14)
+
+
+### Features
+
+* update ([a29d616](https://github.com/edalferes/monetics/commit/a29d61605fe2e5041a68684c64ea8cc70567348f))
+
 ## [0.17.0](https://github.com/edalferes/monetics/compare/v0.16.0...v0.17.0) (2025-12-14)
 
 
