@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0](https://github.com/edalferes/monetics/compare/v0.16.0...v0.17.0) (2025-12-14)
+
+
+### Features
+
+* update edit transactions ([66235b0](https://github.com/edalferes/monetics/commit/66235b010eb4320a7b41c556e6734c26e7d03088))
+
 ## [0.16.0](https://github.com/edalferes/monetics/compare/v0.15.0...v0.16.0) (2025-12-13)
 
 
