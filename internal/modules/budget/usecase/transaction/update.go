@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"context"
+	"time"
 
 	"github.com/edalferes/monetics/internal/modules/budget/domain"
 	"github.com/edalferes/monetics/internal/modules/budget/errors"
@@ -118,6 +119,16 @@ func (uc *UpdateUseCase) Execute(ctx context.Context, input UpdateInput) (domain
 	// Update description if provided
 	if input.Description != nil {
 		tx.Description = *input.Description
+	}
+
+	// Update date if provided
+	if input.Date != nil {
+		parsedDate, err := time.Parse(time.RFC3339, *input.Date)
+		if err != nil {
+			uc.logger.Error().Err(err).Str("date", *input.Date).Msg("invalid date format")
+			return domain.Transaction{}, errors.ErrInvalidTransactionType // Reusing this error or create a new one
+		}
+		tx.Date = parsedDate
 	}
 
 	updatedTx, err := uc.transactionRepo.Update(ctx, tx)

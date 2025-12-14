@@ -130,9 +130,25 @@ func (r *TransactionRepository) GetByType(ctx context.Context, userID uint, tran
 }
 
 func (r *TransactionRepository) Update(ctx context.Context, transaction domain.Transaction) (domain.Transaction, error) {
-	if err := r.db.WithContext(ctx).Save(&transaction).Error; err != nil {
+	// Use Updates with Select to explicitly update all fields
+	result := r.db.WithContext(ctx).Model(&transaction).
+		Select("account_id", "category_id", "type", "amount", "description", "date",
+			"status", "tags", "attachments", "is_recurring", "recurrence_rule",
+			"recurrence_end", "destination_account_id", "transfer_fee").
+		Updates(transaction)
+
+	if result.Error != nil {
+		return domain.Transaction{}, result.Error
+	}
+
+	// Reload with relationships
+	if err := r.db.WithContext(ctx).
+		Preload("Account").
+		Preload("Category").
+		First(&transaction, transaction.ID).Error; err != nil {
 		return domain.Transaction{}, err
 	}
+
 	return transaction, nil
 }
 
